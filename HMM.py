@@ -358,7 +358,7 @@ def main():
     TICKER       = "SPY"
     START        = "2010-01-01"
     END          = "2024-01-01"
-    N_REGIMES    = 3            # number of hidden states
+    N_REGIMES    = 3             # number of hidden states
 
     # Override source if a ticker is supplied via CLI
     if len(sys.argv) > 1:
