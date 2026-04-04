@@ -3,3 +3,10 @@ venv/
 __pycache__/
 *.pyc
 .DS_Store
+
+Papier/TER.aux
+Papier/TER.log
+Papier/TER.out
+Papier/TER.synctex.gz
+Papier/TER.fdb_latexmk
+Papier/TER.fls
