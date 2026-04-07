@@ -13,6 +13,8 @@
 \usepackage{fancyhdr}
 \usepackage{amsmath}
 \usepackage{amssymb}
+\usepackage{tikz}
+\usetikzlibrary{arrows.meta,positioning}
 
 \geometry{margin=2.5cm}
 \setlength{\parindent}{0pt}
@@ -45,9 +47,9 @@
 
         {\huge \textbf{Chaîne de Markov cachées et application en finance}}\\[1.2cm]
 
-        {\large Sous la supervision de \textit{ Joseph Rynkiewicz et Jean-Marc Bardet.}}\\[0.8cm]
+        {\large Sous la supervision de \textit{Joseph Rynkiewicz et Jean-Marc Bardet.}}\\[0.8cm]
 
-        {\large Par Marius Requillard et Maxime Delpech.}\\[0.8cm]
+        {\large Par Marius Requillart et Maxime Delpech.}\\[0.8cm]
 
         {\large 2025--2026}
     \end{center}
@@ -101,9 +103,193 @@ Les chaîne de Markov cachées (HMM) sont des modèles statistique utilisées da
 
 \subsubsection* {a) Variables aléatoires observables et cachées}
 
-Définition : Les états cachés sont modélisés par un processus de Markov $(X_t)_{t\in\mathbb{N}}$ tel que $X_t \in Q$ où $Q$ est l'ensemble des états possibles. Notons $A$ la matrice de transition du processus de Markov, où $A_{ij} = P(X_{t+1} = j | X_t = i)$. 
-\vspace{0.5cm}
+\textbf{Définition.} 
+Les états cachés sont modélisés par un processus de Markov $(X_t)_{t \in \mathbb{N}}$ à valeurs dans un ensemble fini $Q = \{1,\dots,N\}$. 
+On note $A = (a_{ij})$ la matrice de transition définie par :
+\[
+a_{ij} = \mathbb{P}(X_{t+1} = j \mid X_t = i).
+\]
 
-Définition : Les observations sont modélisées par un processus d'observation $(Y_t)_{t\in\mathbb{N}}$ tel que $Y_t \in O$, où $O$ est l'ensemble des observations possibles. La loi des $Y_t$ dépend de l'état caché $X_t$ tel que $P(Y_t | X_t) = B_{X_T}(Y_t)$ où $B$ est la matrice d'émission du modèle.
+\vspace{0.3cm}
+
+\textbf{Définition.} 
+Les observations sont modélisées par un processus $(Y_t)_{t \in \mathbb{N}}$ à valeurs dans un ensemble $O$. 
+Conditionnellement aux états cachés, les variables $(Y_t)$ sont indépendantes et vérifient :
+\[
+\mathbb{P}(Y_t = y \mid X_t = i) = b_i(y),
+\]
+où $B = (b_i(y))$ est la matrice (ou famille) d’émission.
+
+\vspace{0.3cm}
+
+\textbf{Définition.} 
+Un modèle de chaîne de Markov cachée est défini par le triplet $(A, B, \pi)$ où :
+\begin{itemize}
+    \item $A$ est la matrice de transition des états cachés,
+    \item $B$ est la loi d’émission des observations,
+    \item $\pi$ est la distribution initiale, avec $\pi_i = \mathbb{P}(X_1 = i)$.
+\end{itemize}
+\vspace{0.3cm}
+
+\subsubsection* {b) Loi jointes et vraisemblance}
+
+\textbf{Propriété:}
+Soit $X$ = ($X_1$, \dots, $X_T$) la séquence d'états cachés et $Y$ = ($Y_1$, \dots, $Y_T$) la séquence d'observations, la loi des observations conditionnellements à la séquence d'états cachés est : 
+\[
+\mathbb{P}(Y \mid X) = \prod_{t=1}^T \mathbb{P}(Y_t \mid X_t) 
+\]
+
+\textbf{Preuve:}
+\[
+\mathbb{P}(Y \mid X) = \prod_{t=1}^T \mathbb{P}(Y_t \mid X_1, \dots X_T,Y_1, \dots Y_{t-1})=\prod_{t=1}^T \mathbb{P}(Y_t \mid X_t)  
+\]
+\vspace{0.3cm}
+
+\textbf{Propriété:}
+Soit $X$ = ($X_1$, \dots, $X_T$) la séquence d'états cachés et $Y$ = ($Y_1$, \dots, $Y_T$) la séquence d'observations, la loi jointes des observations et des états cachées est donnée par : 
+\[
+\mathbb{P}(Y, X) = \pi_{X_1} \prod_{t=2}^T \mathbb{P}(X_{t} \mid X_{t-1}) \prod_{t=1}^T \mathbb{P}(Y_t \mid X_t)
+\]
+
+\textbf{Preuve:}
+\begin{align*}
+\mathbb{P}(X, Y) 
+&= \mathbb{P}(X_1, Y_1) \prod_{t=2}^T \mathbb{P}(X_t,Y_t \mid X_1, \dots, X_{t-1}, Y_1,\dots, Y_{t-2}) \\
+&= \mathbb{P}(X_1)\mathbb{P}(Y_1 \mid X_1) 
+\prod_{t=2}^T \mathbb{P}(X_t \mid X_1, \dots, X_{t-1}, Y_1,\dots, Y_{t-2})
+\mathbb{P}(Y_t \mid X_1, \dots, X_{t-1}, Y_1,\dots, Y_{t-2}) \\
+&= \mathbb{P}(X_1)\mathbb{P}(Y_1 \mid X_1) 
+\prod_{t=2}^T \mathbb{P}(X_t \mid X_{t-1}) \mathbb{P}(Y_t \mid X_t) \\
+&= \mathbb{P}(X_1) \prod_{t=2}^T \mathbb{P}(X_t \mid X_{t-1}) \prod_{t=1}^T \mathbb{P}(Y_t \mid X_t) \\
+&= \pi_{X_1} \prod_{t=2}^T \mathbb{P}(X_t \mid X_{t-1}) \prod_{t=1}^T \mathbb{P}(Y_t \mid X_t)
+\end{align*}
+\vspace{0.3cm}
+
+\textbf{Remarque:}
+La loi des observations à chaque instant $t$ est dépend de l'état caché à cet instant et pas des états d'avant. 
+\vspace{0.3cm}
+
+\textbf{Exemple:}
+Soit un modèle de chaîne de Markov cachée avec deux états $A$ et $B$. 
+En supposant ques les observation sont gaussienne conditionnellement à l'état caché, on a :
+\[
+\mathbb{P}(Y_t \mid X_t = A) \sim \mathcal{N}(\mu_{A}, \sigma^2_{A})
+\]
+\[
+\mathbb{P}(Y_t \mid X_t = B) \sim \mathcal{N}(\mu_{B}, \sigma^2_{B})
+\]
+\vspace{0.3cm}
+
+\textbf{Remarque:}
+$X_t$ agit comme un selecteur de distribution pour $Y_t$.
+\vspace{0.3cm}
+
+\subsubsection* {c) Exemple de globale d'une chaîne de Markov cachée}
+
+Prenons un exemple simple d'une chaîne de Markov cachée avec deux états $C$ et $V$ (pour "calme" et "volatile") et des observations gaussiennes conditionnelles à ces états.\\
+Soit $E = \{C, V\}$ l'ensemble d'états, on note $\pi$ la distribution initiale, par exemple $\pi_0 = (0.5, 0.5)$, indiquant que le processus commence avec une probabilité égale dans les états $C$ et $V$.\\
+La matrice de transition $A$ peut être définie comme suit :
+\[
+A =
+\begin{pmatrix}
+0.9 & 0.1 \\
+0.2 & 0.8
+\end{pmatrix}
+\]
+Avec, $a_{ij} = \mathbb{P}(X_{t+1} = j \mid X_t = i)$.
+
+\vspace{0.3cm}
+
+La matrice d'émission $B$ peut être définie par les distributions gaussiennes conditionnelles à chaque état :
+\[
+B =
+\begin{cases}
+\mathbb{P}(Y_t \mid X_t = C) \sim \mathcal{N}(\mu_C, \sigma_C^2) \\
+\mathbb{P}(Y_t \mid X_t = V) \sim \mathcal{N}(\mu_V, \sigma_V^2)
+\end{cases}
+\]
+
+\vspace{0.5cm}
+\textbf{NB:}
+La matrice de transition $A$ n'est pas connue dans la plupart des applications, elle doit être estimé à partir des données d'observations. Par exemple avec l'algorithme de Baum-Welch que nous verrons plus tard.
+\vspace{1.5cm}
+
+\begin{figure}[h]
+\centering
+\begin{tikzpicture}[
+    node distance=2cm,
+    every node/.style={draw, circle, minimum size=1cm},
+    arrow/.style={->, thick}
+]
+
+% Etats cachés
+\node (X1) {$X_t$};
+\node (X2) [right=of X1] {$X_{t+1}$};
+
+% Observations
+\node (Y1) [below=of X1] {$Y_t$};
+\node (Y2) [below=of X2] {$Y_{t+1}$};
+
+% Transitions
+\draw[arrow] (X1) -- node[midway, above, draw=none] {$a_{ij}$} (X2);
+
+% Emissions
+\draw[arrow] (X1) -- 
+node[midway, left, draw=none] {$\mathbb{P}(Y_t \mid X_t)$} 
+(Y1);
+
+\draw[arrow] (X2) -- 
+node[midway, right, draw=none] {$\mathbb{P}(Y_{t+1} \mid X_{t+1})$} 
+(Y2);
+
+\end{tikzpicture}
+\caption{Modèle de Markov caché (HMM)}
+\end{figure}
+
+
+\newpage
+
+
+
+\subsection* {d) Remarque sur les observations}
+
+\textbf{Propriété:}
+La probabilité totale des obstervation $Y_T$ est donnée par : 
+\[
+\mathbb{P}(Y) = \sum_{X}\mathbb{P}(Y,X) = \sum_{}\mathbb{P}(Y \mid X)\mathbb{P}(X)
+\]
+\vspace{0.3cm}
+
+\textbf{Propriété:}
+Dans un HMM les observations $(Y_t)$ n'est pas un processus de Markov, même si les états cachés $(X_t)$ le sont. 
+
+\textbf{Preuve :}
+
+Si le processus d'observations $(Y_t)$ était markovien. Alors on aurait
+\[
+\mathbb{P}(Y_{n+1} \mid Y_1,\dots,Y_n) = \mathbb{P}(Y_{n+1} \mid Y_n).
+\]
+
+Or, pour $K$ états cachés, on a
+\begin{align*}
+\mathbb{P}(Y_{n+1} \mid Y_1,\dots,Y_n)
+&= \sum_{i=1}^{K} \mathbb{P}(Y_{n+1}, X_{n+1}=i \mid Y_1,\dots,Y_n) \\
+&= \sum_{i=1}^{K} \mathbb{P}(Y_{n+1} \mid X_{n+1}=i, Y_1,\dots,Y_n)\,
+\mathbb{P}(X_{n+1}=i \mid Y_1,\dots,Y_n) \\
+&= \sum_{i=1}^{K} \mathbb{P}(Y_{n+1} \mid X_{n+1}=i)\,
+\mathbb{P}(X_{n+1}=i \mid Y_1,\dots,Y_n).
+\end{align*}
+
+Ainsi, le terme
+\[
+\mathbb{P}(X_{n+1}=i \mid Y_1,\dots,Y_n)
+\]
+dépend en général de tout le passé observé $(Y_1,\dots,Y_n)$, et pas seulement de $Y_n$.
+
+Donc, en général,
+\[
+\mathbb{P}(Y_{n+1} \mid Y_1,\dots,Y_n) \neq \mathbb{P}(Y_{n+1} \mid Y_n),
+\]
+ce qui montre que le processus d'observations $(Y_t)$ n'est pas markovien.
 
 \end{document}
