@@ -91,17 +91,57 @@
 
 \newpage
 % Début du projet
-\section*{Introduction}
+\section{Introduction}
 
-\section*{I) Définitions et propriétées}
+\section{Définitions et propriétées}
+Toutes les variables aléatoires de ce travail sont définies sur l'espace probabilisé $(\Omega, \mathcal{F}, \mathbb{P})$.
+\subsection{Définitions et propriétées d'un chaîne de Markov}
+\subsubsection{ Définition}
 
-\subsection*{1) Définition d'une chaîne de Markov}
+\textbf{Définition d'une chaîne de Markov :}\\
+Soit $E$ un ensemble fini ou dénombrable, appelé \textit{espace d'états}. Soit $(X_n)_{n \ge 0}$ un \textit{processus} à valeur dans $E$.
+On dit que $(X_n)_{n \ge 0}$ est une \textit{chaîne de Markov} d'ordre 1, si :\\
+Pour tout $n \ge 0$, pour tout $y \in E$, pour tout $x_0,...,x_{n-1},x \in E$ tel que $\mathbb{P}(X_0 = x_0, \ldots, X_{n-1} = x_{n-1}, X_n = x) > 0$, on a:
+\[
+\mathbb{P}(X_{n+1} = y \mid X_n = x_n, X_{n-1} = x_{n-1},\ldots,X_0=x_0)=\mathbb{P}(X_{n+1}=x_{n+1} \mid X_n=x_n)
+\]
+On pose $\pi_0$ la distribution initiale, i.e., la loi de $X_0$.
 
-\subsection*{2) Définition d'une chaîne de Markov cachée}
+De plus, s'il existe $P : E \times E \to [0,1]$ tel que $(x,y) \mapsto P(x,y)=\mathbb{P}(X_{n+1} = y \mid X_n = x_n)$, pour tout $n \ge 0$, pour tout $x,y \in E$ tel que $\mathbb{P}(X_n=x_n) > 0$.
+On dit alors que $(X_n)_{n \ge 0}$ est une chaîne de Markov d'ordre 1 \textit{homogène}.
+Dans ce cas, $P$ est appelé \textit{matrice de transition} du processus $(X_n)_{n \ge 0}$, avec $P(x,y)>0$ et $\sum_{y \in E}P(x,y)=1$, pour tout $x,y \in E$.\\
+
+Dans ce travail, nous ne considèrerons qu'uniquement les chaînes de Markov d'ordre 1 homogènes, c'est pourquoi nous les appelerons juste chaînes de Markov.
+
+\subsubsection{Propriétés}
+\textbf{$\bullet$ Équation de Chapman-Kolmogorov :} \\
+Soit $(X_n)_{n \ge 0}$ une chaîne de Markov de matrice de transition P et de distribution initiale $\pi_0$. On a,\\
+Pour tout $n \ge 0$, pour tout $x_0, \ldots, x_n \in E$, 
+\[
+\mathbb{P}(X_0=x_0, \ldots, X_n=x_n) = \pi_0(x_0) \mathbb{P}(x_0,x_1) \ldots \mathbb{P}(x_{n-1},x_n)
+\]
+i.e. la loi d'une chaîne de Markov est entièrement caractérisée par sa distribution initiale et sa matrice de transition.
+
+\textbf{$\bullet$ Propriété de Markov :} \\
+Soit $n \ge 0$, $\pi_0$ une mesure de probabilité sur $E$ et $x \in E$ tel que $\mathbb{P}_{\pi_0}(X_n=x)>0$.\\
+Alors, pour tout $A \in E^n$, $B \in E^m$, $m \ge 0$, on a :
+\[
+\begin{aligned}
+\mathbb{P}_{\pi_0}\bigl((X_0,\ldots,X_{n-1}) \in A,\,(X_{n+1},\ldots,X_{n+m}) \in B \mid X_n=x\bigr)
+&= \mathbb{P}_{\pi_0}\bigl((X_0,\ldots,X_{n-1}) \in A \mid X_n=x\bigr) \\
+&\qquad \times \mathbb{P}_{\pi_0}\bigl((X_{n+1},\ldots,X_{n+m}) \in B \mid X_n=x\bigr).
+\end{aligned}
+\]
+i.e. le passé et le futur d'un moment $n$ d'une chaîne de Markov sont indépendants entre eux.
+
+\textbf{$\bullet$ Quelques propriétés utiles :} \\
+
+
+\subsection{Définition d'une chaîne de Markov cachée}
 
 Les chaîne de Markov cachées (HMM) sont des modèles statistique utilisées dans un situation où on a des états latent qui ne sont pas directement observable. Les données observables sont générées par ces état suivant une loi de probabilité conditionnelle.
 
-\subsubsection* {a) Variables aléatoires observables et cachées}
+\subsubsection{Variables aléatoires observables et cachées}
 
 \textbf{Définition.} 
 Les états cachés sont modélisés par un processus de Markov $(X_t)_{t \in \mathbb{N}}$ à valeurs dans un ensemble fini $Q = \{1,\dots,N\}$. 
@@ -131,7 +171,7 @@ Un modèle de chaîne de Markov cachée est défini par le triplet $(A, B, \pi)$
 \end{itemize}
 \vspace{0.3cm}
 
-\subsubsection* {b) Loi jointes et vraisemblance}
+\subsubsection{Loi jointes et vraisemblance}
 
 \textbf{Propriété:}
 Soit $X$ = ($X_1$, \dots, $X_T$) la séquence d'états cachés et $Y$ = ($Y_1$, \dots, $Y_T$) la séquence d'observations, la loi des observations conditionnellements à la séquence d'états cachés est : 
@@ -184,7 +224,7 @@ En supposant ques les observation sont gaussienne conditionnellement à l'état 
 $X_t$ agit comme un selecteur de distribution pour $Y_t$.
 \vspace{0.3cm}
 
-\subsubsection* {c) Exemple de globale d'une chaîne de Markov cachée}
+\subsubsection{Exemple de globale d'une chaîne de Markov cachée}
 
 Prenons un exemple simple d'une chaîne de Markov cachée avec deux états $C$ et $V$ (pour "calme" et "volatile") et des observations gaussiennes conditionnelles à ces états.\\
 Soit $E = \{C, V\}$ l'ensemble d'états, on note $\pi$ la distribution initiale, par exemple $\pi_0 = (0.5, 0.5)$, indiquant que le processus commence avec une probabilité égale dans les états $C$ et $V$.\\
@@ -251,7 +291,7 @@ node[midway, right, draw=none] {$\mathbb{P}(Y_{t+1} \mid X_{t+1})$}
 
 
 
-\subsection* {d) Remarque sur les observations}
+\subsubsection{Remarque sur les observations}
 
 \textbf{Propriété:}
 La probabilité totale des obstervation $Y_T$ est donnée par : 
