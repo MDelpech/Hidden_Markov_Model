@@ -67,11 +67,13 @@
 
 \vspace{1cm}
 
-\textbf{1) Introduction}
+\textbf{I) Introduction}
 
-\textbf{2) Définition et propriétés}
+\textbf{II) Définition et propriétés}
 
-\hspace*{0.5cm}2.1) Définition d'une chaîne de Markov. \\
+\hspace*{0.5cm}2.1) Définitions \\
+\hspace*{1cm}2.1.1) Variables aléatoires observables et cachées. \\
+\hspace*{1cm}2.1.2) Propriétés. \\
 
 \hspace*{0.5cm}2.2) Définition chaîne de Markov cachée. \\
 \hspace*{1cm}2.2.1) Variables aléatoires observables et cachées. \\
@@ -82,7 +84,7 @@
 
 \vspace{0.5cm}
 
-\textbf{II) Trois grandes problématiques des HMM}
+\textbf{III) Trois grandes problématiques des HMM}
 
 \hspace*{0.5cm}1) Estimation de la vraisemblance et forward algorithm.
 
@@ -92,7 +94,7 @@
 
 \vspace{0.5cm}
 
-\textbf{III) Application aux séries temporelles financières}
+\textbf{IV) Application aux séries temporelles financières}
 
 
 \newpage
@@ -346,5 +348,62 @@ Donc, en général,
 \mathbb{P}(Y_{n+1} \mid Y_1,\dots,Y_n) \neq \mathbb{P}(Y_{n+1} \mid Y_n),
 \]
 ce qui montre que le processus d'observations $(Y_t)$ n'est pas markovien.
+
+%%%%%%%%%%%%%%%%%%
+%% Début de la partie 3 sur les algorithmes
+%%%%%%%%%%%%%%%%%%
+
+\section{Trois grandes problématiques des HMM}
+
+\subsection{Estimation de la vraisemblance et forward algorithme}
+
+\textbf{Problématique:}
+Comment calculer efficacement la vraisemblance $\mathbb{P}(Y)$ d'une séquence d'observations $Y$ donnée un modèle de HMM $(A, B, \pi)$ ? \\ 
+
+On suppose que la matrice de transition $A$, la matrice d'émission $B$ ainsi que la distribution initiale $\pi$ sont connues. \\ 
+
+On sait que la vraisemblance de $Y$ est donnée par :
+\[
+\mathbb{P}(Y) = \sum_{X}\mathbb{P}(Y,X) = \sum_{X}\mathbb{P}(Y \mid X)\mathbb{P}(X).
+\]
+Cependant, pour N états cachés et une séquence d'observations de longueur T, le nombre de séquence cachées possibles est de $N^T$, ce qui rend le calcul direct d'un complexité exponentielle si on l'effectue de manière naïve. \\ 
+La solution optimale est d'utiliser l'algorithme de forward qui permet de calculer $\mathbb{P}(Y)$ avec un complexité de $O(N^2T)$. \\ 
+
+Cet algorithme repose sur le comcepte de programmation dynamique et utilise une variable intermédiaire $\alpha_t(i)$ qui représente la probabilité d'observé la séquence d'observation $Y_1 \dots Y_t$ et d'être dans l'état caché $i$ à l'intant $t$.\\
+Formellement, on définit $\alpha_t(i)$ comme : 
+\[
+\alpha_t(i) = \mathbb{P}(Y_1, \dots, Y_t, X_t = i).
+\]
+
+\vspace{0.5cm}
+\textbf{Forward Algorithm :} \\
+1) Initialisation :
+\[
+\alpha_1(i) = \pi_i b_i(Y_1), \quad \text{pour } i = 1, \dots, N.
+\]
+2) Récursion :
+\[
+\alpha_{t}(j) =  \sum_{i=1}^N \alpha_{t-1}(i) a_{ij} b_j(Y_{t}), \quad \text{pour } t = 1, \dots, T \text{ et } j = 1, \dots, N.
+\]
+3) Terminaison :
+\[
+\mathbb{P}(Y) = \sum_{i=1}^N \alpha_T(i).
+\]          
+\vspace{0.5cm}
+
+avec $a_{ij}$ la probabilité de transition de l'état $i$ à l'état $j$, $b_j(Y_{t})$ la probabilité d'observer $Y_t$ conditionnellement à être dans l'état $j$ à l'instant $t$, et $\pi_i$ la probabilité initiale d'être dans l'état $i$.
+
+L'algorithme de forward permet ainsi de calculer efficacement la vraisemblance d'une séquence d'observations donnée, en évitant le calcul direct de toutes les séquences d'états cachés possibles.
+
+\vspace{1cm}
+
+Pour plus de claireté, on peut présenter l'algorithme de forward sous forme de treillis : 
+
+ \includegraphics[width=16cm]{Logo/treilli.png}\\
+ Dans cet exemple, le nombre détats cachées est de 2 et la longeur de la séquence d'observations est de 3.
+
+
+
+
 
 \end{document}
