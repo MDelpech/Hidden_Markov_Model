@@ -337,6 +337,31 @@ Or, pour $K$ états cachés, on a
 \mathbb{P}(X_{n+1}=i \mid Y_1,\dots,Y_n).
 \end{align*}
 
+or, 
+\begin{align*}
+\mathbb{P}(X_{n+1}=i \mid Y_1,\dots,Y_n)
+&= \sum_{j=1}^{K} \mathbb{P}(X_{n+1}=i, X_{n}=j \mid Y_1,\dots,Y_n) \\
+&= \sum_{j=1}^{K} \mathbb{P}(X_{n+1}=i \mid X_{n}=j, Y_1,\dots,Y_n) \mathbb{P}(X_{n}=j \mid Y_1, \dots Y_n)\\
+&= \sum_{j=1}^{K} \mathbb{P}(X_{n+1}=i \mid X_{n}=j) \mathbb{P}(X_n=j \mid Y_1, \dots Y_n)\\
+&= \sum_{j=1}^{k} a_{ji} \mathbb{P}(X_n=j \mid Y_1, \dots Y_n).
+\end{align*}
+
+et, 
+\begin{align*}
+\mathbb{P}(X_{n}=j \mid Y_1,\dots,Y_n) 
+&= \mathbb{P}(X_n=j, Y_1 \dots Y_n) / \mathbb{P}(Y_1 \dots Y_n) \\[0.3cm]
+&= \frac{\mathbb{P}(Y_n \mid X_n=j,Y_1 \dots Y_{n-1}) \mathbb{P}(X_n=j, Y_1 \dots Y_{n-1})}{\mathbb{P}(Y_1 \dots Y_n)} \\[0.3cm]
+&= \frac{\mathbb{P}(Y_n \mid X_n=j) \mathbb{P}(X_n=j \mid Y_1 \dots Y_{n-1}) \mathbb{P}(Y_1 \dots Y_{n-1})}{\mathbb{P}(Y_n \mid Y_1 \dots Y_{n-1}) \mathbb{P}(Y_1 \dots Y_{n-1})}\\[0.3cm]
+&= \frac{\mathbb{P}(Y_n \mid X_n=j) \mathbb{P}(X_n=j \mid Y_1 \dots Y_{n-1})}{\mathbb{P}(Y_n \mid Y_1 \dots Y_{n-1})}.
+\end{align*}
+
+on a donc : 
+\[
+\mathbb{P}(Y_{n+1}\mid Y_1 \dots Y_n ) = \sum_{i=1}^{K} \sum_{j=1}^K a_{ji} \frac{\mathbb{P}(Y_{n+1} \mid X_{n+1} = i) \mathbb{P}(Y_n \mid X_n=j) \mathbb{P}(X_n=j \mid Y_1 \dots Y_{n-1})}{\mathbb{P}(Y_n \mid Y_1 \dots Y_{n-1})}.
+\]
+
+On procède de la même manière pour calculer $\mathbb{P}(X_n = j \mid Y_1 \dots Y_{n-1})$ ce qui va descendre le degrès de dépendance à $Y_{n-1}$. On continue ainsi de suite de manière récursive jusqu'à ce que le terme de dépendance à $Y_1$ soit atteint.
+
 Ainsi, le terme
 \[
 \mathbb{P}(X_{n+1}=i \mid Y_1,\dots,Y_n)
