@@ -103,14 +103,24 @@
 %%%%%%%%%%%%%%%%
 
 \section{Introduction}
-Toutes les variables aléatoires de ce travail sont définies sur l'espace probabilisé $(\Omega, \mathcal{F}, \mathbb{P})$.
 
 
+Les séries temporelles financières occupent une place centrale en finance quantitative, car elles permettent d’analyser l’évolution des prix d’actifs, des rendements, de la volatilité ou encore des volumes échangés au cours du temps. Cependant, ces séries présentent souvent des comportements complexes : elles sont bruitées, irrégulières, parfois instables, et peuvent être marquées par des changements soudains de dynamique. Une même série financière peut ainsi alterner entre des périodes relativement calmes et des périodes de forte incertitude, ce qui rend son analyse particulièrement délicate.
+
+Les chaînes de Markov cachées, ou Hidden Markov Models, constituent un cadre probabiliste adapté pour modéliser ce type de phénomènes. Leur principe repose sur l’existence d’un état latent, non directement observable, qui évolue au cours du temps selon une chaîne de Markov. Les observations disponibles, comme les rendements financiers, sont alors supposées dépendre de cet état caché. 
+
+L’intérêt de ces modèles réside dans leur capacité à faire apparaître une structure cachée derrière les données observées. Ils permettent non seulement de détecter des changements de régime, mais aussi de donner une interprétation économique et financière aux résultats obtenus. Les états cachés identifiés peuvent par exemple être associés à des phases de croissance, de stress financier, de forte incertitude ou de retour à une situation plus stable. Ainsi, l’analyse ne se limite pas à une classification statistique des observations : elle peut aussi aider à relier les régimes détectés à des événements de marché, à des changements d’anticipations ou à des variations du niveau de risque.
+
+Dans ce travail, nous étudierons les chaînes de Markov cachées et leurs applications aux séries temporelles financières. Nous présenterons d’abord le cadre théorique de ces modèles, avant d’aborder les principaux algorithmes d’inférence et d’estimation, notamment les algorithmes de Viterbi et de Baum-Welch. Nous analyserons ensuite leur utilisation pour identifier différents régimes de marché et mieux comprendre l’évolution des séries financières.
+
+\newpage
 
 %%%%%%%%%%%%
 % Début de la partie 2.1
 %%%%%%%%%%%%
 \section{Définitions et propriétées}
+Toutes les variables aléatoires de ce travail sont définies sur l'espace probabilisé $(\Omega, \mathcal{F}, \mathbb{P})$.
+
 
 %Partie sur les chaines de Markov classiques.
 \subsection{Définitions et propriétées d'un chaîne de Markov}
