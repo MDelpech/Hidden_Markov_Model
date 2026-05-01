@@ -45,7 +45,7 @@
 
     \begin{center}
 
-        {\huge \textbf{Chaîne de Markov cachées et application en finance}}\\[1.2cm]
+        {\huge \textbf{Chaînes de Markov cachées et application en finance}}\\[1.2cm]
 
         {\large Sous la supervision de \textit{Joseph Rynkiewicz et Jean-Marc Bardet.}}\\[0.8cm]
 
@@ -67,7 +67,7 @@
 
 \vspace{1cm}
 
-\textbf{I) Définition et propriétés}
+\textbf{I) Définitions et propriétés}
 
 \hspace*{0.5cm}1) Définition d'une chaîne de Markov.
 
@@ -80,9 +80,9 @@
 
 \hspace*{0.5cm}1) Estimation de la vraisemblance et forward algorithm.
 
-\hspace*{0.5cm}2) Decodding et Viterbi algorithm.
+\hspace*{0.5cm}2) Décodage et Viterbi algorithm.
 
-\hspace*{0.5cm}c) Learning et Baum--Welch algorithm.
+\hspace*{0.5cm}c) Apprentissage et Baum--Welch algorithm.
 
 \vspace{0.5cm}
 
@@ -92,9 +92,9 @@
 \newpage
 % Début du projet
 \section{Introduction}
+Toutes les variables aléatoires de ce travail sont définies sur l'espace probabilisé $(\Omega, \mathcal{F}, \mathbb{P})$.
 
 \section{Définitions et propriétées}
-Toutes les variables aléatoires de ce travail sont définies sur l'espace probabilisé $(\Omega, \mathcal{F}, \mathbb{P})$.
 \subsection{Définitions et propriétées d'un chaîne de Markov}
 \subsubsection{ Définition}
 
@@ -331,5 +331,330 @@ Donc, en général,
 \mathbb{P}(Y_{n+1} \mid Y_1,\dots,Y_n) \neq \mathbb{P}(Y_{n+1} \mid Y_n),
 \]
 ce qui montre que le processus d'observations $(Y_t)$ n'est pas markovien.
+
+\section{Trois grandes problématiques des HMM}
+
+\subsection{Decodding et Viterbi algorithm}
+
+Considérons un nouveau problème : le décodage d'une suite d'état d'après une série d'observations $Y_1,\dots,Y_T$.
+On essaye de découvrir la partie cachée du modèle.\\
+i.e. Découvrir à posteriori la ``vraie'' séquence d'état qui s'est produite pour générer une série d'observation, sachant la distribution initiale, la matrice de transition ainsi que les probabilités d'émissions.
+
+Il paraît évident qu'il n'y a pas de ``vraie'' séquence d'états, nous allons devoir instaurer des critères d'optimalité pour régler notre problème.
+
+Une première approche qu'on pourrait qualifier de ``Greedy'' serait de choisir, à chaque instant $t$, l'état $q_t$ tel que la probabilité d'observer $Y_t$ est la plus grande.
+Ce critère d'optimalité maximise l'espérance du nombre d'états correctement décrypté un à un.
+
+Cependant, cela peut amener plusieurs problèmes avec la séquence d'état qui en résulte. N'ayant aucune condition d'ergodicité sur notre chaîne de Markov cachée, une transition entre 2 états peut avoir une probabilité nulle.
+Or rien ne l'interdit dans notre critère, donc cette transition pourrait apparaître dans le résultat alors que celui-ci ne serait ainsi même pas réalisable.
+
+Il va donc falloir trouver un critère prenant en compte la probabilité de réalisation d'une séquence d'états. On pourrait ainsi vouloir maximiser l'espérance du nombre de paires correctes d'états découvert, ou de triplet, etc.
+Cependant le critère le plus utilisé est le critère de trouver l'unique séquence d'états qui maximise la probabilité de voir nos observations sachant la distribution initiale, la matrice de transition ainsi que les probabilités d'émissions.
+
+Le problème étant exponentiellement complexe, la solution est d'utiliser un algorithme de programmation dynamique nommé : Algorithme de Viterbi.
+
+\subsubsection{L'algorithme de Viterbi}
+
+Premièrement, on remarque que maximiser $\mathbb{P}(Q \mid O,\lambda)$ est équivalent à maximiser $\mathbb{P}(Q,O \mid \lambda)$ car les observations sont fixées.
+
+Afin de trouver la meilleure séquence d'états $Q=\{q_1,\dots,q_T\}$, pour la séquence d'observations $O=\{o_1,\dots,o_T\}$, on définit la quantité :
+\[
+\delta_t(i)= \max_{q_1,\dots,q_{t-1}} \mathbb{P}(q_1,q_2,\dots,q_t=i,o_1,o_2,\dots,o_t \mid \lambda)
+\]
+i.e. $\delta_t(i)$ est la probabilité du chemin le plus probable se terminant par l'état $S_i$ au moment $t$.
+
+\vspace{0.3cm}
+
+Avec,
+\[
+a_{ij}=\mathbb{P}(q_{t+1}=S_j \mid q_t=S_i)
+\]
+et
+\[
+b_j(o_t)=\mathbb{P}(Y_t=o_t \mid q_t=S_j)
+\]
+Ainsi, par récurrence, on a que :
+\[
+\delta_{t+1}(j)=\left[\max_{1\leq i\leq N}\delta_t(i)a_{ij}\right]b_j(o_{t+1})
+\]
+
+\textbf{Problème:}
+En testant naïvement toutes les suites possibles d'états cachés, il y a $N^T$ séquences possibles.
+Et pour calculer la probabilité de chaque séquence, il faut environ $T$ opérations.\\
+Ainsi on obtient une complexité de :
+\[
+O(TN^T)
+\]
+C'est exponentiel, donc inutilisable dès que $T$ ou $N$ devient grand.
+
+Afin de limiter cette complexité, l'algorithme de Viterbi repose sur le principe du treillis.
+
+\textbf{Principe du Treillis:}
+
+Structure en colonne où :
+\begin{itemize}
+    \item chaque colonne correspond à un instant $t$
+    \item chaque ligne correspond à un état caché.
+    \item chaque noeud $(t,j)$ représente le fait d'être dans l'état $j$ au temps $t$.
+    \item chaque arête entre $(t-1,i)$ et $(t,j)$ représente une transition possible, pondéré par la proba $a_{ij}$.
+    \item chaque noeud est également associé à la proba d'émission $b_j(o_t)$.
+\end{itemize}
+
+Ainsi, le problème de décodage revient à trouver le meilleur chemin dans ce treillis, depuis la première colonne jusqu'à la dernière.
+Chaque chemin correspond à une séquence d'état cachés possible.
+Le rôle de l'algorithme de Viterbi est précisément de trouver le chemin de probabilité maximale.
+
+\newpage
+
+\begin{figure}[h]
+\centering
+\includegraphics[width=0.95\textwidth]{figures/treillis-viterbi.png}
+\caption{Treillis de l'algorithme de Viterbi}
+\end{figure}
+
+L'intérêt du treillis est qu'il met en évidence une propriété fondamentale : pour retrouver la séquence d'état, il faut garder en mémoire l'argument qui maximise la récurrence. Nous allons le faire via la liste $\psi_t(j)$.
+
+On peut donc suivre l'algorithme suivant :
+
+\textbf{1. Initialisation}
+\[
+\delta_1(i)=\pi_i b_i(o_1), \quad 1\leq i\leq N
+\]
+\[
+\psi_1(i)=0
+\]
+
+\textbf{2. Récurrence}
+\[
+\delta_t(j)=\left[\max_{1\leq i\leq N}\delta_{t-1}(i)a_{ij}\right]b_j(o_t), \quad 2\leq t\leq T,\quad 1\leq j\leq N
+\]
+\[
+\psi_t(j)=\operatorname*{Argmax}_{1\leq i\leq N}[\delta_{t-1}(i)a_{ij}], \quad 2\leq t\leq T,\quad 1\leq j\leq N
+\]
+
+\textbf{3. Fin}
+\[
+P^\star=\max_{1\leq i\leq N}[\delta_T(i)]
+\]
+\[
+q_T^\star=\operatorname*{Argmax}_{1\leq i\leq N}[\delta_T(i)]
+\]
+
+\textbf{4. Retracage du chemin.}
+\[
+q_t^\star=\psi_{t+1}(q_{t+1}^\star), \quad t=T-1,T-2,\dots,1
+\]
+
+On obtient ainsi avec $q_1^\star,\dots,q_T^\star$ notre séquence d'état recherchée.
+
+\vspace{0.3cm}
+
+\textbf{Analyse de la complexité:}
+\begin{itemize}
+    \item A chaque instant, on calcule une valeur pour chacun des $N$ états.
+    \item Pour chaque état, on doit évaluer la probabilité de venir depuis chacun des états.
+\end{itemize}
+Ainsi, à chaque itération, on a une complexité de $O(N^2)$.
+
+Il y a $T$ instant, on obtient donc une complexité temporelle totale de :
+\[
+O(TN^2)
+\]
+
+
+\subsection{Estimation et Algorithme de Baum--Welch }
+
+Ce dernier problème est celui qui nous intéressera le plus dans les applications économiques.
+Nous allons chercher à estimer l'ensemble des paramètres de notre modèle, la distribution initiale, les probabilités de changement d'états ainsi que les paramètres des différentes lois des observations, et tout ça uniquement à partir d'une série d'observations.
+C'est-à-dire qu'on cherche le modèle qui maximise la probabilité de voir ce qu'on a observé.
+
+i.e.
+\[
+\operatorname*{argmax}_{(A,B,\pi)} \mathbb{P}(O \mid (A,B,\pi))
+\]
+
+Pour cela, nous pouvons utiliser un algorithme introduit par Baum--Welch qui est en fait un cas particulier d'utilisation de l'algorithme Expectation Maximisation (EM).
+
+Avant toutes choses, il est important de noter que cette méthode itérative permet d'approximer un optimal local à notre problème.
+
+Afin de pouvoir trouver les $A$, $B$ et $\pi$ de notre problème, nous devons définir les variables avec lesquelles nous allons travailler :
+
+\textbf{$\bullet$} $\xi_t(i,j)$ := la probabilité d'être en l'état $i$ à l'instant $t$ et en l'état $j$ à l'instant $t+1$ sachant le modèle $(A,B,\pi)$ et la série d'observations $O$.
+
+\[
+\forall t \in \{1,\dots,T-1\}, \quad \forall i,j \in Q,
+\]
+\[
+\xi_t(i,j)=\mathbb{P}(S_t=i,S_{t+1}=j \mid O,(A,B,\pi))
+\]
+\[
+=\frac{\mathbb{P}(S_t=i,S_{t+1}=j,O \mid (A,B,\pi))}
+{\mathbb{P}(O \mid A,B,\pi)}
+\]
+\[
+=\frac{\alpha_t(i)a_{ij}b_j(o_{t+1})\beta_{t+1}(j)}
+{\mathbb{P}(O \mid A,B,\pi)}
+\]
+\[
+=
+\frac{\alpha_t(i)a_{ij}b_j(o_{t+1})\beta_{t+1}(j)}
+{\sum_{k \in Q}\sum_{\ell \in Q}\alpha_t(k)a_{k\ell}b_\ell(o_{t+1})\beta_{t+1}(\ell)}
+\]
+
+\textbf{$\bullet$} $\gamma_t(i)$ := la probabilité d'être en l'état $i$ à l'instant $t$, sachant la série d'observation et le modèle $(A,B,\pi)$.
+
+\[
+\forall t \in \{1,\dots,T\}, \quad \forall i \in Q,
+\]
+\[
+\gamma_t(i)=\mathbb{P}(S_t=i \mid O,(A,B,\pi))
+\]
+\[
+=\sum_{j \in Q}\mathbb{P}(S_t=i,S_{t+1}=j \mid O,(A,B,\pi))
+\]
+\[
+=\sum_{j \in Q}\xi_t(i,j)
+\]
+
+On peut remarquer qu'en sommant les $\gamma_t(i)$ par rapport aux instants $t$, on obtient le nombre de fois où l'état $i$ est visité, ou de manière équivalente, l'espérance du nombre de transitions depuis $i$.
+
+De la même manière, la somme sur les $t$ des $\xi_t(i,j)$ donne l'espérance du nombre de transitions de l'état $i$ vers l'état $j$.
+
+i.e.
+\[
+\sum_{t=1}^{T-1}\gamma_t(i) = \text{espérance du nombre de transitions depuis } i
+\]
+\[
+\sum_{t=1}^{T-1}\xi_t(i,j) = \text{espérance du nombre de transitions de } i \text{ vers } j
+\]
+
+Grâce à cette remarque, des estimateurs naturels de $\pi$, $A$, $B$ apparaissent :
+
+\[
+\forall i,j \in Q,
+\]
+\[
+\pi_i' := \text{probabilité d'être en l'état } i \text{ au moment } 1
+=\gamma_1(i)
+\]
+
+\[
+a_{ij}' :=
+\frac{\text{espérance du nombre de transitions de l'état } i \text{ à } j}
+{\text{espérance du nombre de transitions depuis l'état } i}
+=
+\frac{\sum_{t=1}^{T-1}\xi_t(i,j)}
+{\sum_{t=1}^{T-1}\gamma_t(i)}
+\]
+
+\[
+b_j'(y) :=
+\frac{\text{espérance du nombre d'observations de } y \text{ étant dans l'état } j}
+{\text{espérance du nombre de fois où on est en l'état } j}
+\]
+\[
+=
+\frac{\sum_{t=1}^{T}\gamma_t(j)\mathbb{1}_{\{o_t=y\}}}
+{\sum_{t=1}^{T}\gamma_t(j)}
+\]
+
+Dans le cas où les observations sont continues, alors on estime les paramètres avec des estimateurs naturels issues de ces quantités.
+
+Par exemple pour des émissions gaussiennes, on a :
+\[
+\mu_j =
+\frac{\sum_{t=1}^{T}\gamma_t(j)o_t}
+{\sum_{t=1}^{T}\gamma_t(j)}
+\]
+et
+\[
+\sigma_j^2 =
+\frac{\sum_{t=1}^{T}\gamma_t(j)(o_t-\mu_j)^2}
+{\sum_{t=1}^{T}\gamma_t(j)}
+\]
+
+On peut donc en déduire cet algorithme :
+
+\textbf{1. Initialisation}
+
+Initialiser aléatoirement ou non les paramètres $A$, $B$, $\pi$.
+
+\textbf{2. Itération tant que $\Delta L \geq \epsilon$}
+
+\textbf{Étape E :} calcul des probabilités forward-backward.
+
+Calcul des probabilités forward $\alpha$ :
+\[
+\alpha_t(i)=\mathbb{P}(O_1,\dots,O_t,X_t=i \mid (A,B,\pi))
+\]
+
+Calcul des probabilités backward $\beta$ :
+\[
+\beta_t(i)=\mathbb{P}(O_{t+1},\dots,O_T \mid X_t=i,(A,B,\pi))
+\]
+
+Étape les probabilités a posteriori :
+
+Pour chaque temps $t$ et chaque état $i$ :
+\[
+\gamma_t(i)=\mathbb{P}(X_t=i \mid O,(A,B,\pi))
+\]
+
+Pour chaque temps $t$, chaque état $i$ et chaque état $j$ :
+\[
+\xi_t(i,j)=\mathbb{P}(X_t=i,X_{t+1}=j \mid O,(A,B,\pi))
+\]
+
+\textbf{Étape M : Mise à jour des paramètres}
+
+\textbf{$\bullet$} Distribution initiale :
+\[
+\pi_i=\gamma_1(i)
+\]
+
+\textbf{$\bullet$} Matrice de transition :
+\[
+a_{ij}=
+\frac{\sum_{t=1}^{T-1}\xi_t(i,j)}
+{\sum_{t=1}^{T-1}\gamma_t(i)}
+\]
+
+\textbf{$\bullet$} Probabilités d'émission :
+\[
+b_j(y)=
+\frac{\sum_{t=1}^{T}\gamma_t(j)\mathbb{1}_{\{o_t=y\}}}
+{\sum_{t=1}^{T}\gamma_t(j)}
+\]
+
+\textbf{Étape calcul de la vraisemblance :}
+\[
+L=\mathbb{P}(O \mid \lambda)
+\]
+
+\textbf{Analyse de la complexité :}
+\begin{itemize}
+    \item étape forward : pour chaque instant $t$, pour chaque état $j$, on somme sur tous les états précédents. Donc $O(TN^2)$.
+    \item étape backward : idem que pour forward. Donc $O(TN^2)$.
+    \item calcul des $\gamma_t(i)$ : calcul utilisant $\alpha_t(i)$ et $\beta_t(i)$, sur chaque $t$ et chaque $i$. Donc $O(TN)$.
+    \item calcul des $\xi_t(i,j)$ : calcul utilisant $\alpha_t(i)$ et $\beta_t(j)$ pour chaque $t$ et chaque couple $(i,j)$. Donc $O(TN^2)$.
+    \item mise à jour des $\pi_i$ : on récupère la valeur de $\gamma_1(i)$ pour chaque $i$. Donc $O(N)$.
+    \item mise à jour des $a_{ij}$ : calcul avec une somme sur $T$ pour chaque couple $(i,j)$. Donc $O(TN^2)$.
+    \item mise à jour des $b_j(k)$ : si on boucle naïvement sur tous les symboles $k$, les états $j$ et les instants $t$, alors $O(TNM)$. Or on peut parcourir les observations efficacement et obtenir une complexité de $O(TN)$.
+\end{itemize}
+
+Ainsi, on obtient une complexité globale par itération de :
+\[
+O(TN^2)
+\]
+
+Si l'algorithme fait $I$ itérations avant convergence, alors on a une complexité totale de :
+\[
+O(ITN^2)
+\]
+
+
+
+
+
 
 \end{document}
