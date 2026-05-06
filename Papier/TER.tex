@@ -550,34 +550,52 @@ L'intérêt du treillis est qu'il met en évidence une propriété fondamentale 
 
 On peut donc suivre l'algorithme suivant :
 
-\textbf{1. Initialisation}
-\[
-\delta_1(i)=\pi_i b_i(y_1), \quad 1\leq i\leq N
-\]
-\[
-\psi_1(i)=0
-\]
+\begin{algorithm}[H]
+\caption{Algorithme de Viterbi}
+\label{alg:viterbi}
+\begin{algorithmic}[1]
+\Require Matrice de transition $A = (a_{ij})_{1 \leq i,j \leq N}$,
+probabilités d'émission $B = (b_i(y))_{1 \leq i \leq N}$,
+distribution initiale $\pi = (\pi_i)_{1 \leq i \leq N}$,
+suite d'observations $Y = (y_1,\dots,y_T)$
+\Ensure Chemin d'états le plus probable $X^* = (X_1^*,\dots,X_T^*)$
+et probabilité associée $P^*$
 
-\textbf{2. Récurrence}
-\[
-\delta_t(j)=\left[\max_{1\leq i\leq N}\delta_{t-1}(i)a_{ij}\right]b_j(y_t), \quad 2\leq t\leq T,\quad 1\leq j\leq N
-\]
-\[
-\psi_t(j)=\operatorname*{Argmax}_{1\leq i\leq N}[\delta_{t-1}(i)a_{ij}], \quad 2\leq t\leq T,\quad 1\leq j\leq N
-\]
+\Statex
+\Statex \textbf{Initialisation}
+\For{$i = 1,\dots,N$}
+    \State $\delta_1(i) \gets \pi_i b_i(y_1)$
+    \State $\psi_1(i) \gets 0$
+\EndFor
 
-\textbf{3. Fin}
-\[
-P^\star=\max_{1\leq i\leq N}[\delta_T(i)]
-\]
-\[
-X_T^\star=\operatorname*{Argmax}_{1\leq i\leq N}[\delta_T(i)]
-\]
+\Statex
+\Statex \textbf{Récurrence}
+\For{$t = 2,\dots,T$}
+    \For{$j = 1,\dots,N$}
+        \State $\displaystyle \delta_t(j) \gets
+        \left[\max_{1 \leq i \leq N}
+        \delta_{t-1}(i)a_{ij}\right] b_j(y_t)$
+        \State $\displaystyle \psi_t(j) \gets
+        \arg\max_{1 \leq i \leq N}
+        \delta_{t-1}(i)a_{ij}$
+    \EndFor
+\EndFor
 
-\textbf{4. Retracage du chemin.}
-\[
-X_t^\star=\psi_{t+1}(X_{t+1}^\star), \quad t=T-1,T-2,\dots,1
-\]
+\Statex
+\Statex \textbf{Fin}
+\State $\displaystyle P^* \gets \max_{1 \leq i \leq N} \delta_T(i)$
+\State $\displaystyle X_T^* \gets \arg\max_{1 \leq i \leq N} \delta_T(i)$
+
+\Statex
+\Statex \textbf{Retracage du chemin}
+\For{$t = T-1,T-2,\dots,1$}
+    \State $\displaystyle X_t^* \gets \psi_{t+1}(X_{t+1}^*)$
+\EndFor
+
+\State \Return $X^*, P^*$
+
+\end{algorithmic}
+\end{algorithm}
 
 On obtient ainsi avec $X_1^\star,\dots,X_T^\star$ notre séquence d'état recherchée.
 
