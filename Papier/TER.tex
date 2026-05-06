@@ -14,6 +14,10 @@
 \usepackage{amsmath}
 \usepackage{amssymb}
 \usepackage{tikz}
+\usepackage{algorithm}
+\usepackage{algpseudocode}
+\usepackage{float}
+
 \usetikzlibrary{arrows.meta,positioning}
 
 \geometry{margin=2.5cm}
@@ -90,7 +94,11 @@
 
 \hspace*{0.5cm}2) Décodage et Viterbi algorithm.
 
-\hspace*{0.5cm}c) Apprentissage et Baum--Welch algorithm.
+\hspace*{0.5cm}3) Apprentissage et Baum--Welch algorithm.
+
+\hspace*{0.5cm}4) Limite des algorithmes. 
+
+\hspace*{0.5cm}5) Mesure de la qualité des estimations. 
 
 \vspace{0.5cm}
 
@@ -415,20 +423,38 @@ Formellement, on définit $\alpha_t(i)$ comme :
 \]
 
 \vspace{0.5cm}
-\textbf{Forward Algorithm :} \\
-1) Initialisation :
-\[
-\alpha_1(i) = \pi_i b_i(y_1), \quad \text{pour } i = 1, \dots, N.
-\]
-2) Récursion :
-\[
-\alpha_{t}(j) =  \sum_{i=1}^N \alpha_{t-1}(i) a_{ij} b_j(y_{t}), \quad \text{pour } t = 1, \dots, T \text{ et } j = 1, \dots, N.
-\]
-3) Terminaison :
-\[
-\mathbb{P}(Y) = \sum_{i=1}^N \alpha_T(i).
-\]          
-\vspace{0.5cm}
+\begin{algorithm}[H]
+\caption{Algorithme Forward}
+\label{alg:forward}
+\begin{algorithmic}[1]
+\Require Matrice de transition $A = (a_{ij})_{1 \leq i,j \leq N}$,
+probabilités d'émission $B = (b_i(y))_{1 \leq i \leq N}$,
+distribution initiale $\pi = (\pi_i)_{1 \leq i \leq N}$,
+suite d'observations $Y = (y_1,\dots,y_T)$
+\Ensure Vraisemblance $\mathbb{P}(Y)$
+
+\Statex
+\Statex \textbf{Initialisation}
+\For{$i = 1,\dots,N$}
+    \State $\alpha_1(i) \gets \pi_i b_i(y_1)$
+\EndFor
+
+\Statex
+\Statex \textbf{Récursion}
+\For{$t = 2,\dots,T$}
+    \For{$j = 1,\dots,N$}
+        \State $\displaystyle \alpha_t(j) \gets b_j(y_t)
+        \sum_{i=1}^N \alpha_{t-1}(i)a_{ij}$
+    \EndFor
+\EndFor
+
+\Statex
+\Statex \textbf{Terminaison}
+\State $\displaystyle \mathbb{P}(Y) \gets \sum_{i=1}^N \alpha_T(i)$
+\State \Return $\mathbb{P}(Y)$
+
+\end{algorithmic}
+\end{algorithm}
 
 avec $a_{ij}$ la probabilité de transition de l'état $i$ à l'état $j$, $b_j(y_{t})$ la probabilité d'observer $Y_t = y_t$ conditionnellement à être dans l'état $j$ à l'instant $t$, et $\pi_i$ la probabilité initiale d'être dans l'état $i$.
 
