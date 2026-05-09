@@ -1,0 +1,798 @@
+\documentclass[11pt]{article}
+
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage[french]{babel}
+\usepackage{lmodern}
+\usepackage{geometry}
+\usepackage{setspace}
+\usepackage{graphicx}
+\usepackage{titlesec}
+\usepackage{enumitem}
+\usepackage{hyperref}
+\usepackage{fancyhdr}
+\usepackage{amsmath}
+\usepackage{amssymb}
+\usepackage{tikz}
+\usepackage{algorithm}
+\usepackage{algpseudocode}
+\usepackage{float}
+
+\usetikzlibrary{arrows.meta,positioning}
+
+\geometry{margin=2.5cm}
+\setlength{\parindent}{0pt}
+\setlength{\parskip}{0.4em}
+\onehalfspacing
+
+% Numérotation simple en bas de page
+\pagestyle{fancy}
+\fancyhf{}
+\fancyfoot[C]{\thepage}
+\renewcommand{\headrulewidth}{0pt}
+
+\begin{document}
+
+
+\begin{titlepage}
+
+    \noindent
+    \begin{minipage}{0.5\textwidth}
+        \includegraphics[width=4cm]{Logo/Paris1logo.png}
+    \end{minipage}
+    \begin{minipage}{0.5\textwidth}
+        \raggedleft
+        \includegraphics[width=4cm]{Logo/SAMMlogo.png}
+    \end{minipage}
+
+    \vspace{6cm}
+
+    \begin{center}
+
+        {\huge \textbf{Chaînes de Markov cachées et application en finance}}\\[1.2cm]
+
+        {\large Sous la supervision de \textit{Joseph Rynkiewicz et Jean-Marc Bardet.}}\\[0.8cm]
+
+        {\large Par Marius Requillart et Maxime Delpech.}\\[0.8cm]
+
+        {\large 2025--2026}
+    \end{center}
+
+    \vfill
+\end{titlepage}
+
+\setcounter{page}{1}
+
+% Sommaire
+\thispagestyle{fancy}
+\begin{center}
+    {\LARGE \textbf{SOMMAIRE}}
+\end{center}
+
+\vspace{1cm}
+
+\textbf{I) Introduction}
+
+\textbf{II) Définition et propriétés}
+
+\hspace*{0.5cm}2.1) Définitions \\
+\hspace*{1cm}2.1.1) Variables aléatoires observables et cachées. \\
+\hspace*{1cm}2.1.2) Propriétés. \\
+
+\hspace*{0.5cm}2.2) Définition chaîne de Markov cachée. \\
+\hspace*{1cm}2.2.1) Variables aléatoires observables et cachées. \\
+\hspace*{1cm}2.2.2) Lois jointes et vraisemblance. \\
+\hspace*{1cm}2.2.3) Exemple global d'une chaîne de Markov cachée. \\
+\hspace*{1cm}2.2.4) Remarques sur les observations.
+
+
+\vspace{0.5cm}
+
+\textbf{III) Trois grandes problématiques des HMM}
+
+\hspace*{0.5cm}1) Estimation de la vraisemblance et forward algorithm.
+
+\hspace*{0.5cm}2) Décodage et Viterbi algorithm.
+
+\hspace*{0.5cm}3) Apprentissage et Baum--Welch algorithm.
+
+\hspace*{0.5cm}4) Limite des algorithmes. 
+
+\hspace*{0.5cm}5) Mesure de la qualité des estimations. 
+
+\vspace{0.5cm}
+
+\textbf{IV) Application aux séries temporelles financières}
+
+
+\newpage
+%%%%%%%%%%%%%%%%
+% Début du projet
+%%%%%%%%%%%%%%%%
+
+\section{Introduction}
+
+
+Les séries temporelles financières occupent une place centrale en finance quantitative, car elles permettent d’analyser l’évolution des prix d’actifs, des rendements, de la volatilité ou encore des volumes échangés au cours du temps. Cependant, ces séries présentent souvent des comportements complexes : elles sont bruitées, irrégulières, parfois instables, et peuvent être marquées par des changements soudains de dynamique. Une même série financière peut ainsi alterner entre des périodes relativement calmes et des périodes de forte incertitude, ce qui rend son analyse particulièrement délicate.
+
+Les chaînes de Markov cachées, ou Hidden Markov Models, constituent un cadre probabiliste adapté pour modéliser ce type de phénomènes. Leur principe repose sur l’existence d’un état latent, non directement observable, qui évolue au cours du temps selon une chaîne de Markov. Les observations disponibles, comme les rendements financiers, sont alors supposées dépendre de cet état caché. 
+
+L’intérêt de ces modèles réside dans leur capacité à faire apparaître une structure cachée derrière les données observées. Ils permettent non seulement de détecter des changements de régime, mais aussi de donner une interprétation économique et financière aux résultats obtenus. Les états cachés identifiés peuvent par exemple être associés à des phases de croissance, de stress financier, de forte incertitude ou de retour à une situation plus stable. Ainsi, l’analyse ne se limite pas à une classification statistique des observations : elle peut aussi aider à relier les régimes détectés à des événements de marché, à des changements d’anticipations ou à des variations du niveau de risque.
+
+Dans ce travail, nous étudierons les chaînes de Markov cachées et leurs applications aux séries temporelles financières. Nous présenterons d’abord le cadre théorique de ces modèles, avant d’aborder les principaux algorithmes d’inférence et d’estimation, notamment les algorithmes de Viterbi et de Baum-Welch. Nous analyserons ensuite leur utilisation pour identifier différents régimes de marché et mieux comprendre l’évolution des séries financières.
+
+\newpage
+
+%%%%%%%%%%%%
+% Début de la partie 2.1
+%%%%%%%%%%%%
+\section{Définitions et propriétées}
+Toutes les variables aléatoires de ce travail sont définies sur l'espace probabilisé $(\Omega, \mathcal{F}, \mathbb{P})$.
+
+
+%Partie sur les chaines de Markov classiques.
+\subsection{Définitions et propriétées d'un chaîne de Markov}
+\subsubsection{ Définition}
+
+\textbf{Définition d'une chaîne de Markov :}\\
+Soit $E$ un ensemble fini ou dénombrable, appelé \textit{espace d'états}. Soit $(X_n)_{n \ge 0}$ un \textit{processus} à valeur dans $E$.
+On dit que $(X_n)_{n \ge 0}$ est une \textit{chaîne de Markov} d'ordre 1, si :\\
+Pour tout $n \ge 0$, pour tout $y \in E$, pour tout $x_0,...,x_{n-1},x \in E$ tel que $\mathbb{P}(X_0 = x_0, \ldots, X_{n-1} = x_{n-1}, X_n = x) > 0$, on a:
+\[
+\mathbb{P}(X_{n+1} = y \mid X_n = x_n, X_{n-1} = x_{n-1},\ldots,X_0=x_0)=\mathbb{P}(X_{n+1}=x_{n+1} \mid X_n=x_n)
+\]
+On pose $\pi_0$ la distribution initiale, i.e., la loi de $X_0$.
+
+De plus, s'il existe $A : E \times E \to [0,1]$ tel que $(x,y) \mapsto a_{x,y}=\mathbb{P}(X_{n+1} = y \mid X_n = x_n)$, pour tout $n \ge 0$, pour tout $x,y \in E$ tel que $\mathbb{P}(X_n=x_n) > 0$.
+On dit alors que $(X_n)_{n \ge 0}$ est une chaîne de Markov d'ordre 1 \textit{homogène}.
+Dans ce cas, $A$ est appelé \textit{matrice de transition} du processus $(X_n)_{n \ge 0}$, avec $P(x,y)>0$ et $\sum_{y \in E}a_{x,y}=1$, pour tout $x,y \in E$.\\
+
+Dans ce travail, nous ne considèrerons qu'uniquement les chaînes de Markov d'ordre 1 homogènes, c'est pourquoi nous les appelerons juste chaînes de Markov.
+
+\subsubsection{Propriétés}
+\textbf{$\bullet$ Équation de Chapman-Kolmogorov :} \\
+Soit $(X_n)_{n \ge 0}$ une chaîne de Markov de matrice de transition P et de distribution initiale $\pi_0$. On a,\\
+Pour tout $n \ge 0$, pour tout $x_0, \ldots, x_n \in E$, 
+\[
+\mathbb{P}(X_0=x_0, \ldots, X_n=x_n) = \pi_0(x_0) \mathbb{P}(x_0,x_1) \ldots \mathbb{P}(x_{n-1},x_n)
+\]
+i.e. la loi d'une chaîne de Markov est entièrement caractérisée par sa distribution initiale et sa matrice de transition.
+
+\textbf{$\bullet$ Propriété de Markov :} \\
+Soit $n \ge 0$, $\pi_0$ une mesure de probabilité sur $E$ et $x \in E$ tel que $\mathbb{P}_{\pi_0}(X_n=x)>0$.\\
+Alors, pour tout $A \in E^n$, $B \in E^m$, $m \ge 0$, on a :
+\[
+\begin{aligned}
+\mathbb{P}_{\pi_0}\bigl((X_0,\ldots,X_{n-1}) \in A,\,(X_{n+1},\ldots,X_{n+m}) \in B \mid X_n=x\bigr)
+&= \mathbb{P}_{\pi_0}\bigl((X_0,\ldots,X_{n-1}) \in A \mid X_n=x\bigr) \\
+&\qquad \times \mathbb{P}_{\pi_0}\bigl((X_{n+1},\ldots,X_{n+m}) \in B \mid X_n=x\bigr).
+\end{aligned}
+\]
+i.e. le passé et le futur d'un moment $n$ d'une chaîne de Markov sont indépendants entre eux.
+
+\textbf{$\bullet$ Quelques propriétés utiles :} \\
+
+%%%%%%%%%%%%%%
+%Début de la partie 2.2 
+%%%%%%%%%%%%%%
+
+\subsection{Définition d'une chaîne de Markov cachée}
+
+Les chaîne de Markov cachées (HMM) sont des modèles statistique utilisées dans un situation où on a des états latent qui ne sont pas directement observable. Les données observables sont générées par ces état suivant une loi de probabilité conditionnelle.
+
+\subsubsection{Variables aléatoires observables et cachées}
+
+\textbf{Définition.} 
+Les états cachés sont modélisés par un processus de Markov $(X_t)_{t \in \mathbb{N}}$ à valeurs dans un ensemble fini $E  = \{1,\dots,N\}$. 
+On note $A = (a_{ij})$ la matrice de transition définie par :
+\[
+a_{ij} = \mathbb{P}(X_{t+1} = j \mid X_t = i).
+\]
+
+\vspace{0.3cm}
+
+\textbf{Définition.} 
+Les observations sont modélisées par un processus $(Y_t)_{t \in \mathbb{N}}$ à valeurs dans un ensemble $O$. 
+Conditionnellement aux états cachés, les variables $(Y_t)$ sont indépendantes et vérifient :
+\[
+\mathbb{P}(Y_t = y \mid X_t = i) = b_i(y),
+\]
+où $B = (b_i(y))$ est la matrice (ou famille) d’émission.
+
+\vspace{0.3cm}
+
+\textbf{Définition.} 
+Un modèle de chaîne de Markov cachée est défini par le triplet $(A, B, \pi)$ où :
+\begin{itemize}
+    \item $A$ est la matrice de transition des états cachés,
+    \item $B$ est la loi d’émission des observations,
+    \item $\pi$ est la distribution initiale, avec $\pi_i = \mathbb{P}(X_1 = i)$.
+\end{itemize}
+\vspace{0.3cm}
+
+\subsubsection{Loi jointes et vraisemblance}
+
+\textbf{Propriété:}
+Soit $X$ = ($X_1$, \dots, $X_T$) la séquence d'états cachés et $Y$ = ($Y_1$, \dots, $Y_T$) la séquence d'observations, la loi des observations conditionnellements à la séquence d'états cachés est : 
+\[
+\mathbb{P}(Y \mid X) = \prod_{t=1}^T \mathbb{P}(Y_t \mid X_t) 
+\]
+
+\textbf{Preuve:}
+\[
+\mathbb{P}(Y \mid X) = \prod_{t=1}^T \mathbb{P}(Y_t \mid X_1, \dots X_T,Y_1, \dots Y_{t-1})=\prod_{t=1}^T \mathbb{P}(Y_t \mid X_t)  
+\]
+\vspace{0.3cm}
+
+\textbf{Propriété:}
+Soit $X$ = ($X_1$, \dots, $X_T$) la séquence d'états cachés et $Y$ = ($Y_1$, \dots, $Y_T$) la séquence d'observations, la loi jointes des observations et des états cachées est donnée par : 
+\[
+\mathbb{P}(Y, X) = \pi_{X_1} \prod_{t=2}^T \mathbb{P}(X_{t} \mid X_{t-1}) \prod_{t=1}^T \mathbb{P}(Y_t \mid X_t)
+\]
+
+\textbf{Preuve:}
+\begin{align*}
+\mathbb{P}(X, Y) 
+&= \mathbb{P}(X_1, Y_1) \prod_{t=2}^T \mathbb{P}(X_t,Y_t \mid X_1, \dots, X_{t-1}, Y_1,\dots, Y_{t-2}) \\
+&= \mathbb{P}(X_1)\mathbb{P}(Y_1 \mid X_1) 
+\prod_{t=2}^T \mathbb{P}(X_t \mid X_1, \dots, X_{t-1}, Y_1,\dots, Y_{t-2})
+\mathbb{P}(Y_t \mid X_1, \dots, X_{t-1}, Y_1,\dots, Y_{t-2}) \\
+&= \mathbb{P}(X_1)\mathbb{P}(Y_1 \mid X_1) 
+\prod_{t=2}^T \mathbb{P}(X_t \mid X_{t-1}) \mathbb{P}(Y_t \mid X_t) \\
+&= \mathbb{P}(X_1) \prod_{t=2}^T \mathbb{P}(X_t \mid X_{t-1}) \prod_{t=1}^T \mathbb{P}(Y_t \mid X_t) \\
+&= \pi_{X_1} \prod_{t=2}^T \mathbb{P}(X_t \mid X_{t-1}) \prod_{t=1}^T \mathbb{P}(Y_t \mid X_t)
+\end{align*}
+\vspace{0.3cm}
+
+\textbf{Remarque:}
+La loi des observations à chaque instant $t$ est dépend de l'état caché à cet instant et pas des états d'avant. 
+\vspace{0.3cm}
+
+\textbf{Exemple:}
+Soit un modèle de chaîne de Markov cachée avec deux états $A$ et $B$. 
+En supposant ques les observation sont gaussienne conditionnellement à l'état caché, on a :
+\[
+\mathbb{P}(Y_t \mid X_t = A) \sim \mathcal{N}(\mu_{A}, \sigma^2_{A})
+\]
+\[
+\mathbb{P}(Y_t \mid X_t = B) \sim \mathcal{N}(\mu_{B}, \sigma^2_{B})
+\]
+\vspace{0.3cm}
+
+\textbf{Remarque:}
+$X_t$ agit comme un selecteur de distribution pour $Y_t$.
+\vspace{0.3cm}
+
+\subsubsection{Exemple de globale d'une chaîne de Markov cachée}
+
+Prenons un exemple simple d'une chaîne de Markov cachée avec deux états $C$ et $V$ (pour "calme" et "volatile") et des observations gaussiennes conditionnelles à ces états.\\
+Soit $E = \{C, V\}$ l'ensemble d'états, on note $\pi$ la distribution initiale, par exemple $\pi_0 = (0.5, 0.5)$, indiquant que le processus commence avec une probabilité égale dans les états $C$ et $V$.\\
+La matrice de transition $A$ peut être définie comme suit :
+\[
+A =
+\begin{pmatrix}
+0.9 & 0.1 \\
+0.2 & 0.8
+\end{pmatrix}
+\]
+Avec, $a_{ij} = \mathbb{P}(X_{t+1} = j \mid X_t = i)$.
+
+\vspace{0.3cm}
+
+La matrice d'émission $B$ peut être définie par les distributions gaussiennes conditionnelles à chaque état :
+\[
+B =
+\begin{cases}
+\mathbb{P}(Y_t \mid X_t = C) \sim \mathcal{N}(\mu_C, \sigma_C^2) \\
+\mathbb{P}(Y_t \mid X_t = V) \sim \mathcal{N}(\mu_V, \sigma_V^2)
+\end{cases}
+\]
+
+\vspace{0.5cm}
+\textbf{NB:}
+La matrice de transition $A$ n'est pas connue dans la plupart des applications, elle doit être estimé à partir des données d'observations. Par exemple avec l'algorithme de Baum-Welch que nous verrons plus tard.
+\vspace{1.5cm}
+
+\begin{figure}[h]
+\centering
+\begin{tikzpicture}[
+    node distance=2cm,
+    every node/.style={draw, circle, minimum size=1cm},
+    arrow/.style={->, thick}
+]
+
+% Etats cachés
+\node (X1) {$X_t$};
+\node (X2) [right=of X1] {$X_{t+1}$};
+
+% Observations
+\node (Y1) [below=of X1] {$Y_t$};
+\node (Y2) [below=of X2] {$Y_{t+1}$};
+
+% Transitions
+\draw[arrow] (X1) -- node[midway, above, draw=none] {$a_{ij}$} (X2);
+
+% Emissions
+\draw[arrow] (X1) -- 
+node[midway, left, draw=none] {$\mathbb{P}(Y_t \mid X_t)$} 
+(Y1);
+
+\draw[arrow] (X2) -- 
+node[midway, right, draw=none] {$\mathbb{P}(Y_{t+1} \mid X_{t+1})$} 
+(Y2);
+
+\end{tikzpicture}
+\caption{Modèle de Markov caché (HMM)}
+\end{figure}
+
+
+\newpage
+
+
+
+\subsubsection{Remarques sur les observations}
+
+\textbf{Propriété:}
+La probabilité totale des obstervation $Y_T$ est donnée par : 
+\[
+\mathbb{P}(Y) = \sum_{X}\mathbb{P}(Y,X) = \sum_{}\mathbb{P}(Y \mid X)\mathbb{P}(X)
+\]
+\vspace{0.3cm}
+
+\textbf{Propriété:}
+Dans un HMM les observations $(Y_t)$ n'est pas un processus de Markov, même si les états cachés $(X_t)$ le sont. 
+
+\textbf{Preuve :}
+
+Si le processus d'observations $(Y_t)$ était markovien. Alors on aurait
+\[
+\mathbb{P}(Y_{n+1} \mid Y_1,\dots,Y_n) = \mathbb{P}(Y_{n+1} \mid Y_n).
+\]
+
+Or, pour $K$ états cachés, on a
+\begin{align*}
+\mathbb{P}(Y_{n+1} \mid Y_1,\dots,Y_n)
+&= \sum_{i=1}^{K} \mathbb{P}(Y_{n+1}, X_{n+1}=i \mid Y_1,\dots,Y_n) \\
+&= \sum_{i=1}^{K} \mathbb{P}(Y_{n+1} \mid X_{n+1}=i, Y_1,\dots,Y_n)\,
+\mathbb{P}(X_{n+1}=i \mid Y_1,\dots,Y_n) \\
+&= \sum_{i=1}^{K} \mathbb{P}(Y_{n+1} \mid X_{n+1}=i)\,
+\mathbb{P}(X_{n+1}=i \mid Y_1,\dots,Y_n).
+\end{align*}
+
+or, 
+\begin{align*}
+\mathbb{P}(X_{n+1}=i \mid Y_1,\dots,Y_n)
+&= \sum_{j=1}^{K} \mathbb{P}(X_{n+1}=i, X_{n}=j \mid Y_1,\dots,Y_n) \\
+&= \sum_{j=1}^{K} \mathbb{P}(X_{n+1}=i \mid X_{n}=j, Y_1,\dots,Y_n) \mathbb{P}(X_{n}=j \mid Y_1, \dots Y_n)\\
+&= \sum_{j=1}^{K} \mathbb{P}(X_{n+1}=i \mid X_{n}=j) \mathbb{P}(X_n=j \mid Y_1, \dots Y_n)\\
+&= \sum_{j=1}^{k} a_{ji} \mathbb{P}(X_n=j \mid Y_1, \dots Y_n).
+\end{align*}
+
+et, 
+\begin{align*}
+\mathbb{P}(X_{n}=j \mid Y_1,\dots,Y_n) 
+&= \mathbb{P}(X_n=j, Y_1 \dots Y_n) / \mathbb{P}(Y_1 \dots Y_n) \\[0.3cm]
+&= \frac{\mathbb{P}(Y_n \mid X_n=j,Y_1 \dots Y_{n-1}) \mathbb{P}(X_n=j, Y_1 \dots Y_{n-1})}{\mathbb{P}(Y_1 \dots Y_n)} \\[0.3cm]
+&= \frac{\mathbb{P}(Y_n \mid X_n=j) \mathbb{P}(X_n=j \mid Y_1 \dots Y_{n-1}) \mathbb{P}(Y_1 \dots Y_{n-1})}{\mathbb{P}(Y_n \mid Y_1 \dots Y_{n-1}) \mathbb{P}(Y_1 \dots Y_{n-1})}\\[0.3cm]
+&= \frac{\mathbb{P}(Y_n \mid X_n=j) \mathbb{P}(X_n=j \mid Y_1 \dots Y_{n-1})}{\mathbb{P}(Y_n \mid Y_1 \dots Y_{n-1})}.
+\end{align*}
+
+on a donc : 
+\[
+\mathbb{P}(Y_{n+1}\mid Y_1 \dots Y_n ) = \sum_{i=1}^{K} \sum_{j=1}^K a_{ji} \frac{\mathbb{P}(Y_{n+1} \mid X_{n+1} = i) \mathbb{P}(Y_n \mid X_n=j) \mathbb{P}(X_n=j \mid Y_1 \dots Y_{n-1})}{\mathbb{P}(Y_n \mid Y_1 \dots Y_{n-1})}.
+\]
+
+On procède de la même manière pour calculer $\mathbb{P}(X_n = j \mid Y_1 \dots Y_{n-1})$ ce qui va descendre le degrès de dépendance à $Y_{n-1}$. On continue ainsi de suite de manière récursive jusqu'à ce que le terme de dépendance à $Y_1$ soit atteint.
+
+Ainsi, le terme
+\[
+\mathbb{P}(X_{n+1}=i \mid Y_1,\dots,Y_n)
+\]
+dépend en général de tout le passé observé $(Y_1,\dots,Y_n)$, et pas seulement de $Y_n$.
+
+Donc, en général,
+\[
+\mathbb{P}(Y_{n+1} \mid Y_1,\dots,Y_n) \neq \mathbb{P}(Y_{n+1} \mid Y_n),
+\]
+ce qui montre que le processus d'observations $(Y_t)$ n'est pas markovien.
+
+\section{Trois grandes problématiques des HMM}
+
+%%%%%%%%%%%%%%%%%%
+%% Début de la partie 3 sur les algorithmes
+%%%%%%%%%%%%%%%%%%
+
+\subsection{Estimation de la vraisemblance et forward algorithme}
+
+\textbf{Problématique:}
+Comment calculer efficacement la vraisemblance $\mathbb{P}(Y)$ d'une séquence d'observations $Y$ donnée un modèle de HMM $(A, B, \pi)$ ? \\ 
+
+On suppose que la matrice de transition $A$, la matrice d'émission $B$ ainsi que la distribution initiale $\pi$ sont connues. \\ 
+
+On sait que la vraisemblance de $Y$ est donnée par :
+\[
+\mathbb{P}(Y) = \sum_{X}\mathbb{P}(Y,X) = \sum_{X}\mathbb{P}(Y \mid X)\mathbb{P}(X).
+\]
+Cependant, pour N états cachés et une séquence d'observations de longueur T, le nombre de séquence cachées possibles est de $N^T$, ce qui rend le calcul direct d'un complexité exponentielle si on l'effectue de manière naïve. \\ 
+La solution optimale est d'utiliser l'algorithme de forward qui permet de calculer $\mathbb{P}(Y)$ avec un complexité de $O(N^2T)$. \\ 
+
+Cet algorithme repose sur le comcepte de programmation dynamique et utilise une variable intermédiaire $\alpha_t(i)$ qui représente la probabilité d'observé la séquence d'observation $y_1 \dots y_t$ et d'être dans l'état caché $i$ à l'intant $t$.\\
+Formellement, on définit $\alpha_t(i)$ comme : 
+\[
+\alpha_t(i) = \mathbb{P}(y_1, \dots, y_t, X_t = i).
+\]
+
+\vspace{0.5cm}
+\begin{algorithm}[H]
+\caption{Algorithme Forward}
+\label{alg:forward}
+\begin{algorithmic}[1]
+\Require Matrice de transition $A = (a_{ij})_{1 \leq i,j \leq N}$,
+probabilités d'émission $B = (b_i(y))_{1 \leq i \leq N}$,
+distribution initiale $\pi = (\pi_i)_{1 \leq i \leq N}$,
+suite d'observations $Y = (y_1,\dots,y_T)$
+\Ensure Vraisemblance $\mathbb{P}(Y)$
+
+\Statex
+\Statex \textbf{Initialisation}
+\For{$i = 1,\dots,N$}
+    \State $\alpha_1(i) \gets \pi_i b_i(y_1)$
+\EndFor
+
+\Statex
+\Statex \textbf{Récursion}
+\For{$t = 2,\dots,T$}
+    \For{$j = 1,\dots,N$}
+        \State $\displaystyle \alpha_t(j) \gets b_j(y_t)
+        \sum_{i=1}^N \alpha_{t-1}(i)a_{ij}$
+    \EndFor
+\EndFor
+
+\Statex
+\Statex \textbf{Terminaison}
+\State $\displaystyle \mathbb{P}(Y) \gets \sum_{i=1}^N \alpha_T(i)$
+\State \Return $\mathbb{P}(Y)$
+
+\end{algorithmic}
+\end{algorithm}
+
+avec $a_{ij}$ la probabilité de transition de l'état $i$ à l'état $j$, $b_j(y_{t})$ la probabilité d'observer $Y_t = y_t$ conditionnellement à être dans l'état $j$ à l'instant $t$, et $\pi_i$ la probabilité initiale d'être dans l'état $i$.
+
+L'algorithme de forward permet ainsi de calculer efficacement la vraisemblance d'une séquence d'observations donnée, en évitant le calcul direct de toutes les séquences d'états cachés possibles.
+
+\vspace{1cm}
+
+Pour plus de claireté, on peut présenter l'algorithme de forward sous forme de treillis : 
+
+ \includegraphics[width=16cm]{Logo/treilli.png}\\
+ Dans cet exemple, le nombre détats cachées est de 2 et la longeur de la séquence d'observations est de 3.
+
+
+\subsection{Decodding et Viterbi algorithm}
+
+Considérons un nouveau problème : le décodage d'une suite d'état d'après une série d'observations $Y_1,\dots,Y_T$.
+On essaye de découvrir la partie cachée du modèle.\\
+i.e. Découvrir à posteriori la ``vraie'' séquence d'état $X = (X_1, \dots, X_T)$ qui s'est produite pour générer une série d'observation, sachant la distribution initiale, la matrice de transition ainsi que les probabilités d'émissions.
+
+Il paraît évident qu'il n'y a pas de ``vraie'' séquence d'états, nous allons devoir instaurer des critères d'optimalité pour régler notre problème.
+
+Une première approche qu'on pourrait qualifier de ``Greedy'' serait de choisir, à chaque instant $t$, l'état $X_t$ tel que la probabilité d'observer $Y_t$ est la plus grande.
+Ce critère d'optimalité maximise l'espérance du nombre d'états correctement décrypté un à un.
+
+Cependant, cela peut amener plusieurs problèmes avec la séquence d'état qui en résulte. N'ayant aucune condition d'ergodicité sur notre chaîne de Markov cachée, une transition entre 2 états peut avoir une probabilité nulle.
+Or rien ne l'interdit dans notre critère, donc cette transition pourrait apparaître dans le résultat alors que celui-ci ne serait ainsi même pas réalisable.
+
+Il va donc falloir trouver un critère prenant en compte la probabilité de réalisation d'une séquence d'états. On pourrait ainsi vouloir maximiser l'espérance du nombre de paires correctes d'états découvert, ou de triplet, etc.
+Cependant le critère le plus utilisé est le critère de trouver l'unique séquence d'états qui maximise la probabilité de voir nos observations sachant la distribution initiale, la matrice de transition ainsi que les probabilités d'émissions.
+
+Le problème étant exponentiellement complexe, la solution est d'utiliser un algorithme de programmation dynamique nommé : Algorithme de Viterbi.
+
+\subsubsection{L'algorithme de Viterbi}
+
+Premièrement, on remarque que maximiser $\mathbb{P}(X \mid Y,\lambda)$ est équivalent à maximiser $\mathbb{P}(X,y \mid \lambda)$ car les observations sont fixées.
+
+Afin de trouver la meilleure séquence d'états $X=\{X_1,\dots,X_T\}$, pour la séquence d'observations $y=\{y_1,\dots,y_T\}$, on définit la quantité :
+\[
+\delta_t(i)= \max_{X_1,\dots,X_{t-1}} \mathbb{P}(X_1,X_2,\dots,X_t=i,y_1,y_2,\dots,y_t \mid \lambda)
+\]
+i.e. $\delta_t(i)$ est la probabilité du chemin le plus probable se terminant par l'état $i$ au moment $t$.
+
+\vspace{0.3cm}
+
+Avec,
+\[
+a_{ij}=\mathbb{P}(X_{t+1}=j \mid X_t=i)
+\]
+et
+\[
+b_j(y_t)=\mathbb{P}(Y_t=y_t \mid X_t=j)
+\]
+Ainsi, par récurrence, on a que :
+\[
+\delta_{t+1}(j)=\left[\max_{1\leq i\leq N}\delta_t(i)a_{ij}\right]b_j(y_{t+1})
+\]
+
+\textbf{Problème:}
+En testant naïvement toutes les suites possibles d'états cachés, il y a $N^T$ séquences possibles.
+Et pour calculer la probabilité de chaque séquence, il faut environ $T$ opérations.\\
+Ainsi on obtient une complexité de :
+\[
+O(TN^T)
+\]
+C'est exponentiel, donc inutilisable dès que $T$ ou $N$ devient grand.
+
+Afin de limiter cette complexité, l'algorithme de Viterbi repose sur le principe du treillis.
+
+\textbf{Principe du Treillis:}
+
+Structure en colonne où :
+\begin{itemize}
+    \item chaque colonne correspond à un instant $t$
+    \item chaque ligne correspond à un état caché.
+    \item chaque noeud $(t,j)$ représente le fait d'être dans l'état $j$ au temps $t$.
+    \item chaque arête entre $(t-1,i)$ et $(t,j)$ représente une transition possible, pondéré par la proba $a_{ij}$.
+    \item chaque noeud est également associé à la proba d'émission $b_j(y_t)$.
+\end{itemize}
+
+Ainsi, le problème de décodage revient à trouver le meilleur chemin dans ce treillis, depuis la première colonne jusqu'à la dernière.
+Chaque chemin correspond à une séquence d'état cachés possible.
+Le rôle de l'algorithme de Viterbi est précisément de trouver le chemin de probabilité maximale.
+
+\newpage
+
+\begin{figure}[h]
+\centering
+\includegraphics[width=0.95\textwidth]{figures/treillis-viterbi.png}
+\caption{Treillis de l'algorithme de Viterbi}
+\end{figure}
+
+L'intérêt du treillis est qu'il met en évidence une propriété fondamentale : pour retrouver la séquence d'état, il faut garder en mémoire l'argument qui maximise la récurrence. Nous allons le faire via la liste $\psi_t(j)$.
+
+On peut donc suivre l'algorithme suivant :
+
+\begin{algorithm}[H]
+\caption{Algorithme de Viterbi}
+\label{alg:viterbi}
+\begin{algorithmic}[1]
+\Require Matrice de transition $A = (a_{ij})_{1 \leq i,j \leq N}$,
+probabilités d'émission $B = (b_i(y))_{1 \leq i \leq N}$,
+distribution initiale $\pi = (\pi_i)_{1 \leq i \leq N}$,
+suite d'observations $Y = (y_1,\dots,y_T)$
+\Ensure Chemin d'états le plus probable $X^* = (X_1^*,\dots,X_T^*)$
+et probabilité associée $P^*$
+
+\Statex
+\Statex \textbf{Initialisation}
+\For{$i = 1,\dots,N$}
+    \State $\delta_1(i) \gets \pi_i b_i(y_1)$
+    \State $\psi_1(i) \gets 0$
+\EndFor
+
+\Statex
+\Statex \textbf{Récurrence}
+\For{$t = 2,\dots,T$}
+    \For{$j = 1,\dots,N$}
+        \State $\displaystyle \delta_t(j) \gets
+        \left[\max_{1 \leq i \leq N}
+        \delta_{t-1}(i)a_{ij}\right] b_j(y_t)$
+        \State $\displaystyle \psi_t(j) \gets
+        \arg\max_{1 \leq i \leq N}
+        \delta_{t-1}(i)a_{ij}$
+    \EndFor
+\EndFor
+
+\Statex
+\Statex \textbf{Fin}
+\State $\displaystyle P^* \gets \max_{1 \leq i \leq N} \delta_T(i)$
+\State $\displaystyle X_T^* \gets \arg\max_{1 \leq i \leq N} \delta_T(i)$
+
+\Statex
+\Statex \textbf{Retracage du chemin}
+\For{$t = T-1,T-2,\dots,1$}
+    \State $\displaystyle X_t^* \gets \psi_{t+1}(X_{t+1}^*)$
+\EndFor
+
+\State \Return $X^*, P^*$
+
+\end{algorithmic}
+\end{algorithm}
+
+On obtient ainsi avec $X_1^\star,\dots,X_T^\star$ notre séquence d'état recherchée.
+
+\vspace{0.3cm}
+
+\textbf{Analyse de la complexité:}
+\begin{itemize}
+    \item A chaque instant, on calcule une valeur pour chacun des $N$ états.
+    \item Pour chaque état, on doit évaluer la probabilité de venir depuis chacun des états.
+\end{itemize}
+Ainsi, à chaque itération, on a une complexité de $O(N^2)$.
+
+Il y a $T$ instant, on obtient donc une complexité temporelle totale de :
+\[
+O(TN^2)
+\]
+
+
+\subsection{Estimation et Algorithme de Baum--Welch }
+
+Ce dernier problème est celui qui nous intéressera le plus dans les applications économiques.
+Nous allons chercher à estimer l'ensemble des paramètres de notre modèle, la distribution initiale, les probabilités de changement d'états ainsi que les paramètres des différentes lois des observations, et tout ça uniquement à partir d'une série d'observations.
+C'est-à-dire qu'on cherche le modèle qui maximise la probabilité de voir ce qu'on a observé.
+
+i.e.
+\[
+\operatorname*{argmax}_{(A,B,\pi)} \mathbb{P}(Y \mid (A,B,\pi))
+\]
+
+Pour cela, nous pouvons utiliser un algorithme introduit par Baum--Welch qui est en fait un cas particulier d'utilisation de l'algorithme Expectation Maximisation (EM).
+
+Avant toutes choses, il est important de noter que cette méthode itérative permet d'approximer un optimal local à notre problème.
+
+Afin de pouvoir trouver les $A$, $B$ et $\pi$ de notre problème, nous devons définir les variables avec lesquelles nous allons travailler :
+
+\textbf{$\bullet$} $\xi_t(i,j)$ := la probabilité d'être en l'état $i$ à l'instant $t$ et en l'état $j$ à l'instant $t+1$ sachant le modèle $(A,B,\pi)$ et la série d'observations $Y$.
+
+\[
+\forall t \in \{1,\dots,T-1\}, \quad \forall i,j \in E,
+\]
+\begin{align*}
+\xi_t(i,j) 
+&= \mathbb{P}(X_t=i,X_{t+1}=j \mid Y,(A,B,\pi)) \\
+&= \frac{\mathbb{P}(X_t=i,X_{t+1}=j,Y \mid (A,B,\pi))}
+{\mathbb{P}(Y \mid A,B,\pi)} \\
+&= \frac{\alpha_t(i)a_{ij}b_j(y_{t+1})\beta_{t+1}(j)}
+{\mathbb{P}(Y \mid A,B,\pi)} \\
+&= \frac{\alpha_t(i)a_{ij}b_j(y_{t+1})\beta_{t+1}(j)}
+{\sum_{k \in E}\sum_{\ell \in E}\alpha_t(k)a_{k\ell}b_\ell(y_{t+1})\beta_{t+1}(\ell)}
+\end{align*}
+
+\newpage
+\textbf{$\bullet$} $\gamma_t(i)$ := la probabilité d'être en l'état $i$ à l'instant $t$, sachant la série d'observation et le modèle $(A,B,\pi)$.
+
+\[
+\forall t \in \{1,\dots,T-1\}, \quad \forall i \in E,
+\]
+\begin{align*}
+\gamma_t(i) 
+&= \mathbb{P}(X_t=i \mid Y,(A,B,\pi)) \\
+&= \sum_{j \in E}\mathbb{P}(X_t=i,X_{t+1}=j \mid Y,(A,B,\pi)) \\
+&= \sum_{j \in E}\xi_t(i,j)
+\end{align*}
+
+On peut remarquer qu'en sommant les $\gamma_t(i)$ par rapport aux instants $t$, on obtient le nombre de fois où l'état $i$ est visité, ou de manière équivalente, l'espérance du nombre de transitions depuis $i$.
+
+De la même manière, la somme sur les $t$ des $\xi_t(i,j)$ donne l'espérance du nombre de transitions de l'état $i$ vers l'état $j$.
+
+i.e.
+\[
+\sum_{t=1}^{T-1}\gamma_t(i) = \text{espérance du nombre de transitions depuis } i
+\]
+\[
+\sum_{t=1}^{T-1}\xi_t(i,j) = \text{espérance du nombre de transitions de } i \text{ vers } j
+\]
+
+Grâce à cette remarque, des estimateurs naturels de $\pi$, $A$, $B$ apparaissent :
+
+\[
+\forall i,j \in E,
+\]
+\[
+\pi_i' := \text{probabilité d'être en l'état } i \text{ au moment } 1
+=\gamma_1(i)
+\]
+
+\[
+a_{ij}' :=
+\frac{\text{espérance du nombre de transitions de l'état } i \text{ à } j}
+{\text{espérance du nombre de transitions depuis l'état } i}
+=
+\frac{\sum_{t=1}^{T-1}\xi_t(i,j)}
+{\sum_{t=1}^{T-1}\gamma_t(i)}
+\]
+
+\[
+b_j'(y) :=
+\frac{\text{espérance du nombre d'observations de } y \text{ étant dans l'état } j}
+{\text{espérance du nombre de fois où on est en l'état } j}
+\]
+\[
+=
+\frac{\sum_{t=1}^{T}\gamma_t(j)\mathbf{1}_{\{y_t=y\}}}
+{\sum_{t=1}^{T}\gamma_t(j)}
+\]
+
+Dans le cas où les observations sont continues, alors on estime les paramètres avec des estimateurs naturels issues de ces quantités.
+
+Par exemple pour des émissions gaussiennes, on a :
+\[
+\mu_j =
+\frac{\sum_{t=1}^{T}\gamma_t(j)y_t}
+{\sum_{t=1}^{T}\gamma_t(j)}
+\]
+et
+\[
+\sigma_j^2 =
+\frac{\sum_{t=1}^{T}\gamma_t(j)(y_t-\mu_j)^2}
+{\sum_{t=1}^{T}\gamma_t(j)}
+\]
+
+On peut donc en déduire cet algorithme :
+
+\textbf{1. Initialisation}
+
+Initialiser aléatoirement ou non les paramètres $A$, $B$, $\pi$.
+
+\textbf{2. Itération tant que $\Delta L \geq \epsilon$}
+
+\textbf{Étape E :} calcul des probabilités forward-backward.
+
+Calcul des probabilités forward $\alpha$ :
+\[
+\alpha_t(i)=\mathbb{P}(Y_1,\dots,Y_t,X_t=i \mid (A,B,\pi))
+\]
+
+Calcul des probabilités backward $\beta$ :
+\[
+\beta_t(i)=\mathbb{P}(Y_{t+1},\dots,Y_T \mid X_t=i,(A,B,\pi))
+\]
+
+Étape les probabilités a posteriori :
+
+Pour chaque temps $t$ et chaque état $i$ :
+\[
+\gamma_t(i)=\mathbb{P}(X_t=i \mid Y,(A,B,\pi))
+\]
+
+Pour chaque temps $t$, chaque état $i$ et chaque état $j$ :
+\[
+\xi_t(i,j)=\mathbb{P}(X_t=i,X_{t+1}=j \mid Y,(A,B,\pi))
+\]
+
+\textbf{Étape M : Mise à jour des paramètres}
+
+\textbf{$\bullet$} Distribution initiale :
+\[
+\pi_i=\gamma_1(i)
+\]
+
+\textbf{$\bullet$} Matrice de transition :
+\[
+a_{ij}=
+\frac{\sum_{t=1}^{T-1}\xi_t(i,j)}
+{\sum_{t=1}^{T-1}\gamma_t(i)}
+\]
+
+\textbf{$\bullet$} Probabilités d'émission :
+\[
+b_j(o)=
+\frac{\sum_{t=1}^{T}\gamma_t(j)\mathbf{1}_{\{y_t=o\}}}
+{\sum_{t=1}^{T}\gamma_t(j)}
+\]
+
+\textbf{Étape calcul de la vraisemblance :}
+\[
+L=\mathbb{P}(Y \mid \lambda)
+\]
+
+\textbf{Analyse de la complexité :}
+\begin{itemize}
+    \item étape forward : pour chaque instant $t$, pour chaque état $j$, on somme sur tous les états précédents. Donc $O(TN^2)$.
+    \item étape backward : idem que pour forward. Donc $O(TN^2)$.
+    \item calcul des $\gamma_t(i)$ : calcul utilisant $\alpha_t(i)$ et $\beta_t(i)$, sur chaque $t$ et chaque $i$. Donc $O(TN)$.
+    \item calcul des $\xi_t(i,j)$ : calcul utilisant $\alpha_t(i)$ et $\beta_t(j)$ pour chaque $t$ et chaque couple $(i,j)$. Donc $O(TN^2)$.
+    \item mise à jour des $\pi_i$ : on récupère la valeur de $\gamma_1(i)$ pour chaque $i$. Donc $O(N)$.
+    \item mise à jour des $a_{ij}$ : calcul avec une somme sur $T$ pour chaque couple $(i,j)$. Donc $O(TN^2)$.
+    \item mise à jour des $b_j(k)$ : si on boucle naïvement sur tous les symboles $k$, les états $j$ et les instants $t$, alors $O(TNM)$. Or on peut parcourir les observations efficacement et obtenir une complexité de $O(TN)$.
+\end{itemize}
+
+Ainsi, on obtient une complexité globale par itération de :
+\[
+O(TN^2)
+\]
+
+Si l'algorithme fait $I$ itérations avant convergence, alors on a une complexité totale de :
+\[
+O(ITN^2)
+\]
+\end{document}
