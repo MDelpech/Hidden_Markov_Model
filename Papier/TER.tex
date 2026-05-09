@@ -459,8 +459,15 @@ suite d'observations $Y = (y_1,\dots,y_T)$
 avec $a_{ij}$ la probabilité de transition de l'état $i$ à l'état $j$, $b_j(y_{t})$ la probabilité d'observer $Y_t = y_t$ conditionnellement à être dans l'état $j$ à l'instant $t$, et $\pi_i$ la probabilité initiale d'être dans l'état $i$.
 
 L'algorithme de forward permet ainsi de calculer efficacement la vraisemblance d'une séquence d'observations donnée, en évitant le calcul direct de toutes les séquences d'états cachés possibles.
+\vspace{0.5cm}
 
-\vspace{1cm}
+\textbf{Analyse de la complexité}
+Lors de l'initialisation, on effectue $N$ opérations de complexité$O(1)$ pour calculer $\alpha_1(i)$ pour $i=1, \dots, N$, soit une complexité de $O(N)$.\\
+Lors de la récursion, pour chaque instant $t$ de 2 à $T$, on effectue $N$ opérations pour calculer $\alpha_t(j)$ pour $j=1, \dots, N$. chaque calcul de $\alpha_t(j)$ nécessite de faire une somme de $N$ termes, ce qui correspond à une complexité de $O(N^2)$ pour chaque instant $t$. Ainsi la complexité total de la récursion est de $O(N^2T)$.\\
+Lors de la terminaison, on effectue une somme de $N$ termes pour calculer $\mathbb{P}(Y)$, ce qui correspond à une complexité de $O(N)$.\\
+En combinant ces différentes étapes, on obtient une complexité totale de l'algorithme de $O(N^2T)$, ce qui est beacoup plus efficace que la complexié exponentielle $O(N^T)$ du calcul brut. 
+
+\vspace{0.5cm}
 
 Pour plus de claireté, on peut présenter l'algorithme de forward sous forme de treillis : 
 
