@@ -472,8 +472,15 @@ suite d'observations $Y = (y_1,\dots,y_T)$
 avec $a_{ij}$ la probabilité de transition de l'état $i$ à l'état $j$, $b_j(y_{t})$ la probabilité d'observer $Y_t = y_t$ conditionnellement à être dans l'état $j$ à l'instant $t$, et $\pi_i$ la probabilité initiale d'être dans l'état $i$.
 
 L'algorithme de forward permet ainsi de calculer efficacement la vraisemblance d'une séquence d'observations donnée, en évitant le calcul direct de toutes les séquences d'états cachés possibles.
+\vspace{0.5cm}
 
-\vspace{1cm}
+\textbf{Analyse de la complexité}
+Lors de l'initialisation, on effectue $N$ opérations de complexité$O(1)$ pour calculer $\alpha_1(i)$ pour $i=1, \dots, N$, soit une complexité de $O(N)$.\\
+Lors de la récursion, pour chaque instant $t$ de 2 à $T$, on effectue $N$ opérations pour calculer $\alpha_t(j)$ pour $j=1, \dots, N$. chaque calcul de $\alpha_t(j)$ nécessite de faire une somme de $N$ termes, ce qui correspond à une complexité de $O(N^2)$ pour chaque instant $t$. Ainsi la complexité total de la récursion est de $O(N^2T)$.\\
+Lors de la terminaison, on effectue une somme de $N$ termes pour calculer $\mathbb{P}(Y)$, ce qui correspond à une complexité de $O(N)$.\\
+En combinant ces différentes étapes, on obtient une complexité totale de l'algorithme de $O(N^2T)$, ce qui est beacoup plus efficace que la complexié exponentielle $O(N^T)$ du calcul brut. 
+
+\vspace{0.5cm}
 
 Pour plus de claireté, on peut présenter l'algorithme de forward sous forme de treillis : 
 
@@ -1263,6 +1270,17 @@ L'idée est d'estimer le modèle sur une période d'apprentissage puis de l'éva
 NLPD=-\frac{1}{T_{test}}\ell_{test}.
 \]
 Un \(NLPD\) faible indique que le modèle attribue une forte probabilité aux nouvelles observations. Cette étape est importante, car une estimation peut bien expliquer le passé tout en généralisant mal sur des données financières futures.
+
+
+
+
+\subsection{Limites des algorithmes}
+
+\subsubsection{Limites de l'algorithme de forward}
+
+Une des principales limites de l'algorithme de forward vient de la quantité d'observations. En effet, plus la séquence d'observations est longue, plus la vraisemblance $\mathbb{P}(Y)$ devient extrêmement petite, ce qui peut entraîner des problèmes computationnels liés à la précision numérique.
+Pour pallier à ce problème, on peut alors effectuer une modification de l'algorithme de forward en passant à la log-vraisemblance. Cela permet de transformer les produites en sommes, le tout avec des valeurs plus grandes et par conséquent plus faciles à manipuler numériquement.\\
+De plus, si le nombre d'états cachés est trés grand, l'algorithme de forward peut devenir extrêmement coûteux en temps de calcul, ce qui peut rendre son utilisation moins pertinente dans des applications avec un grand nombre d'états.\\
 
 
 \end{document}
