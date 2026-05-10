@@ -19,6 +19,7 @@
 \usepackage{float}
 
 \usetikzlibrary{arrows.meta,positioning}
+\usetikzlibrary{arrows.meta,positioning,calc}
 
 \geometry{margin=2.5cm}
 \setlength{\parindent}{0pt}
@@ -55,7 +56,7 @@
 
         {\large Par Marius Requillart et Maxime Delpech.}\\[0.8cm]
 
-        {\large 2025--2026}
+        {\large 2026}
     \end{center}
 
     \vfill
@@ -73,32 +74,30 @@
 
 \textbf{I) Introduction}
 
-\textbf{II) Définition et propriétés}
-
+\textbf{II) Définition et propriétés}\\
 \hspace*{0.5cm}2.1) Définitions \\
 \hspace*{1cm}2.1.1) Variables aléatoires observables et cachées. \\
 \hspace*{1cm}2.1.2) Propriétés. \\
-
 \hspace*{0.5cm}2.2) Définition chaîne de Markov cachée. \\
 \hspace*{1cm}2.2.1) Variables aléatoires observables et cachées. \\
 \hspace*{1cm}2.2.2) Lois jointes et vraisemblance. \\
 \hspace*{1cm}2.2.3) Exemple global d'une chaîne de Markov cachée. \\
 \hspace*{1cm}2.2.4) Remarques sur les observations.
 
+\vspace{0.5cm}
+
+\textbf{III) Trois grandes problématiques des HMM}\\
+\hspace*{0.5cm}1) Estimation de la vraisemblance et forward algorithm. \\
+\hspace*{0.5cm}2) Décodage et Viterbi algorithm. \\
+\hspace*{0.5cm}3) Apprentissage et Baum--Welch algorithm.
 
 \vspace{0.5cm}
 
-\textbf{III) Trois grandes problématiques des HMM}
-
-\hspace*{0.5cm}1) Estimation de la vraisemblance et forward algorithm.
-
-\hspace*{0.5cm}2) Décodage et Viterbi algorithm.
-
-\hspace*{0.5cm}3) Apprentissage et Baum--Welch algorithm.
-
-\hspace*{0.5cm}4) Limite des algorithmes. 
-
-\hspace*{0.5cm}5) Mesure de la qualité des estimations. 
+\textbf{IV) Limites des algorithmes et mesure de la qualité des estimations}\\
+\hspace*{0.5cm}1) Limites des algorithmes \\
+\hspace*{0.5cm}2) Mesure de la qualité des estimations de l'algorithme de Forward. \\
+\hspace*{0.5cm}3) Mesure de la qualité des estimations de l'algorithme de Viterbi. \\
+\hspace*{0.5cm}4) Mesure de la qualité des estimations de l'algorithme de Baum--Welch.
 
 \vspace{0.5cm}
 
@@ -171,6 +170,20 @@ Alors, pour tout $A \in E^n$, $B \in E^m$, $m \ge 0$, on a :
 i.e. le passé et le futur d'un moment $n$ d'une chaîne de Markov sont indépendants entre eux.
 
 \textbf{$\bullet$ Quelques propriétés utiles :} \\
+
+Pour tout $x,y \in E$, on a :
+\begin{flalign*}
+&\mathbb{P}_x(X_n = y) = P^n(x,y). &&
+\end{flalign*}
+
+De plus, pour toute mesure de probabilité $\mu$ sur $E$, et pour tout $y \in E$, on a :
+\begin{flalign*}
+&\mathbb{P}_{\mu}(X_n = y)
+=
+\sum_{x \in E} \mu(x)P^n(x,y)
+=
+(\mu P^n)(y). &&
+\end{flalign*}
 
 %%%%%%%%%%%%%%
 %Début de la partie 2.2 
@@ -464,8 +477,101 @@ L'algorithme de forward permet ainsi de calculer efficacement la vraisemblance d
 
 Pour plus de claireté, on peut présenter l'algorithme de forward sous forme de treillis : 
 
- \includegraphics[width=16cm]{Logo/treilli.png}\\
- Dans cet exemple, le nombre détats cachées est de 2 et la longeur de la séquence d'observations est de 3.
+\begin{figure}[H]
+\centering
+\resizebox{\textwidth}{!}{%
+\begin{tikzpicture}[
+    >=Stealth,
+    etat/.style={
+        circle,
+        draw,
+        minimum size=1.05cm,
+        inner sep=0pt,
+        font=\large
+    },
+    init/.style={
+        circle,
+        draw,
+        minimum size=0.95cm,
+        inner sep=0pt,
+        font=\large
+    },
+    fleche/.style={
+        ->,
+        line width=0.6pt,
+        shorten >=1pt,
+        shorten <=1pt
+    },
+    formule/.style={
+        font=\small
+    },
+    contrib/.style={
+        font=\scriptsize,
+        fill=white,
+        inner sep=1pt
+    }
+]
+
+% Noeud initial
+\node[init] (pi) at (0.6,0) {$\pi$};
+
+% Etats caches
+\node[etat] (e21) at (4.2,1.15) {$e_2$};
+\node[etat] (e11) at (4.2,-1.15) {$e_1$};
+
+\node[etat] (e22) at (11.2,1.15) {$e_2$};
+\node[etat] (e12) at (11.2,-1.15) {$e_1$};
+
+\node[etat] (e23) at (18.2,1.15) {$e_2$};
+\node[etat] (e13) at (18.2,-1.15) {$e_1$};
+
+% Observations
+\node at (4.2,-2.45) {$y_1$};
+\node at (11.2,-2.45) {$y_2$};
+\node at (18.2,-2.45) {$y_3$};
+
+% Transitions initiales
+\draw[fleche] (pi) -- node[above left, contrib] {$\pi_2 b_2(y_1)$} (e21);
+\draw[fleche] (pi) -- node[below left, contrib] {$\pi_1 b_1(y_1)$} (e11);
+
+% Transitions entre t=1 et t=2
+\draw[fleche] (e21) -- node[above, contrib] {$\alpha_1(2)a_{22}b_2(y_2)$} (e22);
+\draw[fleche] (e21) -- node[pos=0.28, below, sloped, contrib] {$\alpha_1(2)a_{21}b_1(y_2)$} (e12);
+\draw[fleche] (e11) -- node[pos=0.72, above, sloped, contrib] {$\alpha_1(1)a_{12}b_2(y_2)$} (e22);
+\draw[fleche] (e11) -- node[below, contrib] {$\alpha_1(1)a_{11}b_1(y_2)$} (e12);
+
+% Transitions entre t=2 et t=3
+\draw[fleche] (e22) -- node[above, contrib] {$\alpha_2(2)a_{22}b_2(y_3)$} (e23);
+\draw[fleche] (e22) -- node[pos=0.28, below, sloped, contrib] {$\alpha_2(2)a_{21}b_1(y_3)$} (e13);
+\draw[fleche] (e12) -- node[pos=0.72, above, sloped, contrib] {$\alpha_2(1)a_{12}b_2(y_3)$} (e23);
+\draw[fleche] (e12) -- node[below, contrib] {$\alpha_2(1)a_{11}b_1(y_3)$} (e13);
+
+% Titres des colonnes
+\node at (4.2,2.05) {\(\alpha_1(i)\)};
+\node at (11.2,2.05) {\(\alpha_2(j)\)};
+\node at (18.2,2.05) {\(\alpha_3(j)\)};
+
+% Formule de recurrence
+\node[formule, align=center] at (11.2,2.85)
+{\(\displaystyle
+\alpha_t(j)=b_j(y_t)\sum_{i=1}^{N}\alpha_{t-1}(i)a_{ij}
+\)};
+
+% Etiquettes temporelles
+\node at (4.2,-3.05) {\(t=1\)};
+\node at (11.2,-3.05) {\(t=2\)};
+\node at (18.2,-3.05) {\(t=3\)};
+
+% Vraisemblance finale
+\node[formule, align=center] at (11.2,-3.75)
+{\(\displaystyle L=\sum_{i=1}^{N}\alpha_T(i)\)};
+
+\end{tikzpicture}
+}
+\vspace{0.35cm}
+\caption{Treillis de l'algorithme Forward}
+\label{fig:treillis-forward}
+\end{figure}
 
 
 \subsection{Decodding et Viterbi algorithm}
@@ -523,8 +629,7 @@ C'est exponentiel, donc inutilisable dès que $T$ ou $N$ devient grand.
 
 Afin de limiter cette complexité, l'algorithme de Viterbi repose sur le principe du treillis.
 
-\textbf{Principe du Treillis:}
-
+\textbf{Principe du Treillis:}\\
 Structure en colonne où :
 \begin{itemize}
     \item chaque colonne correspond à un instant $t$
@@ -536,14 +641,105 @@ Structure en colonne où :
 
 Ainsi, le problème de décodage revient à trouver le meilleur chemin dans ce treillis, depuis la première colonne jusqu'à la dernière.
 Chaque chemin correspond à une séquence d'état cachés possible.
-Le rôle de l'algorithme de Viterbi est précisément de trouver le chemin de probabilité maximale.
+Le rôle de l'algorithme de Viterbi est précisément de trouver le chemin de probabilité maximale : 
 
-\newpage
 
-\begin{figure}[h]
+\begin{figure}[H]
 \centering
-\includegraphics[width=0.95\textwidth]{figures/treillis-viterbi.png}
+\begin{tikzpicture}[
+    >=Stealth,
+    etat/.style={
+        circle,
+        draw,
+        minimum size=1.05cm,
+        inner sep=0pt,
+        font=\large
+    },
+    init/.style={
+        circle,
+        draw,
+        minimum size=0.95cm,
+        inner sep=0pt,
+        font=\large
+    },
+    fleche/.style={
+        ->,
+        line width=0.55pt,
+        shorten >=1pt,
+        shorten <=1pt
+    },
+    flechemax/.style={
+        ->,
+        line width=1.15pt,
+        shorten >=1pt,
+        shorten <=1pt
+    },
+    formule/.style={
+        font=\small
+    }
+]
+
+% Noeud initial
+\node[init] (pi) at (0,0) {$\pi$};
+
+% Etats caches
+\node[etat] (e21) at (2.6,1.15) {$e_2$};
+\node[etat] (e11) at (2.6,-1.15) {$e_1$};
+
+\node[etat] (e22) at (6.1,1.15) {$e_2$};
+\node[etat] (e12) at (6.1,-1.15) {$e_1$};
+
+\node[etat] (e23) at (9.6,1.15) {$e_2$};
+\node[etat] (e13) at (9.6,-1.15) {$e_1$};
+
+% Observations
+\node at (2.6,-2.45) {$y_1$};
+\node at (6.1,-2.45) {$y_2$};
+\node at (9.6,-2.45) {$y_3$};
+
+% Transitions initiales
+\draw[fleche] (pi) -- node[above left, formule] {$\pi_2 b_2(y_1)$} (e21);
+\draw[fleche] (pi) -- node[below left, formule] {$\pi_1 b_1(y_1)$} (e11);
+
+% Transitions entre t=1 et t=2
+\draw[fleche] (e21) -- (e22);
+\draw[flechemax] (e21) -- node[pos=0.55, below, sloped, formule]
+{$\delta_1(2)a_{21}b_1(y_2)$} (e12);
+\draw[fleche] (e11) -- (e22);
+\draw[fleche] (e11) -- (e12);
+
+% Transitions entre t=2 et t=3
+\draw[fleche] (e22) -- (e23);
+\draw[fleche] (e22) -- (e13);
+\draw[flechemax] (e12) -- node[pos=0.55, above, sloped, formule]
+{$\delta_2(1)a_{12}b_2(y_3)$} (e23);
+\draw[fleche] (e12) -- (e13);
+
+% Titres des colonnes
+\node at (2.6,2.05) {\(\delta_1(i)\)};
+\node at (6.1,2.05) {\(\delta_2(j)\)};
+\node at (9.6,2.05) {\(\delta_3(j)\)};
+
+% Formule de recurrence
+\node[formule, align=center] at (6.1,2.85)
+{\(\displaystyle
+\delta_t(j)=b_j(y_t)\max_{1\leq i\leq N}\delta_{t-1}(i)a_{ij}
+\)};
+
+% Etiquettes temporelles
+\node at (2.6,-3.05) {\(t=1\)};
+\node at (6.1,-3.05) {\(t=2\)};
+\node at (9.6,-3.05) {\(t=3\)};
+
+% Chemin Viterbi indique
+\node[formule, align=center] at (6.1,-3.75)
+{\(\displaystyle X^\star=(e_2,e_1,e_2)\)};
+
+\end{tikzpicture}
+
+\vspace{0.35cm}
 \caption{Treillis de l'algorithme de Viterbi}
+\label{fig:treillis-viterbi}
 \end{figure}
 
 L'intérêt du treillis est qu'il met en évidence une propriété fondamentale : pour retrouver la séquence d'état, il faut garder en mémoire l'argument qui maximise la récurrence. Nous allons le faire via la liste $\psi_t(j)$.
@@ -719,62 +915,91 @@ et
 
 On peut donc en déduire cet algorithme :
 
-\textbf{1. Initialisation}
+\vspace{0.5cm}
 
-Initialiser aléatoirement ou non les paramètres $A$, $B$, $\pi$.
+\begin{algorithm}[H]
+\caption{Algorithme de Baum--Welch}
+\label{alg:baum-welch-standalone}
+\small
+\singlespacing
+\setlength{\abovedisplayskip}{2pt}
+\setlength{\belowdisplayskip}{2pt}
+\setlength{\abovedisplayshortskip}{2pt}
+\setlength{\belowdisplayshortskip}{2pt}
+\begin{algorithmic}[1]
+\Require Suite d'observations \(Y=(y_1,\dots,y_T)\),
+nombre d'états \(N\), paramètres initiaux \(\lambda^{(0)}=(A^{(0)},B^{(0)},\pi^{(0)})\),
+seuil de convergence \(\varepsilon\)
+\Ensure Paramètres estimés \(\widehat{\lambda}=(\widehat{A},\widehat{B},\widehat{\pi})\)
 
-\textbf{2. Itération tant que $\Delta L \geq \epsilon$}
+\State Initialiser \(m\gets 0\)
+\Repeat
+    \Statex
+    \Statex \textbf{Étape E : estimation des variables cachées}
+    \State Pour \(i=1,\dots,N\) :
+    \Statex \[
+    \alpha_1(i)=\pi_i^{(m)}b_i^{(m)}(y_1)
+    \]
+    \State Pour \(t=2,\dots,T\) et \(j=1,\dots,N\) :
+    \Statex \[
+    \alpha_t(j)
+    =
+    b_j^{(m)}(y_t)
+    \sum_{i=1}^{N}\alpha_{t-1}(i)a_{ij}^{(m)}
+    \]
+    \State Pour \(i=1,\dots,N\) :
+    \Statex \[
+    \beta_T(i)=1
+    \]
+    \State Pour \(t=T-1,\dots,1\) et \(i=1,\dots,N\) :
+    \Statex \[
+    \beta_t(i)
+    =
+    \sum_{j=1}^{N}
+    a_{ij}^{(m)}b_j^{(m)}(y_{t+1})\beta_{t+1}(j)
+    \]
+    \State Pour \(t=1,\dots,T\) et \(i=1,\dots,N\) :
+    \Statex \[
+    \gamma_t(i)
+    =
+    \frac{\alpha_t(i)\beta_t(i)}
+    {\sum_{k=1}^{N}\alpha_t(k)\beta_t(k)}
+    \]
+    \State Pour \(t=1,\dots,T-1\) et \(i,j=1,\dots,N\) :
+    \Statex \[
+    \xi_t(i,j)
+    =
+    \frac{
+    \alpha_t(i)a_{ij}^{(m)}b_j^{(m)}(y_{t+1})\beta_{t+1}(j)
+    }{
+    \sum_{k=1}^{N}\sum_{\ell=1}^{N}
+    \alpha_t(k)a_{k\ell}^{(m)}b_\ell^{(m)}(y_{t+1})\beta_{t+1}(\ell)
+    }
+    \]
 
-\textbf{Étape E :} calcul des probabilités forward-backward.
+    \Statex
+    \Statex \textbf{Étape M : mise à jour des paramètres}
+    \State Pour \(i=1,\dots,N\) :
+    \Statex \[
+    \pi_i^{(m+1)}=\gamma_1(i)
+    \]
+    \State Pour \(i,j=1,\dots,N\) :
+    \Statex \[
+    a_{ij}^{(m+1)}
+    =
+    \frac{\sum_{t=1}^{T-1}\xi_t(i,j)}
+    {\sum_{t=1}^{T-1}\gamma_t(i)}
+    \]
+    \State Mettre à jour les paramètres d'émission \(B^{(m+1)}\)
+    \State \(\displaystyle L^{(m+1)}\gets \sum_{i=1}^{N}\alpha_T(i)\)
+    \State \(m\gets m+1\)
+\Until{\(\left|L^{(m)}-L^{(m-1)}\right|<\varepsilon\)}
 
-Calcul des probabilités forward $\alpha$ :
-\[
-\alpha_t(i)=\mathbb{P}(Y_1,\dots,Y_t,X_t=i \mid (A,B,\pi))
-\]
+\State \Return \(\widehat{\lambda}=\lambda^{(m)}\)
+\end{algorithmic}
+\end{algorithm}
 
-Calcul des probabilités backward $\beta$ :
-\[
-\beta_t(i)=\mathbb{P}(Y_{t+1},\dots,Y_T \mid X_t=i,(A,B,\pi))
-\]
-
-Étape les probabilités a posteriori :
-
-Pour chaque temps $t$ et chaque état $i$ :
-\[
-\gamma_t(i)=\mathbb{P}(X_t=i \mid Y,(A,B,\pi))
-\]
-
-Pour chaque temps $t$, chaque état $i$ et chaque état $j$ :
-\[
-\xi_t(i,j)=\mathbb{P}(X_t=i,X_{t+1}=j \mid Y,(A,B,\pi))
-\]
-
-\textbf{Étape M : Mise à jour des paramètres}
-
-\textbf{$\bullet$} Distribution initiale :
-\[
-\pi_i=\gamma_1(i)
-\]
-
-\textbf{$\bullet$} Matrice de transition :
-\[
-a_{ij}=
-\frac{\sum_{t=1}^{T-1}\xi_t(i,j)}
-{\sum_{t=1}^{T-1}\gamma_t(i)}
-\]
-
-\textbf{$\bullet$} Probabilités d'émission :
-\[
-b_j(o)=
-\frac{\sum_{t=1}^{T}\gamma_t(j)\mathbf{1}_{\{y_t=o\}}}
-{\sum_{t=1}^{T}\gamma_t(j)}
-\]
-
-\textbf{Étape calcul de la vraisemblance :}
-\[
-L=\mathbb{P}(Y \mid \lambda)
-\]
-
+Dans ce travail, nous ne traiterons pas du choix de epsilon qui mériterait un travail à part entière, mais il est important de noter que ce choix peut avoir un impact significatif sur la convergence de l'algorithme. De plus, avec une seule série d’observations, on ne peut pas estimer de manière robuste la distribution initiale \(\pi\), car elle ne concerne que l’état caché au premier instant ; toutefois, cela a peu d’impact sur l’utilisation finale du modèle, puisque l’influence de \(\pi\) disparaît progressivement au fil du temps au profit des transitions et des émissions estimées.\\
 \textbf{Analyse de la complexité :}
 \begin{itemize}
     \item étape forward : pour chaque instant $t$, pour chaque état $j$, on somme sur tous les états précédents. Donc $O(TN^2)$.
@@ -795,4 +1020,249 @@ Si l'algorithme fait $I$ itérations avant convergence, alors on a une complexit
 \[
 O(ITN^2)
 \]
+
+
+%%%%%%%%%%%%%%%%%%
+%% Début de la partie 3 sur les limites et les analyses
+%%%%%%%%%%%%%%%%%%
+\newpage
+\section{Limites des algorithmes et analyse de la qualité des estimations}
+
+\subsection{Les limites des algortihmes}
+
+\subsection{Mesure de la qualité de la vraisemblance avec l'algorithme Forward}
+
+L'algorithme Forward permet de calculer la probabilité d'observer une séquence donnée sous un modèle HMM donné. Si \(Y_{1:T}\) désigne la série observée, avec \(T\) le nombre total d'observations, et si \(\lambda=(\pi,A,B)\) désigne les paramètres du modèle, l'algorithme Forward calcule :
+\[
+P(Y_{1:T}\mid \lambda).
+\]
+En pratique, on utilise plutôt la log-vraisemblance :
+\[
+\ell(\lambda)=\log P(Y_{1:T}\mid \lambda),
+\]
+car la vraisemblance brute devient très petite lorsque \(T\) est grand.
+
+\subsubsection{Interprétation de la log-vraisemblance}
+
+La log-vraisemblance mesure la capacité du modèle à expliquer les observations. Plus elle est élevée, plus le modèle attribue une forte probabilité à la série observée. Elle constitue donc une première mesure de qualité statistique du HMM.
+
+Cependant, cette mesure doit être interprétée avec prudence. Un modèle plus complexe, par exemple avec davantage d'états cachés, peut obtenir une meilleure log-vraisemblance simplement parce qu'il possède plus de paramètres. Une bonne log-vraisemblance ne signifie donc pas nécessairement que les régimes estimés sont plus interprétables, ni que le modèle restera performant sur de nouvelles observations.
+
+\subsubsection{Comparaison entre modèles}
+
+Pour comparer plusieurs HMM, on peut utiliser la log-vraisemblance moyenne par observation :
+\[
+\overline{\ell}(\lambda)
+=
+\frac{1}{T}\log P(Y_{1:T}\mid \lambda).
+\]
+Cette normalisation permet de comparer des séries de longueurs différentes.
+
+On peut aussi utiliser des critères pénalisés comme l'AIC et le BIC :
+\[
+AIC = -2\ell(\lambda)+2p,
+\]
+\[
+BIC = -2\ell(\lambda)+p\log(T),
+\]
+où \(p\) désigne le nombre de paramètres estimés. Ces critères pénalisent les modèles trop complexes. Dans ce cas, le meilleur modèle est celui qui minimise l'AIC ou le BIC.
+
+\subsubsection{Évaluation hors échantillon}
+
+Une bonne log-vraisemblance sur l'échantillon d'apprentissage ne suffit pas. Le modèle peut très bien expliquer les données passées tout en étant moins performant sur des données nouvelles. Pour une série temporelle financière, on découpe donc le jeu de données dans l'ordre chronologique : une première partie sert à l'apprentissage, puis la partie qui suit sert au test. Il faut donc évaluer la vraisemblance sur cette période de test, qui n'a pas servi à l'estimation.
+
+Si le modèle \(\widehat{\lambda}_{\text{train}}\) est estimé sur \(Y_{1:T_{\text{train}}}\), et si \(Y_{\text{test}}\) désigne les observations de la période test, on peut calculer :
+\[
+\ell_{\text{test}}
+=
+\log P(Y_{\text{test}}\mid \widehat{\lambda}_{\text{train}}).
+\]
+On utilise souvent la log-vraisemblance moyenne de test :
+\[
+\overline{\ell}_{\text{test}}
+=
+\frac{1}{T_{\text{test}}}\ell_{\text{test}},
+\]
+ou encore la negative log predictive density :
+\[
+NLPD
+=
+-\frac{1}{T_{\text{test}}}\ell_{\text{test}}.
+\]
+Un \(NLPD\) faible indique que le modèle attribue une forte probabilité aux nouvelles observations. Il s'agit donc d'un bon indicateur pour vérifier si le modèle reste pertinent sur des données qui n'ont pas servi à l'estimation.
+
+\subsubsection{Limites de l'évaluation par Forward}
+
+L'algorithme Forward évalue la vraisemblance des observations, mais il ne dit pas directement si les régimes cachés estimés sont économiquement interprétables. Un modèle peut avoir une bonne vraisemblance tout en produisant des régimes difficiles à lire financièrement.
+
+Ainsi, la vraisemblance calculée par Forward doit être utilisée comme une mesure statistique importante, mais elle doit être complétée par l'analyse des régimes obtenus avec Viterbi ou avec les probabilités a posteriori, ainsi que par une validation hors échantillon.
+
+
+\subsection{Mesure de la qualité du décodage par Viterbi}
+
+L'algorithme de Viterbi permet d'estimer la séquence d'états cachés la plus probable compte tenu des observations et des paramètres du modèle. Si \(Y_{1:T}\) désigne la série observée, avec \(T\) le nombre total d'observations, et \(\widehat{\lambda}\) les paramètres estimés du modèle, Viterbi cherche le chemin
+\[
+\widehat{X}_{1:T}^{\,V}
+\in
+\mathop{\mathrm{arg\,max}}_{x_{1:T}}
+P(X_{1:T}=x_{1:T}\mid Y_{1:T},\widehat{\lambda}).
+\]
+Dans une application financière, ce chemin peut être interprété comme une chronologie des régimes de marché : chaque date est associée à un régime estimé, par exemple calme, volatil, stressé ou en reprise.
+
+\subsubsection{Difficulté de l'évaluation sur données réelles}
+
+La difficulté principale est que, sur données financières réelles, les vrais états cachés ne sont pas observés. On ne dispose donc pas d'une séquence vraie à laquelle comparer directement la séquence estimée. Il est alors difficile de calculer des mesures quantitatives classiques comme une accuracy, une matrice de confusion ou un taux d'erreur.
+
+L'évaluation de Viterbi est donc surtout indirecte. Un chemin Viterbi très net n'est pas nécessairement le vrai chemin des états cachés : c'est seulement le chemin le plus probable sous le modèle estimé.
+
+\subsubsection{Interprétation économique des régimes détectés}
+
+Sur données réelles, un premier critère consiste à comparer les régimes détectés à des périodes financières connues. Par exemple, un régime interprété comme un régime de stress devrait apparaître davantage pendant des crises, des krachs ou des périodes de forte volatilité. À l'inverse, un régime calme devrait dominer pendant des périodes plus régulières.
+
+Cette lecture reste qualitative, mais elle est importante. Si les états détectés ne correspondent à aucune dynamique financière claire, le décodage est difficile à exploiter.
+
+On peut aussi vérifier la persistance des régimes. Un chemin qui change d'état presque à chaque date peut indiquer que le modèle capte surtout du bruit. Le chemin doit donc être assez stable pour être interprétable.
+
+\subsubsection{Comparaison avec le posterior decoding}
+
+Viterbi ne choisit pas l'état le plus probable à chaque date séparément. Il choisit le chemin globalement le plus probable, c'est-à-dire qu'il maximise :
+\[
+P(X_{1:T}=x_{1:T}\mid Y_{1:T},\widehat{\lambda}).
+\]
+Cette contrainte donne un chemin cohérent temporellement, mais elle peut conduire à choisir, à certaines dates, un état qui n'est pas celui ayant la plus forte probabilité marginale.
+
+Le posterior decoding adopte une logique différente. Il calcule les probabilités a posteriori :
+\[
+\widehat{\gamma}_t(i)
+=
+P(X_t=i\mid Y_{1:T},\widehat{\lambda}),
+\]
+puis choisit, à chaque date \(t\), l'état marginalement le plus probable :
+\[
+\widehat{X}_t^{\,P}
+\in
+\mathop{\mathrm{arg\,max}}_{i\in E}
+\widehat{\gamma}_t(i).
+\]
+Ainsi, le posterior decoding prend une décision locale date par date, tandis que Viterbi optimise une trajectoire complète.
+
+Comparer les deux approches est intéressant, car elles ne répondent pas exactement à la même question. Si Viterbi et posterior decoding donnent des classifications proches, cela indique que les régimes sont bien identifiés par le modèle.
+
+Un exemple simple de mesure d'écart est le taux de désaccord entre les deux décodages :
+\[
+D_{VP}
+=
+\frac{1}{T}
+\sum_{t=1}^{T}
+\mathbf{1}_{\{\widehat{X}_t^{\,V}\neq \widehat{X}_t^{\,P}\}}.
+\]
+Plus \(D_{VP}\) est proche de \(0\), plus les deux méthodes donnent des régimes similaires. Une valeur élevée indique au contraire que le choix des états est incertain ou dépend fortement de la méthode de décodage.
+
+À l'inverse, si les deux méthodes donnent des résultats très différents, cela révèle une incertitude importante sur les états cachés. Le chemin Viterbi doit alors être interprété comme une trajectoire probable, et non comme une classification certaine.
+
+\subsection{Mesure de la qualité des estimations de Baum--Welch}
+
+Baum--Welch estime les paramètres d'une chaîne de Markov cachée à partir des seules observations \(Y_{1:T}\). Si \(X_t\) désigne l'état caché à l'instant \(t\), le modèle est donné par :
+\[
+\lambda=(\pi,A,B)
+\]
+avec
+\[
+\pi_i=P(X_1=i),\qquad
+a_{ij}=P(X_{t+1}=j\mid X_t=i)
+\]
+et \(B\) l'ensemble des lois d'émission \(b_i(y)\), ou plus généralement \(b_i(y;\theta_i)\) lorsque ces lois dépendent de paramètres \(\theta_i\). L'algorithme cherche alors
+\[
+\widehat{\lambda}\in\mathop{\mathrm{arg\,max}}_{\lambda}P(Y_{1:T}\mid \lambda).
+\]
+Comme il s'agit d'une méthode de type EM, la solution obtenue est en général un optimum local et pas nécessairement le meilleur modèle possible. La qualité des estimations doit donc être étudiée à travers la convergence, la stabilité des paramètres, l'interprétation économique et la performance hors échantillon.
+
+\subsubsection{Convergence de la log-vraisemblance}
+
+À l'itération \(k\), on note \(\ell^{(k)}=\log P(Y_{1:T}\mid \lambda^{(k)})\). Ici, \(T\) est la longueur de la série observée, c'est-à-dire le nombre total d'observations. Ainsi, les quantités divisées par \(T\) sont des gains moyens par observation.
+
+Baum--Welch doit produire une log-vraisemblance non décroissante. On suit donc :
+\[
+\Delta_k=\ell^{(k)}-\ell^{(k-1)},\qquad
+\overline{\Delta}_k=\frac{\Delta_k}{T},\qquad
+r_k=\frac{\Delta_k}{1+|\ell^{(k-1)}|}.
+\]
+Un critère d'arrêt raisonnable est \(r_k<10^{-6}\), ou bien \(\overline{\Delta}_k<10^{-6}\) à \(10^{-5}\), pendant plusieurs itérations consécutives. Ces seuils ne doivent pas être vus comme des règles absolues, mais comme des ordres de grandeur permettant de repérer le moment où l'amélioration devient négligeable.
+
+Une convergence trop rapide peut être suspecte si l'algorithme s'arrête en moins de cinq itérations avec des paramètres proches de l'initialisation. Ce cas n'est pas forcément mauvais, mais il doit être comparé aux résultats obtenus avec d'autres initialisations. En lançant Baum--Welch \(M\) fois, on compare :
+\[
+\frac{\ell_{\max}^\star-\ell_m^\star}{T},
+\qquad
+\ell_{\max}^\star=\max_{1\leq m\leq M}\ell_m^\star.
+\]
+Un écart de \(10^{-3}\) à \(10^{-2}\) par observation peut signaler une solution nettement moins bonne. À l'inverse, une convergence instable apparaît lorsque \(\Delta_k<0\). Une petite baisse numérique peut être tolérée si \(\Delta_k/T>-10^{-8}\), mais des baisses plus fortes ou répétées indiquent un problème de normalisation, de sous-flux numérique ou d'implémentation.
+
+\subsubsection{Stabilité des paramètres estimés}
+
+Comme Baum--Welch dépend de l'initialisation, il faut répéter l'estimation avec plusieurs points de départ. Avant de comparer les résultats, on aligne les états afin de corriger le changement d'étiquette : l'état \(1\) d'une estimation peut correspondre à l'état \(2\) d'une autre. Pour deux estimations \((a)\) et \((b)\), on peut mesurer :
+\[
+D_{\pi}=\frac12\sum_i
+\left|\widehat{\pi}^{(a)}_i-\widehat{\pi}^{(b)}_i\right|,
+\qquad
+D_A=
+\frac1N\sum_i\frac12\sum_j
+\left|\widehat{a}^{(a)}_{ij}-\widehat{a}^{(b)}_{ij}\right|.
+\]
+On compare également la durée moyenne des régimes :
+\[
+\widehat{d}_i=\frac{1}{1-\widehat{a}_{ii}},
+\qquad
+D_{d,i}
+=
+\left|
+\frac{\widehat{d}^{(a)}_i-\widehat{d}^{(b)}_i}
+{\widehat{d}^{(b)}_i}
+\right|.
+\]
+Deux estimations peuvent avoir des vraisemblances proches mais des régimes de persistances très différentes.
+
+Pour les lois d'émission discrètes, on peut utiliser :
+\[
+D_B=
+\frac1N\sum_i
+\frac12\sum_{y\in\mathcal{Y}}
+\left|\widehat{b}^{(a)}_i(y)-\widehat{b}^{(b)}_i(y)\right|.
+\]
+Pour des lois continues de densités \(\widehat f_i^{(a)}\) et \(\widehat f_i^{(b)}\), on peut utiliser une divergence de Kullback--Leibler :
+\[
+\mathrm{KL}(\widehat f_i^{(a)}||\widehat f_i^{(b)})
+=
+\int \widehat f_i^{(a)}(y)
+\log\left(
+\frac{\widehat f_i^{(a)}(y)}
+{\widehat f_i^{(b)}(y)}
+\right)dy.
+\]
+Si les émissions sont paramétrées par \(\theta_i\), on compare les vecteurs \(\widehat{\theta}_i\), idéalement avec une distance normalisée afin de tenir compte des différences d'échelle entre les composantes.
+
+\subsubsection{Interprétation économique des régimes}
+
+Une estimation satisfaisante doit produire des régimes économiquement lisibles. Les lois d'émission associées aux états doivent décrire des comportements distincts. Si deux états ont des lois presque identiques, le modèle utilise probablement trop d'états ou ne sépare pas clairement les régimes. La matrice de transition doit aussi être cohérente : dans les séries financières, les coefficients diagonaux \(a_{ii}\) ne doivent pas être trop faibles, car les régimes de marché présentent souvent une certaine persistance.
+
+Les probabilités a posteriori
+\[
+\widehat{\gamma}_t(i)=P(X_t=i\mid Y_{1:T},\widehat{\lambda})
+\]
+permettent de vérifier à quelles dates chaque régime domine. Un régime interprétable doit correspondre à des périodes financières cohérentes, par exemple des périodes de stress, de calme ou de forte incertitude.
+
+\subsubsection{Validation hors échantillon}
+
+On parle aussi d'évaluation hors échantillon, de test hors échantillon, d'évaluation sur période de test ou encore d'évaluation prédictive sur données futures. Dans un contexte financier, le terme backtesting est également utilisé lorsque l'on teste une méthode sur une période passée qui n'a pas servi à l'estimation.
+
+L'idée est d'estimer le modèle sur une période d'apprentissage puis de l'évaluer sur une période future non utilisée pour l'estimation. Si \(\widehat{\lambda}_{train}\) est estimé sur \(Y_{1:T_{train}}\), on calcule :
+\[
+\ell_{test}
+=
+\log P(Y_{T_{train}+1:T}\mid \widehat{\lambda}_{train}),
+\qquad
+NLPD=-\frac{1}{T_{test}}\ell_{test}.
+\]
+Un \(NLPD\) faible indique que le modèle attribue une forte probabilité aux nouvelles observations. Cette étape est importante, car une estimation peut bien expliquer le passé tout en généralisant mal sur des données financières futures.
+
+
 \end{document}
