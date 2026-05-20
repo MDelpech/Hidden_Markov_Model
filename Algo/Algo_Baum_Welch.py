@@ -27,6 +27,7 @@ def baum_welch(Y, N, observations_possible, epsilon=1e-6, max_iter=1000):
     B /= B.sum(axis=1, keepdims=True)
 
     ancienne_vraisemblance = -np.inf
+    log_vraisemblance = []
 
     for iteration in range(max_iter):
 
@@ -46,6 +47,7 @@ def baum_welch(Y, N, observations_possible, epsilon=1e-6, max_iter=1000):
             alpha[:, t] = alpha[:, t] / c[t]
 
         vraisemblance = np.sum(np.log(c))
+        log_vraisemblance.append(vraisemblance)
 
         # Backward avec normalisation
         beta = np.zeros((N, T))
@@ -113,7 +115,7 @@ def baum_welch(Y, N, observations_possible, epsilon=1e-6, max_iter=1000):
 
         ancienne_vraisemblance = vraisemblance
 
-    return PI, A, B, vraisemblance
+    return PI, A, B, vraisemblance, log_vraisemblance
 
-PI_est, A_est, B_est = baum_welch(view,3,observations,1e-6,1000)
-print(PI_est, A_est, B_est)
+##PI_est, A_est, B_est = baum_welch(view,3,observations,1e-6,1000)
+##print(PI_est, A_est, B_est)
