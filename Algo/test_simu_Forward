@@ -1,0 +1,167 @@
+import numpy as np
+import matplotlib.pyplot as plt
+
+from Simulation_data import A, B, PI, view
+
+
+def forward_normalized(PI, A, B, Y):
+    Y = np.asarray(Y, dtype=int)
+    T = len(Y)
+    N = len(PI)
+
+    alpha = np.zeros((T, N))
+    c = np.zeros(T)
+
+    alpha[0] = PI * B[:, Y[0]]
+    c[0] = alpha[0].sum()
+    alpha[0] /= c[0]
+
+    for t in range(1, T):
+        alpha[t] = alpha[t - 1] @ A * B[:, Y[t]]
+        c[t] = alpha[t].sum()
+        alpha[t] /= c[t]
+
+    log_likelihood = np.sum(np.log(c))
+
+    return {
+        "alpha": alpha,
+        "predictive_probabilities": c,
+        "prefix_log_likelihood": np.cumsum(np.log(c)),
+        "log_likelihood": log_likelihood,
+        "mean_log_likelihood": log_likelihood / T,
+        "nlpd": -log_likelihood / T,
+    }
+
+
+def information_criteria(log_likelihood, T, p):
+    AIC = -2 * log_likelihood + 2 * p
+    BIC = -2 * log_likelihood + p * np.log(T)
+    return AIC, BIC
+
+
+def analyser_forward(PI, A, B, Y, train_ratio=0.8):
+    Y = np.asarray(Y, dtype=int)
+
+    T = len(Y)
+    N = A.shape[0]
+    M = B.shape[1]
+
+    p = (N - 1) + N * (N - 1) + N * (M - 1)
+
+    print("\n===== Analyse Forward =====\n")
+
+    metrics = forward_normalized(PI, A, B, Y)
+    AIC, BIC = information_criteria(metrics["log_likelihood"], T, p)
+
+    print(f"Longueur de la série : {T}")
+    print(f"Nombre de paramètres libres : {p}")
+    print(f"Log-vraisemblance : {metrics['log_likelihood']:.6f}")
+    print(f"Log-vraisemblance moyenne : {metrics['mean_log_likelihood']:.6f}")
+    print(f"NLPD : {metrics['nlpd']:.6f}")
+    print(f"AIC : {AIC:.6f}")
+    print(f"BIC : {BIC:.6f}")
+
+    print("\n===== Validation hors échantillon =====\n")
+
+    split = int(train_ratio * T)
+
+    Y_train = Y[:split]
+    Y_test = Y[split:]
+
+    metrics_train = forward_normalized(PI, A, B, Y_train)
+    metrics_full = forward_normalized(PI, A, B, Y)
+
+    loglik_test_cond = (
+        metrics_full["log_likelihood"]
+        - metrics_train["log_likelihood"]
+    )
+
+    nlpd_test_cond = -loglik_test_cond / len(Y_test)
+
+    print(f"T apprentissage : {len(Y_train)}")
+    print(f"T test : {len(Y_test)}")
+    print(f"NLPD apprentissage : {metrics_train['nlpd']:.6f}")
+    print(f"NLPD test conditionnel : {nlpd_test_cond:.6f}")
+
+    print("\n===== Comparaison des modèles =====\n")
+
+    models = {
+        "Modèle de simulation": (PI, A, B),
+        "Transitions uniformes": (PI, np.ones((N, N)) / N, B),
+        "Émissions uniformes": (PI, A, np.ones((N, M)) / M),
+        "Modèle uniforme": (
+            np.ones(N) / N,
+            np.ones((N, N)) / N,
+            np.ones((N, M)) / M,
+        ),
+    }
+
+    noms = []
+    loglik_moyennes = []
+
+    for nom, (PI_m, A_m, B_m) in models.items():
+        m = forward_normalized(PI_m, A_m, B_m, Y)
+        AIC_m, BIC_m = information_criteria(m["log_likelihood"], T, p)
+
+        noms.append(nom)
+        loglik_moyennes.append(m["mean_log_likelihood"])
+
+        print(nom)
+        print(f"  log-vraisemblance : {m['log_likelihood']:.6f}")
+        print(f"  log-vraisemblance moyenne : {m['mean_log_likelihood']:.6f}")
+        print(f"  NLPD : {m['nlpd']:.6f}")
+        print(f"  AIC : {AIC_m:.6f}")
+        print(f"  BIC : {BIC_m:.6f}")
+        print()
+
+    # Graphe 1 : log-vraisemblance cumulée
+    plt.figure(figsize=(8, 5))
+    plt.plot(
+        np.arange(1, T + 1),
+        metrics["prefix_log_likelihood"],
+        linewidth=1.8,
+    )
+    plt.xlabel("Longueur du préfixe")
+    plt.ylabel("Log-vraisemblance cumulée")
+    plt.title("Log-vraisemblance cumulée par préfixe")
+    plt.grid(True)
+
+    # Graphe 2 : comparaison des modèles
+    ordre = np.argsort(loglik_moyennes)
+
+    noms_tries = [noms[i] for i in ordre]
+    valeurs_triees = [loglik_moyennes[i] for i in ordre]
+
+    couleurs = [
+        "#2454a6" if nom == "Modèle de simulation" else "#b8bcc8"
+        for nom in noms_tries
+    ]
+
+    plt.figure(figsize=(8, 5))
+    plt.barh(noms_tries, valeurs_triees, color=couleurs)
+    plt.xlabel("Log-vraisemblance moyenne")
+    plt.title("Comparaison forward des modèles")
+    plt.grid(True, axis="x")
+
+    # Graphe 3 : probabilités prédictives
+    plt.figure(figsize=(8, 5))
+    plt.plot(metrics["predictive_probabilities"], linewidth=1.2)
+    plt.xlabel("t")
+    plt.ylabel(r"$P(Y_t \mid Y_1,\dots,Y_{t-1})$")
+    plt.title("Probabilités prédictives")
+    plt.grid(True)
+
+    plt.show()
+
+    return metrics
+
+
+if __name__ == "__main__":
+
+    resultats_forward = analyser_forward(
+        PI=PI,
+        A=A,
+        B=B,
+        Y=view,
+        train_ratio=0.8
+    )

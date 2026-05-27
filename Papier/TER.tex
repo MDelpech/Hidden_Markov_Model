@@ -17,6 +17,7 @@
 \usepackage{algorithm}
 \usepackage{algpseudocode}
 \usepackage{float}
+\usepackage{booktabs}
 
 \usetikzlibrary{arrows.meta,positioning}
 \usetikzlibrary{arrows.meta,positioning,calc}
@@ -72,36 +73,17 @@
 
 \vspace{1cm}
 
-\textbf{I) Introduction}
+\thispagestyle{fancy}
 
-\textbf{II) Définition et propriétés}\\
-\hspace*{0.5cm}2.1) Définitions \\
-\hspace*{1cm}2.1.1) Variables aléatoires observables et cachées. \\
-\hspace*{1cm}2.1.2) Propriétés. \\
-\hspace*{0.5cm}2.2) Définition chaîne de Markov cachée. \\
-\hspace*{1cm}2.2.1) Variables aléatoires observables et cachées. \\
-\hspace*{1cm}2.2.2) Lois jointes et vraisemblance. \\
-\hspace*{1cm}2.2.3) Exemple global d'une chaîne de Markov cachée. \\
-\hspace*{1cm}2.2.4) Remarques sur les observations.
+\begin{center}
+    {\LARGE \textbf{SOMMAIRE}}
+\end{center}
 
 \vspace{0.5cm}
 
-\textbf{III) Trois grandes problématiques des HMM}\\
-\hspace*{0.5cm}1) Estimation de la vraisemblance et forward algorithm. \\
-\hspace*{0.5cm}2) Décodage et Viterbi algorithm. \\
-\hspace*{0.5cm}3) Apprentissage et Baum--Welch algorithm.
+\tableofcontents
 
-\vspace{0.5cm}
-
-\textbf{IV) Limites des algorithmes et mesure de la qualité des estimations}\\
-\hspace*{0.5cm}1) Limites des algorithmes \\
-\hspace*{0.5cm}2) Mesure de la qualité des estimations de l'algorithme de Forward. \\
-\hspace*{0.5cm}3) Mesure de la qualité des estimations de l'algorithme de Viterbi. \\
-\hspace*{0.5cm}4) Mesure de la qualité des estimations de l'algorithme de Baum--Welch.
-
-\vspace{0.5cm}
-
-\textbf{IV) Application aux séries temporelles financières}
+\newpage
 
 
 \newpage
@@ -125,31 +107,31 @@ Dans ce travail, nous étudierons les chaînes de Markov cachées et leurs appli
 %%%%%%%%%%%%
 % Début de la partie 2.1
 %%%%%%%%%%%%
-\section{Définitions et propriétées}
+\section{Définitions et propriétés}
 Toutes les variables aléatoires de ce travail sont définies sur l'espace probabilisé $(\Omega, \mathcal{F}, \mathbb{P})$.
 
 
 %Partie sur les chaines de Markov classiques.
-\subsection{Définitions et propriétées d'un chaîne de Markov}
+\subsection{Définitions et propriétés d'une chaîne de Markov}
 \subsubsection{ Définition}
 
 \textbf{Définition d'une chaîne de Markov :}\\
 Soit $E$ un ensemble fini ou dénombrable, appelé \textit{espace d'états}. Soit $(X_n)_{n \ge 0}$ un \textit{processus} à valeur dans $E$.
 On dit que $(X_n)_{n \ge 0}$ est une \textit{chaîne de Markov} d'ordre 1, si :\\
-Pour tout $n \ge 0$, pour tout $y \in E$, pour tout $x_0,...,x_{n-1},x \in E$ tel que $\mathbb{P}(X_0 = x_0, \ldots, X_{n-1} = x_{n-1}, X_n = x) > 0$, on a:
+Pour tout $n \ge 0$, pour tout $y \in E$, pour tout $x_0,...,x_{n-1},x \in E$ tel que $\mathbb{P}(X_0 = x_0, \ldots, X_{n-1} = y, X_n = x) > 0$, on a:
 \[
-\mathbb{P}(X_{n+1} = y \mid X_n = x_n, X_{n-1} = x_{n-1},\ldots,X_0=x_0)=\mathbb{P}(X_{n+1}=x_{n+1} \mid X_n=x_n)
+\mathbb{P}(X_{n+1} = y \mid X_n = x, X_{n-1} = x_{n-1},\ldots,X_0=x_0)=\mathbb{P}(X_{n+1}=y \mid X_n=x).
 \]
 On pose $\pi_0$ la distribution initiale, i.e., la loi de $X_0$.
 
-De plus, s'il existe $A : E \times E \to [0,1]$ tel que $(x,y) \mapsto a_{x,y}=\mathbb{P}(X_{n+1} = y \mid X_n = x_n)$, pour tout $n \ge 0$, pour tout $x,y \in E$ tel que $\mathbb{P}(X_n=x_n) > 0$.
+De plus, s'il existe $A : E \times E \to [0,1]$ tel que $(x,y) \mapsto a_{x,y}=\mathbb{P}(X_{n+1} = y \mid X_n = x)$, pour tout $n \ge 0$, pour tout $x,y \in E$ tel que $\mathbb{P}(X_n=x) > 0$.
 On dit alors que $(X_n)_{n \ge 0}$ est une chaîne de Markov d'ordre 1 \textit{homogène}.
-Dans ce cas, $A$ est appelé \textit{matrice de transition} du processus $(X_n)_{n \ge 0}$, avec $P(x,y)>0$ et $\sum_{y \in E}a_{x,y}=1$, pour tout $x,y \in E$.\\
+Dans ce cas, $A$ est appelé \textit{matrice de transition} du processus $(X_n)_{n \ge 0}$, avec $a_{x,y}>0$ et $\sum_{y \in E}a_{x,y}=1$, pour tout $x,y \in E$.\\
 
-Dans ce travail, nous ne considèrerons qu'uniquement les chaînes de Markov d'ordre 1 homogènes, c'est pourquoi nous les appelerons juste chaînes de Markov.
+Dans ce travail, nous ne considérerons qu'uniquement les chaînes de Markov d'ordre 1 homogènes, c'est pourquoi nous les appellerons juste chaînes de Markov.
 
 \subsubsection{Propriétés}
-\textbf{$\bullet$ Équation de Chapman-Kolmogorov :} \\
+\textbf{$\bullet$ Loi d'une trajectoire markovienne :} \\
 Soit $(X_n)_{n \ge 0}$ une chaîne de Markov de matrice de transition P et de distribution initiale $\pi_0$. On a,\\
 Pour tout $n \ge 0$, pour tout $x_0, \ldots, x_n \in E$, 
 \[
@@ -169,21 +151,21 @@ Alors, pour tout $A \in E^n$, $B \in E^m$, $m \ge 0$, on a :
 \]
 i.e. le passé et le futur d'un moment $n$ d'une chaîne de Markov sont indépendants entre eux.
 
-\textbf{$\bullet$ Quelques propriétés utiles :} \\
+\textbf{Quelques propriétés utiles :}
 
 Pour tout $x,y \in E$, on a :
-\begin{flalign*}
-&\mathbb{P}_x(X_n = y) = P^n(x,y). &&
-\end{flalign*}
+\[
+\mathbb{P}_x(X_n = y) = P^n(x,y).
+\]
 
 De plus, pour toute mesure de probabilité $\mu$ sur $E$, et pour tout $y \in E$, on a :
-\begin{flalign*}
-&\mathbb{P}_{\mu}(X_n = y)
+\[
+\mathbb{P}_{\mu}(X_n = y)
 =
 \sum_{x \in E} \mu(x)P^n(x,y)
 =
-(\mu P^n)(y). &&
-\end{flalign*}
+(\mu P^n)(y).
+\]
 
 %%%%%%%%%%%%%%
 %Début de la partie 2.2 
@@ -191,7 +173,7 @@ De plus, pour toute mesure de probabilité $\mu$ sur $E$, et pour tout $y \in E$
 
 \subsection{Définition d'une chaîne de Markov cachée}
 
-Les chaîne de Markov cachées (HMM) sont des modèles statistique utilisées dans un situation où on a des états latent qui ne sont pas directement observable. Les données observables sont générées par ces état suivant une loi de probabilité conditionnelle.
+Les chaînes de Markov cachées (HMM) sont des modèles statistiques utilisés dans une situation où on a des états latents qui ne sont pas directement observables. Les données observables sont générées par ces états suivant une loi de probabilité conditionnelle.
 
 \subsubsection{Variables aléatoires observables et cachées}
 
@@ -223,27 +205,27 @@ Un modèle de chaîne de Markov cachée est défini par le triplet $(A, B, \pi)$
 \end{itemize}
 \vspace{0.3cm}
 
-\subsubsection{Loi jointes et vraisemblance}
+\subsubsection{Lois jointes et vraisemblance}
 
-\textbf{Propriété:}
-Soit $X$ = ($X_1$, \dots, $X_T$) la séquence d'états cachés et $Y$ = ($Y_1$, \dots, $Y_T$) la séquence d'observations, la loi des observations conditionnellements à la séquence d'états cachés est : 
+\textbf{Propriété :}
+Soit $X$ = ($X_1$, \dots, $X_T$) la séquence d'états cachés et $Y$ = ($Y_1$, \dots, $Y_T$) la séquence d'observations, la loi des observations conditionnellement à la séquence d'états cachés est : 
 \[
 \mathbb{P}(Y \mid X) = \prod_{t=1}^T \mathbb{P}(Y_t \mid X_t) 
 \]
 
-\textbf{Preuve:}
+\textbf{Preuve :}
 \[
 \mathbb{P}(Y \mid X) = \prod_{t=1}^T \mathbb{P}(Y_t \mid X_1, \dots X_T,Y_1, \dots Y_{t-1})=\prod_{t=1}^T \mathbb{P}(Y_t \mid X_t)  
 \]
 \vspace{0.3cm}
 
-\textbf{Propriété:}
-Soit $X$ = ($X_1$, \dots, $X_T$) la séquence d'états cachés et $Y$ = ($Y_1$, \dots, $Y_T$) la séquence d'observations, la loi jointes des observations et des états cachées est donnée par : 
+\textbf{Propriété :}
+Soit $X$ = ($X_1$, \dots, $X_T$) la séquence d'états cachés et $Y$ = ($Y_1$, \dots, $Y_T$) la séquence d'observations, la loi jointe des observations et des états cachés est donnée par : 
 \[
 \mathbb{P}(Y, X) = \pi_{X_1} \prod_{t=2}^T \mathbb{P}(X_{t} \mid X_{t-1}) \prod_{t=1}^T \mathbb{P}(Y_t \mid X_t)
 \]
 
-\textbf{Preuve:}
+\textbf{Preuve :}
 \begin{align*}
 \mathbb{P}(X, Y) 
 &= \mathbb{P}(X_1, Y_1) \prod_{t=2}^T \mathbb{P}(X_t,Y_t \mid X_1, \dots, X_{t-1}, Y_1,\dots, Y_{t-2}) \\
@@ -257,26 +239,26 @@ Soit $X$ = ($X_1$, \dots, $X_T$) la séquence d'états cachés et $Y$ = ($Y_1$, 
 \end{align*}
 \vspace{0.3cm}
 
-\textbf{Remarque:}
-La loi des observations à chaque instant $t$ est dépend de l'état caché à cet instant et pas des états d'avant. 
+\textbf{Remarque :}
+La loi des observations à chaque instant $t$ dépend de l'état caché à cet instant et pas des états d'avant. 
 \vspace{0.3cm}
 
-\textbf{Exemple:}
+\textbf{Exemple :}
 Soit un modèle de chaîne de Markov cachée avec deux états $A$ et $B$. 
-En supposant ques les observation sont gaussienne conditionnellement à l'état caché, on a :
+En supposant que les observations sont gaussiennes conditionnellement à l'état caché, on a :
 \[
-\mathbb{P}(Y_t \mid X_t = A) \sim \mathcal{N}(\mu_{A}, \sigma^2_{A})
+\mathcal{L}(Y_t | {X_t=A}) \sim \mathcal{N}(\mu_{A}, \sigma^2_{A})
 \]
 \[
-\mathbb{P}(Y_t \mid X_t = B) \sim \mathcal{N}(\mu_{B}, \sigma^2_{B})
+\mathcal{L}(Y_t | {X_t=B}) \sim \mathcal{N}(\mu_{B}, \sigma^2_{B})
 \]
 \vspace{0.3cm}
 
-\textbf{Remarque:}
-$X_t$ agit comme un selecteur de distribution pour $Y_t$.
+\textbf{Remarque :}
+$X_t$ agit comme un sélecteur de distribution pour $Y_t$.
 \vspace{0.3cm}
 
-\subsubsection{Exemple de globale d'une chaîne de Markov cachée}
+\subsubsection{Exemple global d'une chaîne de Markov cachée}
 
 Prenons un exemple simple d'une chaîne de Markov cachée avec deux états $C$ et $V$ (pour "calme" et "volatile") et des observations gaussiennes conditionnelles à ces états.\\
 Soit $E = \{C, V\}$ l'ensemble d'états, on note $\pi$ la distribution initiale, par exemple $\pi_0 = (0.5, 0.5)$, indiquant que le processus commence avec une probabilité égale dans les états $C$ et $V$.\\
@@ -292,18 +274,18 @@ Avec, $a_{ij} = \mathbb{P}(X_{t+1} = j \mid X_t = i)$.
 
 \vspace{0.3cm}
 
-La matrice d'émission $B$ peut être définie par les distributions gaussiennes conditionnelles à chaque état :
+La famille de densités paramétriques $B$ peut être définie par les distributions gaussiennes conditionnelles à chaque état :
 \[
 B =
 \begin{cases}
-\mathbb{P}(Y_t \mid X_t = C) \sim \mathcal{N}(\mu_C, \sigma_C^2) \\
-\mathbb{P}(Y_t \mid X_t = V) \sim \mathcal{N}(\mu_V, \sigma_V^2)
+\mathcal{L}(Y_t \mid X_t = C) \sim \mathcal{N}(\mu_C, \sigma_C^2) \\
+\mathcal{L}(Y_t \mid X_t = V) \sim \mathcal{N}(\mu_V, \sigma_V^2)
 \end{cases}
 \]
 
 \vspace{0.5cm}
-\textbf{NB:}
-La matrice de transition $A$ n'est pas connue dans la plupart des applications, elle doit être estimé à partir des données d'observations. Par exemple avec l'algorithme de Baum-Welch que nous verrons plus tard.
+\textbf{NB :}
+La matrice de transition $A$ n'est pas connue dans la plupart des applications, elle doit être estimée à partir des données d'observations. Par exemple avec l'algorithme de Baum-Welch que nous verrons plus tard.
 \vspace{1.5cm}
 
 \begin{figure}[h]
@@ -345,19 +327,19 @@ node[midway, right, draw=none] {$\mathbb{P}(Y_{t+1} \mid X_{t+1})$}
 
 \subsubsection{Remarques sur les observations}
 
-\textbf{Propriété:}
-La probabilité totale des obstervation $Y_T$ est donnée par : 
+\textbf{Propriété :}
+La probabilité totale des observations $(Y_t)_{t}$ est donnée par : 
 \[
 \mathbb{P}(Y) = \sum_{X}\mathbb{P}(Y,X) = \sum_{}\mathbb{P}(Y \mid X)\mathbb{P}(X)
 \]
 \vspace{0.3cm}
 
-\textbf{Propriété:}
-Dans un HMM les observations $(Y_t)$ n'est pas un processus de Markov, même si les états cachés $(X_t)$ le sont. 
+\textbf{Propriété :}
+Dans un HMM non dégénéré, le processus d'observations $(Y_t)_{t}$ n'est pas un processus de Markov, même si les états cachés $(X_t)_{t}$ le sont. 
 
 \textbf{Preuve :}
 
-Si le processus d'observations $(Y_t)$ était markovien. Alors on aurait
+Si le processus d'observations $(Y_t)_{t}$ était markovien, alors on aurait
 \[
 \mathbb{P}(Y_{n+1} \mid Y_1,\dots,Y_n) = \mathbb{P}(Y_{n+1} \mid Y_n).
 \]
@@ -372,13 +354,13 @@ Or, pour $K$ états cachés, on a
 \mathbb{P}(X_{n+1}=i \mid Y_1,\dots,Y_n).
 \end{align*}
 
-or, 
+Or, 
 \begin{align*}
 \mathbb{P}(X_{n+1}=i \mid Y_1,\dots,Y_n)
 &= \sum_{j=1}^{K} \mathbb{P}(X_{n+1}=i, X_{n}=j \mid Y_1,\dots,Y_n) \\
 &= \sum_{j=1}^{K} \mathbb{P}(X_{n+1}=i \mid X_{n}=j, Y_1,\dots,Y_n) \mathbb{P}(X_{n}=j \mid Y_1, \dots Y_n)\\
 &= \sum_{j=1}^{K} \mathbb{P}(X_{n+1}=i \mid X_{n}=j) \mathbb{P}(X_n=j \mid Y_1, \dots Y_n)\\
-&= \sum_{j=1}^{k} a_{ji} \mathbb{P}(X_n=j \mid Y_1, \dots Y_n).
+&= \sum_{j=1}^{K} a_{ji} \mathbb{P}(X_n=j \mid Y_1, \dots Y_n).
 \end{align*}
 
 et, 
@@ -390,12 +372,12 @@ et,
 &= \frac{\mathbb{P}(Y_n \mid X_n=j) \mathbb{P}(X_n=j \mid Y_1 \dots Y_{n-1})}{\mathbb{P}(Y_n \mid Y_1 \dots Y_{n-1})}.
 \end{align*}
 
-on a donc : 
+On a donc : 
 \[
 \mathbb{P}(Y_{n+1}\mid Y_1 \dots Y_n ) = \sum_{i=1}^{K} \sum_{j=1}^K a_{ji} \frac{\mathbb{P}(Y_{n+1} \mid X_{n+1} = i) \mathbb{P}(Y_n \mid X_n=j) \mathbb{P}(X_n=j \mid Y_1 \dots Y_{n-1})}{\mathbb{P}(Y_n \mid Y_1 \dots Y_{n-1})}.
 \]
 
-On procède de la même manière pour calculer $\mathbb{P}(X_n = j \mid Y_1 \dots Y_{n-1})$ ce qui va descendre le degrès de dépendance à $Y_{n-1}$. On continue ainsi de suite de manière récursive jusqu'à ce que le terme de dépendance à $Y_1$ soit atteint.
+On procède de la même manière pour calculer $\mathbb{P}(X_n = j \mid Y_1 \dots Y_{n-1})$ ce qui va descendre le degré de dépendance à $Y_{n-1}$. On continue ainsi de suite de manière récursive jusqu'à ce que le terme de dépendance à $Y_1$ soit atteint.
 
 Ainsi, le terme
 \[
@@ -409,16 +391,18 @@ Donc, en général,
 \]
 ce qui montre que le processus d'observations $(Y_t)$ n'est pas markovien.
 
+\newpage
+
 \section{Trois grandes problématiques des HMM}
 
 %%%%%%%%%%%%%%%%%%
 %% Début de la partie 3 sur les algorithmes
 %%%%%%%%%%%%%%%%%%
 
-\subsection{Estimation de la vraisemblance et forward algorithme}
+\subsection{Estimation de la vraisemblance et algorithme Forward}
 
-\textbf{Problématique:}
-Comment calculer efficacement la vraisemblance $\mathbb{P}(Y)$ d'une séquence d'observations $Y$ donnée un modèle de HMM $(A, B, \pi)$ ? \\ 
+\textbf{Problématique :}
+Comment calculer efficacement la vraisemblance $\mathbb{P}(Y)$ d'une séquence d'observations $Y$ donnée par un modèle de HMM $(A, B, \pi)$ ? \\ 
 
 On suppose que la matrice de transition $A$, la matrice d'émission $B$ ainsi que la distribution initiale $\pi$ sont connues. \\ 
 
@@ -426,10 +410,10 @@ On sait que la vraisemblance de $Y$ est donnée par :
 \[
 \mathbb{P}(Y) = \sum_{X}\mathbb{P}(Y,X) = \sum_{X}\mathbb{P}(Y \mid X)\mathbb{P}(X).
 \]
-Cependant, pour N états cachés et une séquence d'observations de longueur T, le nombre de séquence cachées possibles est de $N^T$, ce qui rend le calcul direct d'un complexité exponentielle si on l'effectue de manière naïve. \\ 
-La solution optimale est d'utiliser l'algorithme de forward qui permet de calculer $\mathbb{P}(Y)$ avec un complexité de $O(N^2T)$. \\ 
+Cependant, pour $N$ états cachés et une séquence d'observations de longueur $T$, le nombre de séquences cachées possibles est de $N^T$, ce qui rend le calcul direct d'une complexité exponentielle si on l'effectue de manière naïve. \\ 
+La solution optimale est d'utiliser l'algorithme de forward qui permet de calculer $\mathbb{P}(Y)$ avec une complexité de $O(N^2T)$. \\ 
 
-Cet algorithme repose sur le comcepte de programmation dynamique et utilise une variable intermédiaire $\alpha_t(i)$ qui représente la probabilité d'observé la séquence d'observation $y_1 \dots y_t$ et d'être dans l'état caché $i$ à l'intant $t$.\\
+Cet algorithme repose sur le concept de programmation dynamique et utilise une variable intermédiaire $\alpha_t(i)$ qui représente la probabilité d'observer la séquence d'observations $y_1 \dots y_t$ et d'être dans l'état caché $i$ à l'instant $t$.\\
 Formellement, on définit $\alpha_t(i)$ comme : 
 \[
 \alpha_t(i) = \mathbb{P}(y_1, \dots, y_t, X_t = i).
@@ -474,15 +458,15 @@ avec $a_{ij}$ la probabilité de transition de l'état $i$ à l'état $j$, $b_j(
 L'algorithme de forward permet ainsi de calculer efficacement la vraisemblance d'une séquence d'observations donnée, en évitant le calcul direct de toutes les séquences d'états cachés possibles.
 \vspace{0.5cm}
 
-\textbf{Analyse de la complexité}
-Lors de l'initialisation, on effectue $N$ opérations de complexité$O(1)$ pour calculer $\alpha_1(i)$ pour $i=1, \dots, N$, soit une complexité de $O(N)$.\\
-Lors de la récursion, pour chaque instant $t$ de 2 à $T$, on effectue $N$ opérations pour calculer $\alpha_t(j)$ pour $j=1, \dots, N$. chaque calcul de $\alpha_t(j)$ nécessite de faire une somme de $N$ termes, ce qui correspond à une complexité de $O(N^2)$ pour chaque instant $t$. Ainsi la complexité total de la récursion est de $O(N^2T)$.\\
+\textbf{Analyse de la complexité :}\\
+Lors de l'initialisation, on effectue $N$ opérations de complexité $O(1)$ pour calculer $\alpha_1(i)$ pour $i=1, \dots, N$, soit une complexité de $O(N)$.\\
+Lors de la récursion, pour chaque instant $t$ de 2 à $T$, on effectue $N$ opérations pour calculer $\alpha_t(j)$ pour $j=1, \dots, N$. Chaque calcul de $\alpha_t(j)$ nécessite de faire une somme de $N$ termes, ce qui correspond à une complexité de $O(N^2)$ pour chaque instant $t$. Ainsi la complexité totale de la récursion est de $O(N^2T)$.\\
 Lors de la terminaison, on effectue une somme de $N$ termes pour calculer $\mathbb{P}(Y)$, ce qui correspond à une complexité de $O(N)$.\\
-En combinant ces différentes étapes, on obtient une complexité totale de l'algorithme de $O(N^2T)$, ce qui est beacoup plus efficace que la complexié exponentielle $O(N^T)$ du calcul brut. 
+En combinant ces différentes étapes, on obtient une complexité totale de l'algorithme de $O(N^2T)$, ce qui est beaucoup plus efficace que la complexité exponentielle $O(N^T)$ du calcul brut. 
 
 \vspace{0.5cm}
 
-Pour plus de claireté, on peut présenter l'algorithme de forward sous forme de treillis : 
+Pour plus de clarté, on peut présenter l'algorithme de forward sous forme de treillis : 
 
 \begin{figure}[H]
 \centering
@@ -519,7 +503,7 @@ Pour plus de claireté, on peut présenter l'algorithme de forward sous forme de
     }
 ]
 
-% Noeud initial
+% Nœud initial
 \node[init] (pi) at (0.6,0) {$\pi$};
 
 % Etats caches
@@ -581,22 +565,22 @@ Pour plus de claireté, on peut présenter l'algorithme de forward sous forme de
 \end{figure}
 
 
-\subsection{Decodding et Viterbi algorithm}
+\subsection{Décodage et algorithme de Viterbi}
 
-Considérons un nouveau problème : le décodage d'une suite d'état d'après une série d'observations $Y_1,\dots,Y_T$.
+Considérons un nouveau problème : le décodage d'une suite d'états d'après une série d'observations $Y_1,\dots,Y_T$.
 On essaye de découvrir la partie cachée du modèle.\\
-i.e. Découvrir à posteriori la ``vraie'' séquence d'état $X = (X_1, \dots, X_T)$ qui s'est produite pour générer une série d'observation, sachant la distribution initiale, la matrice de transition ainsi que les probabilités d'émissions.
+i.e. Découvrir a posteriori la ``vraie'' séquence d'états $X = (X_1, \dots, X_T)$ qui s'est produite pour générer une série d'observations, sachant la distribution initiale, la matrice de transition ainsi que les probabilités d'émission.
 
-Il paraît évident qu'il n'y a pas de ``vraie'' séquence d'états, nous allons devoir instaurer des critères d'optimalité pour régler notre problème.
+Il paraît évident qu'il n'y a pas toujours de ``vraie'' séquence d'états, nous allons devoir instaurer des critères d'optimalité pour régler notre problème.
 
-Une première approche qu'on pourrait qualifier de ``Greedy'' serait de choisir, à chaque instant $t$, l'état $X_t$ tel que la probabilité d'observer $Y_t$ est la plus grande.
-Ce critère d'optimalité maximise l'espérance du nombre d'états correctement décrypté un à un.
+Une première approche qu'on pourrait qualifier de ``Greedy'' serait de choisir, à chaque instant $t$, l'état $X_t$ tel que la probabilité d'observer $Y_t$ soit la plus grande.
+Ce critère d'optimalité maximise l'espérance du nombre d'états correctement décryptés un à un.
 
-Cependant, cela peut amener plusieurs problèmes avec la séquence d'état qui en résulte. N'ayant aucune condition d'ergodicité sur notre chaîne de Markov cachée, une transition entre 2 états peut avoir une probabilité nulle.
-Or rien ne l'interdit dans notre critère, donc cette transition pourrait apparaître dans le résultat alors que celui-ci ne serait ainsi même pas réalisable.
+Cependant, cela peut amener plusieurs problèmes avec la séquence d'états qui en résulte. Comme le critère local ignore la matrice de transition, il peut proposer une transition de probabilité nulle.
+Or, rien ne l'interdit dans notre critère, donc cette transition pourrait apparaître dans le résultat alors que celui-ci ne serait ainsi même pas réalisable.
 
-Il va donc falloir trouver un critère prenant en compte la probabilité de réalisation d'une séquence d'états. On pourrait ainsi vouloir maximiser l'espérance du nombre de paires correctes d'états découvert, ou de triplet, etc.
-Cependant le critère le plus utilisé est le critère de trouver l'unique séquence d'états qui maximise la probabilité de voir nos observations sachant la distribution initiale, la matrice de transition ainsi que les probabilités d'émissions.
+Il va donc falloir trouver un critère prenant en compte la probabilité de réalisation d'une séquence d'états. On pourrait ainsi vouloir maximiser l'espérance du nombre de paires correctes d'états découverts, ou de triplets, etc.
+Cependant, le critère le plus utilisé est le critère de trouver l'unique séquence d'états qui maximise la probabilité de voir nos observations sachant la distribution initiale, la matrice de transition ainsi que les probabilités d'émission.
 
 Le problème étant exponentiellement complexe, la solution est d'utiliser un algorithme de programmation dynamique nommé : Algorithme de Viterbi.
 
@@ -616,9 +600,13 @@ Avec,
 \[
 a_{ij}=\mathbb{P}(X_{t+1}=j \mid X_t=i)
 \]
-et
+et, si les observations sont discrètes,
 \[
 b_j(y_t)=\mathbb{P}(Y_t=y_t \mid X_t=j)
+\] 
+ou, si les observations sont continues, 
+\[
+b_j(y_t)=f_{Y_t \mid X_t=j}(y_t)
 \]
 Ainsi, par récurrence, on a que :
 \[
@@ -636,18 +624,18 @@ C'est exponentiel, donc inutilisable dès que $T$ ou $N$ devient grand.
 
 Afin de limiter cette complexité, l'algorithme de Viterbi repose sur le principe du treillis.
 
-\textbf{Principe du Treillis:}\\
+\textbf{Principe du Treillis :}\\
 Structure en colonne où :
 \begin{itemize}
     \item chaque colonne correspond à un instant $t$
     \item chaque ligne correspond à un état caché.
-    \item chaque noeud $(t,j)$ représente le fait d'être dans l'état $j$ au temps $t$.
-    \item chaque arête entre $(t-1,i)$ et $(t,j)$ représente une transition possible, pondéré par la proba $a_{ij}$.
-    \item chaque noeud est également associé à la proba d'émission $b_j(y_t)$.
+    \item chaque nœud $(t,j)$ représente le fait d'être dans l'état $j$ au temps $t$.
+    \item chaque arête entre $(t-1,i)$ et $(t,j)$ représente une transition possible, pondérée par la proba $a_{ij}$.
+    \item chaque nœud est également associé à la proba d'émission $b_j(y_t)$.
 \end{itemize}
 
 Ainsi, le problème de décodage revient à trouver le meilleur chemin dans ce treillis, depuis la première colonne jusqu'à la dernière.
-Chaque chemin correspond à une séquence d'état cachés possible.
+Chaque chemin correspond à une séquence d'états cachés possibles.
 Le rôle de l'algorithme de Viterbi est précisément de trouver le chemin de probabilité maximale : 
 
 
@@ -686,7 +674,7 @@ Le rôle de l'algorithme de Viterbi est précisément de trouver le chemin de pr
     }
 ]
 
-% Noeud initial
+% Nœud initial
 \node[init] (pi) at (0,0) {$\pi$};
 
 % Etats caches
@@ -749,7 +737,7 @@ Le rôle de l'algorithme de Viterbi est précisément de trouver le chemin de pr
 \label{fig:treillis-viterbi}
 \end{figure}
 
-L'intérêt du treillis est qu'il met en évidence une propriété fondamentale : pour retrouver la séquence d'état, il faut garder en mémoire l'argument qui maximise la récurrence. Nous allons le faire via la liste $\psi_t(j)$.
+L'intérêt du treillis est qu'il met en évidence une propriété fondamentale : pour retrouver la séquence d'états, il faut garder en mémoire l'argument qui maximise la récurrence. Nous allons le faire via la liste $\psi_t(j)$.
 
 On peut donc suivre l'algorithme suivant :
 
@@ -790,7 +778,7 @@ et probabilité associée $P^*$
 \State $\displaystyle X_T^* \gets \arg\max_{1 \leq i \leq N} \delta_T(i)$
 
 \Statex
-\Statex \textbf{Retracage du chemin}
+\Statex \textbf{Retraçage du chemin}
 \For{$t = T-1,T-2,\dots,1$}
     \State $\displaystyle X_t^* \gets \psi_{t+1}(X_{t+1}^*)$
 \EndFor
@@ -800,18 +788,18 @@ et probabilité associée $P^*$
 \end{algorithmic}
 \end{algorithm}
 
-On obtient ainsi avec $X_1^\star,\dots,X_T^\star$ notre séquence d'état recherchée.
+On obtient ainsi avec $X_1^\star,\dots,X_T^\star$ notre séquence d'états recherchée.
 
 \vspace{0.3cm}
 
-\textbf{Analyse de la complexité:}
+\textbf{Analyse de la complexité :}
 \begin{itemize}
-    \item A chaque instant, on calcule une valeur pour chacun des $N$ états.
+    \item À chaque instant, on calcule une valeur pour chacun des $N$ états.
     \item Pour chaque état, on doit évaluer la probabilité de venir depuis chacun des états.
 \end{itemize}
 Ainsi, à chaque itération, on a une complexité de $O(N^2)$.
 
-Il y a $T$ instant, on obtient donc une complexité temporelle totale de :
+Il y a $T$ instants, on obtient donc une complexité temporelle totale de :
 \[
 O(TN^2)
 \]
@@ -830,11 +818,11 @@ i.e.
 
 Pour cela, nous pouvons utiliser un algorithme introduit par Baum--Welch qui est en fait un cas particulier d'utilisation de l'algorithme Expectation Maximisation (EM).
 
-Avant toutes choses, il est important de noter que cette méthode itérative permet d'approximer un optimal local à notre problème.
+Avant toute chose, il est important de noter que cette méthode itérative permet d'approximer un optimum local à notre problème.
 
 Afin de pouvoir trouver les $A$, $B$ et $\pi$ de notre problème, nous devons définir les variables avec lesquelles nous allons travailler :
 
-\textbf{$\bullet$} $\xi_t(i,j)$ := la probabilité d'être en l'état $i$ à l'instant $t$ et en l'état $j$ à l'instant $t+1$ sachant le modèle $(A,B,\pi)$ et la série d'observations $Y$.
+\textbf{$\bullet$} $\xi_t(i,j)$ := la probabilité d'être dans l'état $i$ à l'instant $t$ et dans l'état $j$ à l'instant $t+1$ sachant le modèle $(A,B,\pi)$ et la série d'observations $Y$.
 
 \[
 \forall t \in \{1,\dots,T-1\}, \quad \forall i,j \in E,
@@ -851,7 +839,7 @@ Afin de pouvoir trouver les $A$, $B$ et $\pi$ de notre problème, nous devons d�
 \end{align*}
 
 \newpage
-\textbf{$\bullet$} $\gamma_t(i)$ := la probabilité d'être en l'état $i$ à l'instant $t$, sachant la série d'observation et le modèle $(A,B,\pi)$.
+\textbf{$\bullet$} $\gamma_t(i)$ := la probabilité d'être dans l'état $i$ à l'instant $t$, sachant la série d'observations et le modèle $(A,B,\pi)$.
 
 \[
 \forall t \in \{1,\dots,T-1\}, \quad \forall i \in E,
@@ -869,7 +857,7 @@ De la même manière, la somme sur les $t$ des $\xi_t(i,j)$ donne l'espérance d
 
 i.e.
 \[
-\sum_{t=1}^{T-1}\gamma_t(i) = \text{espérance du nombre de transitions depuis } i
+\sum_{t=1}^{T}\gamma_t(i) = \text{espérance du nombre de transitions depuis } i
 \]
 \[
 \sum_{t=1}^{T-1}\xi_t(i,j) = \text{espérance du nombre de transitions de } i \text{ vers } j
@@ -881,7 +869,7 @@ Grâce à cette remarque, des estimateurs naturels de $\pi$, $A$, $B$ apparaisse
 \forall i,j \in E,
 \]
 \[
-\pi_i' := \text{probabilité d'être en l'état } i \text{ au moment } 1
+\pi_i' := \text{probabilité d'être dans l'état } i \text{ au moment } 1
 =\gamma_1(i)
 \]
 
@@ -897,7 +885,7 @@ a_{ij}' :=
 \[
 b_j'(y) :=
 \frac{\text{espérance du nombre d'observations de } y \text{ étant dans l'état } j}
-{\text{espérance du nombre de fois où on est en l'état } j}
+{\text{espérance du nombre de fois où on est dans l'état } j}
 \]
 \[
 =
@@ -905,7 +893,7 @@ b_j'(y) :=
 {\sum_{t=1}^{T}\gamma_t(j)}
 \]
 
-Dans le cas où les observations sont continues, alors on estime les paramètres avec des estimateurs naturels issues de ces quantités.
+Dans le cas où les observations sont continues, alors on estime les paramètres avec des estimateurs naturels issus de ces quantités.
 
 Par exemple pour des émissions gaussiennes, on a :
 \[
@@ -934,8 +922,10 @@ On peut donc en déduire cet algorithme :
 \setlength{\abovedisplayshortskip}{2pt}
 \setlength{\belowdisplayshortskip}{2pt}
 \begin{algorithmic}[1]
-\Require Suite d'observations \(Y=(y_1,\dots,y_T)\),
-nombre d'états \(N\), paramètres initiaux \(\lambda^{(0)}=(A^{(0)},B^{(0)},\pi^{(0)})\),
+\Require 
+Suite d'observations \(Y=(y_1,\dots,y_T)\),\\
+nombre d'états \(N\), \\
+paramètres initiaux \(\lambda^{(0)}=(A^{(0)},B^{(0)},\pi^{(0)})\),\\
 seuil de convergence \(\varepsilon\)
 \Ensure Paramètres estimés \(\widehat{\lambda}=(\widehat{A},\widehat{B},\widehat{\pi})\)
 
@@ -997,7 +987,7 @@ seuil de convergence \(\varepsilon\)
     \frac{\sum_{t=1}^{T-1}\xi_t(i,j)}
     {\sum_{t=1}^{T-1}\gamma_t(i)}
     \]
-    \State Mettre à jour les paramètres d'émission \(B^{(m+1)}\)
+    \State Mettre à jour les paramètres d'émission \(B^{(m+1)}\) avec des estimateurs naturels basés sur les \(\gamma_t(i)\)
     \State \(\displaystyle L^{(m+1)}\gets \sum_{i=1}^{N}\alpha_T(i)\)
     \State \(m\gets m+1\)
 \Until{\(\left|L^{(m)}-L^{(m-1)}\right|<\varepsilon\)}
@@ -1006,7 +996,8 @@ seuil de convergence \(\varepsilon\)
 \end{algorithmic}
 \end{algorithm}
 
-Dans ce travail, nous ne traiterons pas du choix de epsilon qui mériterait un travail à part entière, mais il est important de noter que ce choix peut avoir un impact significatif sur la convergence de l'algorithme. De plus, avec une seule série d’observations, on ne peut pas estimer de manière robuste la distribution initiale \(\pi\), car elle ne concerne que l’état caché au premier instant ; toutefois, cela a peu d’impact sur l’utilisation finale du modèle, puisque l’influence de \(\pi\) disparaît progressivement au fil du temps au profit des transitions et des émissions estimées.\\
+Dans ce travail, nous ne traiterons pas du choix d'epsilon qui mériterait un travail à part entière, mais il est important de noter que ce choix peut avoir un impact significatif sur la convergence de l'algorithme. De plus, avec une seule série d’observations, on ne peut pas estimer de manière robuste la distribution initiale \(\pi\), car elle ne concerne que l’état caché au premier instant ; toutefois, cela a peu d’impact sur l’utilisation finale du modèle, puisque l’influence de \(\pi\) disparaît progressivement au fil du temps au profit des transitions et des émissions estimées.\\
+
 \textbf{Analyse de la complexité :}
 \begin{itemize}
     \item étape forward : pour chaque instant $t$, pour chaque état $j$, on somme sur tous les états précédents. Donc $O(TN^2)$.
@@ -1030,21 +1021,22 @@ O(ITN^2)
 
 
 %%%%%%%%%%%%%%%%%%
-%% Début de la partie 3 sur les limites et les analyses
+%% Début de la partie 4 sur les limites et les analyses
 %%%%%%%%%%%%%%%%%%
 \newpage
 \section{Limites des algorithmes et analyse de la qualité des estimations}
 
-\subsection{Les limites des algortihmes}
+\subsection{Limites et Mesure de la qualité de la vraisemblance avec l'algorithme Forward}
 
 \subsubsection{Limites de l'algorithme de forward}
 Une des principales limites de l'algorithme de forward vient de la quantité d'observations. En effet, plus la séquence d'observations est longue, plus la vraisemblance $\mathbb{P}(Y)$ devient extrêmement petite, ce qui peut entraîner des problèmes computationnels liés à la précision numérique.
-Pour pallier à ce problème, on peut alors effectuer une modification de l'algorithme de forward en passant à la log-vraisemblance. Cela permet de transformer les produites en sommes, le tout avec des valeurs plus grandes et par conséquent plus faciles à manipuler numériquement.\\
-De plus, si le nombre d'états cachés est trés grand, l'algorithme de forward peut devenir extrêmement coûteux en temps de calcul, ce qui peut rendre son utilisation moins pertinente dans des applications avec un grand nombre d'états.\\
+Pour pallier ce problème, on peut alors effectuer une modification de l'algorithme de forward en passant à la log-vraisemblance. Cela permet de transformer les produits en sommes, le tout avec des valeurs plus grandes et par conséquent plus faciles à manipuler numériquement.\\
+De plus, si le nombre d'états cachés est très grand, l'algorithme de forward peut devenir extrêmement coûteux en temps de calcul, ce qui peut rendre son utilisation moins pertinente dans des applications avec un grand nombre d'états.\\
 
-\subsection{Mesure de la qualité de la vraisemblance avec l'algorithme Forward}
+Aussi, l'algorithme Forward évalue la vraisemblance des observations, mais il ne dit pas directement si les régimes cachés estimés sont économiquement interprétables. Un modèle peut avoir une bonne vraisemblance tout en produisant des régimes difficiles à lire financièrement.
+Ainsi, la vraisemblance calculée par Forward doit être utilisée comme une mesure statistique importante, mais elle doit être complétée par l'analyse des régimes obtenus avec Viterbi ou avec les probabilités a posteriori, ainsi que par une validation hors échantillon.\\
 
-L'algorithme Forward permet de calculer la probabilité d'observer une séquence donnée sous un modèle HMM donné. Si \(Y_{1:T}\) désigne la série observée, avec \(T\) le nombre total d'observations, et si \(\lambda=(\pi,A,B)\) désigne les paramètres du modèle, l'algorithme Forward calcule :
+L'algorithme Forward permet donc de calculer la probabilité d'observer une séquence donnée sous un modèle HMM donné. Si \(Y_{1:T}\) désigne la série observée, avec \(T\) le nombre total d'observations, et si \(\lambda=(\pi,A,B)\) désigne les paramètres du modèle, l'algorithme Forward calcule :
 \[
 P(Y_{1:T}\mid \lambda).
 \]
@@ -1102,12 +1094,6 @@ NLPD
 -\frac{1}{T_{\text{test}}}\ell_{\text{test}}.
 \]
 Un \(NLPD\) faible indique que le modèle attribue une forte probabilité aux nouvelles observations. Il s'agit donc d'un bon indicateur pour vérifier si le modèle reste pertinent sur des données qui n'ont pas servi à l'estimation.
-
-\subsubsection{Limites de l'évaluation par Forward}
-
-L'algorithme Forward évalue la vraisemblance des observations, mais il ne dit pas directement si les régimes cachés estimés sont économiquement interprétables. Un modèle peut avoir une bonne vraisemblance tout en produisant des régimes difficiles à lire financièrement.
-
-Ainsi, la vraisemblance calculée par Forward doit être utilisée comme une mesure statistique importante, mais elle doit être complétée par l'analyse des régimes obtenus avec Viterbi ou avec les probabilités a posteriori, ainsi que par une validation hors échantillon.
 
 
 \subsection{Mesure de la qualité du décodage par Viterbi}
@@ -1168,9 +1154,7 @@ D_{VP}
 \sum_{t=1}^{T}
 \mathbf{1}_{\{\widehat{X}_t^{\,V}\neq \widehat{X}_t^{\,P}\}}.
 \]
-Plus \(D_{VP}\) est proche de \(0\), plus les deux méthodes donnent des régimes similaires. Une valeur élevée indique au contraire que le choix des états est incertain ou dépend fortement de la méthode de décodage.
-
-À l'inverse, si les deux méthodes donnent des résultats très différents, cela révèle une incertitude importante sur les états cachés. Le chemin Viterbi doit alors être interprété comme une trajectoire probable, et non comme une classification certaine.
+Plus \(D_{VP}\) est proche de \(0\), plus les deux méthodes donnent des régimes similaires. Une valeur élevée indique au contraire que le choix des états est incertain ou dépend fortement de la méthode de décodage. À l'inverse, si les deux méthodes donnent des résultats très différents, cela révèle une incertitude importante sur les états cachés. Le chemin Viterbi doit alors être interprété comme une trajectoire probable, et non comme une classification certaine.
 
 \subsection{Mesure de la qualité des estimations de Baum--Welch}
 
@@ -1220,7 +1204,7 @@ D_A=
 \frac1N\sum_i\frac12\sum_j
 \left|\widehat{a}^{(a)}_{ij}-\widehat{a}^{(b)}_{ij}\right|.
 \]
-On compare également la durée moyenne des régimes :
+On compare également la durée moyenne des régimes, pour $\widehat{a}_{ii} < 1$ :
 \[
 \widehat{d}_i=\frac{1}{1-\widehat{a}_{ii}},
 \qquad
@@ -1231,7 +1215,7 @@ D_{d,i}
 {\widehat{d}^{(b)}_i}
 \right|.
 \]
-Deux estimations peuvent avoir des vraisemblances proches mais des régimes de persistances très différentes.
+Deux estimations peuvent avoir des vraisemblances proches mais des régimes de persistance très différents.
 
 Pour les lois d'émission discrètes, on peut utiliser :
 \[
@@ -1275,6 +1259,649 @@ L'idée est d'estimer le modèle sur une période d'apprentissage puis de l'éva
 NLPD=-\frac{1}{T_{test}}\ell_{test}.
 \]
 Un \(NLPD\) faible indique que le modèle attribue une forte probabilité aux nouvelles observations. Cette étape est importante, car une estimation peut bien expliquer le passé tout en généralisant mal sur des données financières futures.
+
+
+\newpage
+
+%%% Partie sur la mise en place du modele sur le VIX 
+
+\section{Simulation d'un HMM et application à des données financières}
+
+\subsection{Jeu de données simulé}
+
+Afin de tester et de valider les différents algorithmes étudiés, nous avons construit un jeu de données simulé à partir d'un modèle de Markov caché. L'objectif de cette simulation est de disposer d'une séquence d'observations pour laquelle les paramètres du modèle sont connus à l'avance. Cela permet ensuite de vérifier si les algorithmes d'inférence et d'estimation parviennent à retrouver correctement la structure sous-jacente du modèle.
+
+Le modèle considéré possède trois états cachés, représentant trois conditions météorologiques possibles :
+\[
+S = \{\text{soleil}, \text{nuageux}, \text{pluie}\}.
+\]
+À chaque instant, l'état caché n'est pas observé directement. En revanche, on observe une variable liée à cet état, qui correspond ici au fait qu'une personne prenne ou non un parapluie :
+\[
+O = \{\text{parapluie}, \text{pas parapluie}\}.
+\]
+
+La distribution initiale des états est donnée par
+\[
+\pi =
+\begin{pmatrix}
+0.5 & 0.3 & 0.2
+\end{pmatrix},
+\]
+ce qui signifie que la simulation commence avec une probabilité de $0.5$ dans l'état \og soleil \fg, $0.3$ dans l'état \og nuageux \fg{} et $0.2$ dans l'état \og pluie \fg.
+
+La matrice de transition entre les états cachés est définie par : 
+\[
+A =
+\begin{pmatrix}
+0.7 & 0.295 & 0.005 \\
+0.3 & 0.4 & 0.3 \\
+0.005 & 0.395 & 0.6
+\end{pmatrix}.
+\]
+
+La matrice d'émission est quant à elle définie par :
+\[
+B =
+\begin{pmatrix}
+0.1 & 0.9 \\
+0.4 & 0.6 \\
+0.9 & 0.1
+\end{pmatrix}.
+\]
+
+À partir de ces paramètres, nous simulons une trajectoire de longueur $T = 1000$. La génération se fait en deux étapes à chaque instant. Tout d'abord, un état caché est tiré selon la matrice de transition $A$. Ensuite, une observation est générée selon la loi d'émission correspondant à cet état, donnée par la matrice $B$. On obtient ainsi deux suites :
+\[
+(X_1, X_2, \ldots, X_T)
+\]
+pour les états cachés, et
+\[
+(Y_1, Y_2, \ldots, Y_T)
+\]
+pour les observations.
+
+Ce jeu de données simulé constitue un cadre pour évaluer les algorithmes. En effet, contrairement à un jeu de données réel, les états cachés et les vrais paramètres du modèle sont connus. Il est donc possible de comparer les résultats produits par les algorithmes avec les valeurs utilisées pour générer les données.
+Cela nous permettra notamment de tester la fiabilité des différents algorithmes.
+
+\subsection{Application des algorithmes sur données simulées}\mbox{}\\
+Résultat de l'algorithme Forward : 
+-639.814329
+
+
+Résultat de l'algorithme de Viterbi :
+\begin{figure}[H]
+\centering
+\includegraphics[width=0.90\linewidth]{Test/viterbi_vs_reel_220.png}
+
+\vspace{0.2cm}
+
+
+\caption{Comparaison entre les états réels simulés et le chemin Viterbi sur les 220 premières dates.}
+\end{figure}
+
+Résultat de Baum-Welch : 
+Après exécution de l'algorithme de Baum-Welch sur les données simulées, nous obtenons les paramètres estimés suivants.
+
+La matrice de transition estimée est
+\[
+\hat{A}
+=
+\begin{pmatrix}
+0.7026 & 0.2956 & 0.0018 \\
+0.2720 & 0.5963 & 0.1316 \\
+0.1804 & 0.2172 & 0.6024
+\end{pmatrix}.
+\]
+
+La matrice d'émission estimée est
+\[
+\hat{B}
+=
+\begin{pmatrix}
+0.1070 & 0.8930 \\ 
+0.5702 & 0.4298 \\
+0.9895 & 0.0105 
+\end{pmatrix}.
+\]
+
+
+\subsection{Interprétation des résultats obtenus sur les données simulées}
+
+\subsubsection{Analyse du problème de Forward}
+
+On applique les critères forward à la trajectoire simulée. Le modèle évalué est le modèle générateur
+\(\lambda=(\pi,A,B)\).
+
+\paragraph{Vraisemblance et log-vraisemblance}\mbox{}\\
+\begin{table}[H]
+\centering
+\begin{tabular}{lr}
+\toprule
+Critère & Valeur \\
+\midrule
+Longueur de la série \(T\) & 1001 \\
+Nombre de paramètres libres \(p\) & 11 \\
+Vraisemblance brute & \(1.3557\times 10^{-278}\) \\
+Log-vraisemblance & -639.814329 \\
+Log-vraisemblance moyenne & -0.639175 \\
+NLPD & 0.639175 \\
+AIC indicatif & 1301.628658 \\
+BIC indicatif & 1355.624961 \\
+\bottomrule
+\end{tabular}
+\caption{Critères forward sur la série complète.}
+\end{table}
+
+La vraisemblance brute est très faible, ce qui est attendu pour une longue suite d'observations. On utilise donc la log-vraisemblance
+\[
+\ell(\lambda)=\log P(Y_{1:T}\mid\lambda)=-639.814329.
+\]
+La log-vraisemblance moyenne vaut
+\[
+\bar\ell(\lambda)=\frac{1}{T}\ell(\lambda)=-0.639175,
+\]
+et la negative log predictive density vaut
+\[
+\mathrm{NLPD}=-\bar\ell(\lambda)=0.639175.
+\]
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=0.82\linewidth]{Test/prefix_log_likelihood}
+\caption{Log-vraisemblance cumulée par préfixe.}
+\end{figure}
+
+\paragraph{Comparaison de modèles}\mbox{}\\
+On compare quatre modèles de même dimension :
+\[
+\lambda_0=(\pi,A,B),
+\qquad
+\lambda_1=(\pi,A_{\mathrm{unif}},B),
+\qquad
+\lambda_2=(\pi,A,B_{\mathrm{unif}}),
+\qquad
+\lambda_3=(\pi_{\mathrm{unif}},A_{\mathrm{unif}},B_{\mathrm{unif}}).
+\]
+Le modèle \(\lambda_1\) conserve les émissions mais rend les transitions uniformes. Le modèle
+\(\lambda_2\) conserve les transitions mais rend les émissions uniformes. Le modèle \(\lambda_3\)
+est entièrement uniforme.
+
+Pour \(N=3\) états et \(M=2\) observations, on utilise
+\[
+p=(N-1)+N(N-1)+N(M-1)=11.
+\]
+Les critères sont
+\[
+\mathrm{AIC}=-2\ell(\lambda)+2p,
+\qquad
+\mathrm{BIC}=-2\ell(\lambda)+p\log(T).
+\]
+
+\begin{table}[H]
+\centering
+\begin{tabular}{lrrrrr}
+\toprule
+Modèle & log-vrais. & log-vrais./obs. & NLPD & AIC & BIC \\
+\midrule
+Modèle de simulation & -639.814329 & -0.639175 & 0.639175 & 1301.628658 & 1355.624961 \\
+Transitions uniformes & -689.395632 & -0.688707 & 0.688707 & 1400.791264 & 1454.787566 \\
+Émissions uniformes & -693.840328 & -0.693147 & 0.693147 & 1409.680655 & 1463.676958 \\
+Modèle uniforme & -693.840328 & -0.693147 & 0.693147 & 1409.680655 & 1463.676958 \\
+\bottomrule
+\end{tabular}
+\caption{Comparaison forward des modèles.}
+\end{table}
+
+Le modèle de simulation minimise l'AIC et le BIC. Les modèles à émissions uniformes obtiennent une log-vraisemblance moyenne proche de \(-\log(2)\), ce qui indique que supprimer le lien entre états cachés et observations dégrade fortement la qualité forward.
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=0.82\linewidth]{Test/model_comparison}
+\caption{Log-vraisemblance moyenne par modèle.}
+\end{figure}
+
+\paragraph{Validation hors échantillon}\mbox{}\\
+La série est découpée chronologiquement en 800 observations d'apprentissage et 201 observations de test. La performance hors échantillon est mesurée par : 
+\[
+\ell_{\mathrm{test}}
+=\log P(Y_{\mathrm{test}}\mid Y_{\mathrm{train}},\lambda),
+\qquad
+\mathrm{NLPD}_{\mathrm{test}}
+=-\frac{1}{T_{\mathrm{test}}}\ell_{\mathrm{test}}.
+\]
+
+\begin{table}[H]
+\centering
+\begin{tabular}{lrrrr}
+\toprule
+Segment & \(T\) & log-vrais. & log-vrais./obs. & NLPD \\
+\midrule
+Apprentissage & 800 & -511.319586 & -0.639149 & 0.639149 \\
+Test conditionnel & 201 & -128.494743 & -0.639277 & 0.639277 \\
+Test indépendant & 201 & -128.462530 & -0.639117 & 0.639117 \\
+\bottomrule
+\end{tabular}
+\caption{Validation forward hors échantillon.}
+\end{table}
+
+La NLPD de test conditionnel vaut 0.639277, très proche de celle obtenue sur la partie
+d'apprentissage. Le modèle garde donc une qualité prédictive stable sur les observations de test.
+
+\paragraph{Conclusion}\mbox{}\\
+Les critères forward donnent une évaluation cohérente : la log-vraisemblance moyenne vaut -0.639175, la NLPD vaut 0.639175, le modèle générateur minimise l'AIC et le BIC parmi les modèles comparés, et la NLPD hors échantillon reste proche de celle obtenue sur la période d'apprentissage.
+La comparaison avec les modèles uniformes montre en particulier que la matrice d'émission joue un rôle central : lorsque le lien entre états cachés et observations est supprimé, la vraisemblance se dégrade nettement.
+
+\subsubsection{Analyse du problème de Viterbi}
+
+On applique les critères liés au décodage de Viterbi à la trajectoire simulée. Le chemin obtenu est
+noté \(\hat X^V_{1:T}\).
+
+\paragraph{Interprétation des régimes détectés}\mbox{}\\
+
+On commence par regarder si les états décodés correspondent à des profils d'observations distincts.
+
+\begin{table}[H]
+\centering
+\begin{tabular}{lrrrr}
+\toprule
+État Viterbi & Dates & Parapluie obs. & Parapluie théorique & Pas parapluie obs. \\
+\midrule
+soleil & 408 & 9.56\% & 10.00\% & 90.44\% \\
+nuageux & 206 & 12.62\% & 40.00\% & 87.38\% \\
+pluie & 387 & 100.00\% & 90.00\% & 0.00\% \\
+\bottomrule
+\end{tabular}
+\caption{Profil des observations dans chaque état décodé par Viterbi.}
+\end{table}
+
+Les états \emph{soleil} et \emph{pluie} sont bien séparés : l'état \emph{soleil} est associé presque
+toujours à \emph{Pas parapluie}, tandis que l'état \emph{pluie} est associé presque toujours à
+\emph{Parapluie}. L'état \emph{nuageux} est moins clairement identifié, ce qui est cohérent avec
+des probabilités d'émission moins extrêmes.
+
+On regarde ensuite la persistance des régimes.
+
+\begin{table}[H]
+\centering
+\begin{tabular}{lrrrrr}
+\toprule
+Séquence & Changements & Taux & Runs & Longueur moy. & Longueur max \\
+\midrule
+Viterbi & 326 & 32.60\% & 327 & 3.06 & 28 \\
+Posterior decoding & 390 & 39.00\% & 391 & 2.56 & 21 \\
+Décodage local émissions & 358 & 35.80\% & 359 & 2.79 & 23 \\
+\bottomrule
+\end{tabular}
+\caption{Persistance des séquences décodées.}
+\end{table}
+
+Le chemin Viterbi effectue \(326\) changements, soit un taux de \(32.60\%\). Il est plus régulier que
+le posterior decoding, ce qui correspond à son objectif : trouver une trajectoire globale cohérente.
+
+\newpage
+
+\paragraph{Comparaison avec le posterior decoding et le décodage local}\mbox{}\\
+
+Le posterior decoding choisit, à chaque date, l'état marginalement le plus probable :
+\[
+\hat X^P_t \in \arg\max_i P(X_t=i\mid Y_{1:T},\lambda).
+\]
+Le décodage local par émission choisit, à chaque date, l'état qui rend l'observation courante la plus probable :
+\[
+\widehat X_t^E=\arg\max_i b_i(Y_t).
+\]
+On compare les trois décodages avec le taux de désaccord
+\[
+D_{VP}
+=\frac{1}{T}\sum_{t=1}^T
+\mathbf 1_{\{\hat X^V_t\neq \hat X^P_t\}}.
+\]
+
+
+
+\begin{table}[H]
+\centering
+\begin{tabular}{lr}
+\toprule
+Critère & Valeur \\
+\midrule
+\(D_{VP}\) & 8.39\% \\
+Désaccord Viterbi vs local émissions & 24.48\% \\
+Proba postérieure moyenne de l'état Viterbi & 66.04\% \\
+Proba postérieure médiane de l'état Viterbi & 67.99\% \\
+Marge postérieure moyenne & 38.33\% \\
+Marge postérieure médiane & 42.12\% \\
+\bottomrule
+\end{tabular}
+\caption{Comparaison entre Viterbi et posterior decoding.}
+\end{table}
+
+On obtient \(D_{VP}=8.39\%\). Les deux méthodes donnent donc des classifications proches. La
+probabilité postérieure moyenne de l'état choisi par Viterbi vaut \(66.04\%\), ce qui indique que le
+chemin Viterbi suit le plus souvent des états marginalement plausibles.
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=0.90\linewidth]{Test/comparaison_visuelle_Viterbi}
+\caption{Comparaison visuelle entre Viterbi, posterior decoding et décodage local.}
+\end{figure}
+
+\paragraph{Conclusion}\mbox{}\\
+
+Les critères donnent une lecture cohérente du décodage. Les régimes extrêmes sont bien
+interprétables à partir des observations, et le taux de désaccord avec le posterior decoding reste
+faible. Le chemin Viterbi est aussi plus régulier que les décodages fondés sur des décisions locales.
+Le régime \emph{nuageux} reste moins nettement séparé, ce qui est cohérent avec des probabilités
+d'émission moins discriminantes.
+
+\subsubsection{Analyse du problème de Baum-Welch}
+Nous avons appliqué l'algorithme de Baum-Welch au jeu de données simulé présenté précédemment, en lançant l'estimation à partir de plusieurs initialisations différentes. L'objectif est ici d'observer si les paramètres estimés sont stables d'une initialisation à l'autre et si les solutions obtenues conduisent à des vraisemblances comparables.
+
+La Figure~\ref{fig:loglik_finales} compare les log-vraisemblances finales obtenues pour les différentes initialisations. On observe que les écarts de log-vraisemblance par observation sont très faibles, de l'ordre de $10^{-4}$ à $10^{-3}$. Cela signifie que, du point de vue de la vraisemblance, les différentes estimations expliquent les observations de manière assez proche. Certaines initialisations, notamment les initialisations 9 et 10, donnent des résultats quasiment identiques à la meilleure solution. À l'inverse, l'initialisation 8 présente l'écart le plus important, ce qui indique une solution légèrement moins bonne, même si l'écart reste faible une fois rapporté au nombre d'observations.
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.85\textwidth]{Test/comparaison_log_vraisemblances.png}
+    \caption{Comparaison des log-vraisemblances finales selon l'initialisation.}
+    \label{fig:loglik_finales}
+\end{figure}
+
+Les Figures~\ref{fig:stabilite_A} et~\ref{fig:stabilite_B} montrent respectivement la stabilité de la matrice de transition $A$ et de la matrice d'émission $B$. Ces deux matrices présentent des écarts plus marqués selon l'initialisation. On observe notamment que les initialisations 1, 2, 6, 7 et 8 conduisent à des distances relativement importantes par rapport à la meilleure solution. Cela montre que les paramètres estimés ne sont pas parfaitement stables.
+
+Ce résultat est cohérent avec le comportement attendu de Baum-Welch : l'algorithme peut converger vers des maxima locaux différents selon le point de départ. Ainsi, deux initialisations peuvent donner des log-vraisemblances finales proches tout en produisant des matrices $A$ et $B$ différentes. Autrement dit, la vraisemblance seule ne suffit pas toujours à garantir que les régimes estimés ont exactement la même interprétation.
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.85\textwidth]{Test/stabilite_A.png}
+    \caption{Stabilité de la matrice de transition estimée $A$.}
+    \label{fig:stabilite_A}
+\end{figure}
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.85\textwidth]{Test/stabilite_b.png}
+    \caption{Stabilité de la matrice d'émission estimée $B$.}
+    \label{fig:stabilite_B}
+\end{figure}
+
+La Figure~\ref{fig:stabilite_durees} permet d'interpréter la stabilité de la matrice de transition sous un angle plus concret, en comparant les durées moyennes des régimes. On remarque que les initialisations pour lesquelles la matrice $A$ est éloignée de la référence sont aussi celles pour lesquelles les durées moyennes des régimes varient le plus fortement. Les initialisations 1, 2, 6, 7 et 8 présentent ainsi des écarts importants, tandis que les initialisations 3, 9 et 10 sont beaucoup plus proches de la solution de référence.
+
+Cela signifie que certaines estimations ne décrivent pas seulement des matrices différentes : elles conduisent également à une interprétation différente de la persistance des régimes cachés. Par exemple, un régime peut être estimé comme plus stable ou plus transitoire selon l'initialisation. Cette observation est importante, car dans un modèle de Markov caché, la durée moyenne passée dans chaque état est une information essentielle pour interpréter les régimes.
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.85\textwidth]{Test/stabilite_durees.png}
+    \caption{Stabilité des durées moyennes des régimes.}
+    \label{fig:stabilite_durees}
+\end{figure}
+
+Globalement, les résultats montrent que l'algorithme parvient à obtenir des solutions proches en termes de vraisemblance, mais que les paramètres estimés peuvent varier sensiblement selon l'initialisation. Cette différence est particulièrement visible sur la matrice de transition $A$, la matrice d'émission $B$ et les durées moyennes des régimes. Cela confirme l'intérêt de lancer Baum-Welch plusieurs fois avec des initialisations différentes, puis de retenir la solution ayant la meilleure log-vraisemblance finale.
+
+Dans notre cas, les initialisations 9 et 10 semblent très proches de la solution de référence, à la fois en termes de vraisemblance et de paramètres estimés. À l'inverse, certaines initialisations donnent des paramètres plus éloignés malgré une vraisemblance finale relativement proche. On peut donc conclure que l'algorithme fonctionne correctement sur les données simulées, mais que son résultat reste sensible à l'initialisation, ce qui constitue une limite classique des méthodes de type EM.
+
+
+
+\subsection{Détection de régimes de volatilité sur le VIX}
+
+
+Dans cette section, nous appliquons un modèle de Markov caché au VIX, c'est-à-dire à l'indice de volatilité implicite du S\&P 500. L'objectif est d'étudier si un modèle HMM permet d'identifier automatiquement différents régimes de marché à partir de l'évolution de la volatilité. En effet, le VIX est souvent interprété comme un indicateur du niveau de stress ou d'incertitude sur les marchés financiers. Un niveau faible du VIX correspond généralement à une période calme, tandis qu'un niveau élevé est associé à des phases de tension ou de crise.
+
+Les données utilisées sont des observations journalières du VIX entre 2004 et 2024. Après importation des données, nous conservons principalement le prix de clôture journalier du VIX, noté $V_t$. Afin d'éviter de construire le modèle directement sur le niveau brut du VIX, nous introduisons plusieurs variables décrivant son comportement dynamique. On considère d'abord le logarithme du VIX :
+\[
+    X_t = \log(V_t),
+\]
+puis le rendement logarithmique journalier :
+\[
+    R_t = X_t - X_{t-1}.
+\]
+Nous calculons également deux mesures de volatilité réalisée, obtenues comme écart-type glissant des rendements logarithmiques :
+\[
+    \sigma^{(20)}_t = \operatorname{std}(R_{t-19},\dots,R_t),
+\]
+et
+\[
+    \sigma^{(5)}_t = \operatorname{std}(R_{t-4},\dots,R_t).
+\]
+La première mesure donne une estimation de la volatilité réalisée sur environ un mois de cotation, tandis que la seconde capture une dynamique plus courte et plus réactive.
+
+Nous utilisons donc comme variables observées le vecteur
+\[
+    Y_t =
+    \begin{pmatrix}
+        R_t \\
+        \sigma^{(20)}_t \\
+        \sigma^{(5)}_t
+    \end{pmatrix}.
+\]
+Ces variables sont ensuite standardisées avant l'estimation du modèle, afin que les différentes composantes aient des ordres de grandeur comparables.
+
+On considère un modèle de Markov caché à trois états cachés :
+\[
+    S_t \in \{0,1,2\}.
+\]
+Conditionnellement à l'état caché $S_t=i$, l'observation $Y_t$ est supposée suivre une loi gaussienne multivariée :
+\[
+    Y_t \mid S_t=i \sim \mathcal{N}(\mu_i,\Sigma_i),
+\]
+où $\mu_i$ est le vecteur moyen associé au régime $i$ et $\Sigma_i$ sa matrice de covariance. 
+
+L'estimation du modèle est réalisée à l'aide de l'algorithme de Baum-Welch. Une fois le modèle estimé, la séquence la plus probable des états cachés est obtenue par l'algorithme de Viterbi.
+
+Dans notre application, nous avons choisi trois régimes afin d'obtenir une interprétation simple des phases de marché :
+\[
+    \text{régime calme}, \qquad
+    \text{régime intermédiaire}, \qquad
+    \text{régime de crise}.
+\]
+Les états obtenus par le HMM n'ayant pas d'ordre naturel, nous les réordonnons ensuite selon la volatilité réalisée moyenne $\sigma^{(20)}_t$. Le régime ayant la plus faible volatilité moyenne est appelé régime calme, celui ayant une volatilité moyenne intermédiaire est appelé régime intermédiaire, et celui ayant la volatilité moyenne la plus élevée est appelé régime de crise.
+\vspace{0.5cm}
+
+Les statistiques moyennes obtenues pour les trois régimes sont les suivantes :
+\[
+\begin{array}{c|cccc}
+\text{Régime} & \text{VIX moyen} & R_t \text{ moyen} & \sigma^{(20)}_t \text{ moyenne} & \text{Nombre d'observations} \\
+\hline
+\text{Calme} & 16.3809 & 0.0007 & 0.0466 & 2364 \\
+\text{Intermédiaire} & 20.0225 & -0.0021 & 0.0719 & 1751 \\
+\text{Crise} & 23.6703 & 0.0018 & 0.1134 & 1003
+\end{array}
+\]
+
+\vspace{0.5cm}
+La matrice de transition estimée, après réordonnancement des états, est donnée par :
+\[
+    \widehat{A}
+    =
+    \begin{pmatrix}
+        0.972 & 0.020 & 0.007 \\
+        0.038 & 0.941 & 0.021 \\
+        0.000 & 0.053 & 0.947
+    \end{pmatrix}.
+\]
+On observe que les coefficients diagonaux sont élevés. Cela signifie que les régimes sont persistants.
+
+La figure suivante représente le VIX sur la période étudiée, avec une coloration de fond indiquant le régime estimé par le modèle HMM.
+
+\begin{figure}[h]
+    \centering
+    \includegraphics[width = 1\textwidth]{Figures/regime_detectionVIX.png}
+    \caption{Détection de régime sur l'indice du VIX entre 2004 et 2024}
+    \label{fig:mon_image}
+\end{figure}
+
+On remarque que le modèle identifie majoritairement des phases calmes, associées au régime de plus faible volatilité, tout en basculant vers les régimes intermédiaire et de crise lors des épisodes de forte instabilité. Ces changements apparaissent notamment autour des grandes hausses du VIX, comme pendant la crise financière de 2008, la crise de la dette souveraine en 2011--2012, ainsi que le choc de volatilité observé en 2020. Le modèle semble donc capable de repérer automatiquement des périodes de stress de marché à partir des variables construites sur le VIX.
+
+Il faut toutefois souligner que les régimes estimés ne possèdent pas directement une interprétation économique. Le HMM classe les observations selon leurs propriétés statistiques, en particulier les rendements et les niveaux de volatilité réalisée, mais il n'associe pas lui-même un état caché à un événement économique précis. L'interprétation des régimes doit donc être faite a posteriori, en comparant les périodes détectées avec les épisodes connus de tension sur les marchés.
+
+Les résultats dépendent également des choix de modélisation, notamment des variables utilisées, du nombre d'états cachés et de l'initialisation de l'algorithme. Le choix de trois régimes offre ici une lecture naturelle mais d'autres spécifications pourraient conduire à une segmentation différente.
+
+Cette application illustre ainsi l'intérêt des modèles de Markov cachés pour l'analyse de séries financières. Dans le cas du VIX, le HMM fournit une méthode probabiliste simple pour classifier les périodes de marché selon leur niveau de volatilité et leur dynamique de persistance.
+
+\subsection{Analyse de la qualité de l'estimation Baum--Welch sur le VIX}
+
+On applique les critères d'évaluation de Baum--Welch au modèle HMM estimé sur le VIX. Les observations utilisées sont les mêmes que précédemment :
+\[
+Y_t =
+\begin{pmatrix}
+R_t \\
+\sigma_t^{(20)} \\
+\sigma_t^{(5)}
+\end{pmatrix},
+\]
+où \(R_t\) est le rendement logarithmique journalier du VIX, \(\sigma_t^{(20)}\) la volatilité réalisée sur vingt jours et \(\sigma_t^{(5)}\) la volatilité réalisée sur cinq jours. Les variables sont standardisées avant l'estimation. Le modèle possède trois états cachés et des émissions gaussiennes multivariées.
+
+La série utilisée contient \(5118\) observations, du 2 février 2004 au 31 mai 2024.
+
+\paragraph{Convergence de la log-vraisemblance}\mbox{}\\
+
+Baum--Welch est lancé avec plusieurs initialisations. La meilleure solution est obtenue à la dixième initialisation. La log-vraisemblance finale vaut
+\[
+\ell(\widehat{\lambda})=-14300.087178,
+\]
+soit une log-vraisemblance moyenne de
+\[
+\frac{\ell(\widehat{\lambda})}{T}=-2.794077.
+\]
+
+\begin{table}[H]
+\centering
+\begin{tabular}{lr}
+\toprule
+Critère & Valeur \\
+\midrule
+Nombre d'observations \(T\) & 5118 \\
+Meilleure initialisation & 10 \\
+Nombre d'itérations & 36 \\
+Log-vraisemblance finale & -14300.087178 \\
+Log-vraisemblance moyenne & -2.794077 \\
+Gain final par observation & \(9.728857\times 10^{-11}\) \\
+Gain relatif final & \(3.481714\times 10^{-11}\) \\
+Nombre de baisses détectées & 0 \\
+\bottomrule
+\end{tabular}
+\caption{Convergence de Baum--Welch sur le VIX.}
+\end{table}
+
+La log-vraisemblance est croissante et aucune baisse numérique n'est détectée. Le gain final par observation est très inférieur à \(10^{-6}\), ce qui indique que l'algorithme s'est stabilisé. La convergence est donc satisfaisante.
+
+\paragraph{Stabilité des paramètres estimés}\mbox{}\\
+
+Comme Baum--Welch dépend de l'initialisation, l'estimation est répétée dix fois. Les états sont ensuite alignés afin de corriger le changement d'étiquette. Pour les émissions, le critère discret \(D_B\) est remplacé par une distance gaussienne fondée sur une divergence de Kullback--Leibler symétrisée entre les lois d'émission.
+
+\begin{table}[H]
+\centering
+\begin{tabular}{lr}
+\toprule
+Critère de stabilité & Valeur moyenne \\
+\midrule
+\(D_\pi\) & \(2.563015\times 10^{-109}\) \\
+\(D_A\) & \(5.050970\times 10^{-7}\) \\
+\(D_B\) gaussien & \(7.307790\times 10^{-10}\) \\
+Écart relatif moyen des durées & \(1.257620\times 10^{-5}\) \\
+Écart maximal de log-vraisemblance par observation & \(1.587589\times 10^{-10}\) \\
+\bottomrule
+\end{tabular}
+\caption{Stabilité des estimations selon l'initialisation.}
+\end{table}
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=0.82\linewidth]{Test/comparaison_log_vraisemblances_vix.png}
+\caption{Comparaison des log-vraisemblances finales.}
+\end{figure}
+
+Les écarts entre initialisations sont extrêmement faibles. Les log-vraisemblances finales sont presque identiques, les matrices de transition sont très proches et les émissions gaussiennes restent stables après alignement des états. Contrairement au cas où Baum--Welch converge vers plusieurs optima locaux distincts, les résultats obtenus ici indiquent une solution très stable pour ce choix de variables et de nombre d'états.
+
+\paragraph{Validation hors échantillon}\mbox{}\\
+
+La série est découpée chronologiquement : \(4094\) observations servent à l'apprentissage et \(1024\) observations servent au test. Le modèle est estimé sur la période d'apprentissage puis évalué sur la période suivante.
+
+\begin{table}[H]
+\centering
+\begin{tabular}{lrrr}
+\toprule
+Segment & \(T\) & Log-vraisemblance & NLPD \\
+\midrule
+Apprentissage & 4094 & -11536.441391 & 2.817890 \\
+Test conditionnel & 1024 & -2774.008272 & 2.708992 \\
+Test indépendant & 1024 & -2782.320895 & 2.717110 \\
+\bottomrule
+\end{tabular}
+\caption{Validation hors échantillon du modèle HMM sur le VIX.}
+\end{table}
+
+La NLPD de test conditionnel vaut \(2.708992\), contre \(2.817890\) sur la période d'apprentissage. Le modèle ne présente donc pas de dégradation hors échantillon sur cette découpe chronologique. Cette comparaison ne signifie pas que la période de test est toujours plus facile à prévoir, mais elle indique que les paramètres estimés sur la première partie de la série conservent une bonne capacité à attribuer une densité élevée aux observations futures.
+
+\paragraph{Conclusion}\mbox{}\\
+
+Les critères appliqués au VIX donnent une évaluation favorable de l'estimation Baum--Welch. La log-vraisemblance converge sans baisse numérique, les différentes initialisations conduisent pratiquement à la même solution après alignement des états, et les régimes obtenus sont interprétables en termes de volatilité de marché. La validation hors échantillon confirme que le modèle reste stable sur la période de test. La principale différence avec la simulation est qu'il n'existe pas ici de vrais états cachés observables : l'évaluation repose donc sur la convergence, la stabilité des paramètres, la cohérence économique des régimes et la performance prédictive.
+
+\section{Références}
+
+\begin{thebibliography}{99}
+
+\bibitem{rabiner1989}
+Rabiner, L. R. (1989).
+\emph{A tutorial on hidden Markov models and selected applications in speech recognition}.
+\url{https://www.cs.ubc.ca/~murphyk/Bayes/rabiner.pdf}
+\bibitem{jurafsky2026}
+Jurafsky, D., \& Martin, J. H. (2026).
+\emph{Hidden Markov Models}.
+In \emph{Speech and Language Processing} (Chapter A, draft of January 6, 2026).
+Stanford University.
+\url{https://web.stanford.edu/~jurafsky/slp3/A.pdf}
+
+\bibitem{sublime2022}
+Sublime, J. (2022).
+\emph{Data Analysis -- Lecture 9: Time series analysis, Hidden Markov Models}.
+Engineering school lecture notes, France.
+HAL, hal-03845332.
+\url{https://hal.science/hal-03845332/document}
+
+\bibitem{baum1966}
+Baum, L. E., \& Petrie, T. (1966).
+\emph{Statistical inference for probabilistic functions of finite state Markov chains}.
+The Annals of Mathematical Statistics, 37(6), 1554--1563.
+\url{https://doi.org/10.1214/aoms/1177699147}
+
+\bibitem{baum1970}
+Baum, L. E., Petrie, T., Soules, G., \& Weiss, N. (1970).
+\emph{A maximization technique occurring in the statistical analysis of probabilistic functions of Markov chains}.
+The Annals of Mathematical Statistics, 41(1), 164--171.
+\url{https://doi.org/10.1214/aoms/1177697196}
+
+
+\bibitem{wu1983}
+Wu, C. F. J. (1983).
+\emph{On the convergence properties of the EM algorithm}.
+The Annals of Statistics, 11(1), 95--103.
+\url{https://doi.org/10.1214/aos/1176346060}
+
+
+\bibitem{leroux1992}
+Leroux, B. G. (1992).
+\emph{Maximum-likelihood estimation for hidden Markov models}.
+Stochastic Processes and their Applications, 40(1), 127--143.
+\url{https://doi.org/10.1016/0304-4149(92)90141-C}
+
+
+\bibitem{lember2014}
+Lember, J., \& Koloydenko, A. A. (2014).
+\emph{Bridging Viterbi and posterior decoding: A generalized risk approach to hidden path inference based on hidden Markov models}.
+Journal of Machine Learning Research, 15, 1--58.
+\url{https://jmlr.org/papers/v15/lember14a.html}
+
+\bibitem{akaike1974springer}
+Akaike, H. (1974).
+\emph{A New Look at the Statistical Model Identification}.
+In E. Parzen, K. Tanabe, \& G. Kitagawa (Eds.),
+\emph{Selected Papers of Hirotugu Akaike}
+(pp. 215--222).
+Springer Series in Statistics. Springer, New York, NY.
+\url{https://doi.org/10.1109/TAC.1974.1100705}
+
+
+\end{thebibliography}
+
 
 
 
