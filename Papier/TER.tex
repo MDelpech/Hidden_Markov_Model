@@ -76,9 +76,9 @@
 \textbf{I) Introduction}
 
 \textbf{II) Définition et propriétés}\\
-\hspace*{0.5cm}2.1) Définitions \\
-\hspace*{1cm}2.1.1) Variables aléatoires observables et cachées. \\
-\hspace*{1cm}2.1.2) Propriétés. \\
+\hspace*{0.5cm}2.1) Définitions et propriétées d'une chaîne de Markov \\
+\hspace*{1cm}2.1.1) Définitions \\
+\hspace*{1cm}2.1.2) Propriétés \\
 \hspace*{0.5cm}2.2) Définition chaîne de Markov cachée. \\
 \hspace*{1cm}2.2.1) Variables aléatoires observables et cachées. \\
 \hspace*{1cm}2.2.2) Lois jointes et vraisemblance. \\
@@ -88,23 +88,46 @@
 \vspace{0.5cm}
 
 \textbf{III) Trois grandes problématiques des HMM}\\
-\hspace*{0.5cm}1) Estimation de la vraisemblance et forward algorithm. \\
-\hspace*{0.5cm}2) Décodage et Viterbi algorithm. \\
-\hspace*{0.5cm}3) Apprentissage et Baum--Welch algorithm.
+\hspace*{0.5cm}3.1) Estimation de la vraisemblance et forward algorithme \\
+\hspace*{0.5cm}3.2) Decodding et Viterbi algorithme \\
+\hspace*{0.5cm}3.3) Estimation et Algorithme de Baum--Welch
 
 \vspace{0.5cm}
 
-\textbf{IV) Limites des algorithmes et mesure de la qualité des estimations}\\
-\hspace*{0.5cm}1) Limites des algorithmes \\
-\hspace*{0.5cm}2) Mesure de la qualité des estimations de l'algorithme de Forward. \\
-\hspace*{0.5cm}3) Mesure de la qualité des estimations de l'algorithme de Viterbi. \\
-\hspace*{0.5cm}4) Mesure de la qualité des estimations de l'algorithme de Baum--Welch.
+\textbf{IV) Limites des algorithmes et Analyse de la qualité des estimations}\\
+\hspace*{0.5cm}4.1) Limites et Mesure de la qualité de la vraisemblance avec l'algorithme Forward \\
+\hspace*{1cm}4.1.1) Limites de l'algorithme de Forward \\
+\hspace*{1cm}4.1.2) Interprétation de la log-vraisemblance\\
+\hspace*{1cm}4.1.3) Comparaison entre modèles \\
+\hspace*{1cm}4.1.4) Evaluation hors échantillon\\
 
+\hspace*{0.5cm}4.2) Mesure de la qualité du décodage par Viterbi\\
+\hspace*{1cm}4.2.1) Difficulté de l'évaluation sur données réelles\\
+\hspace*{1cm}4.2.2) Interprétation économique des régimes détectés \\
+\hspace*{1cm}4.2.3) Comparaison avec le posterior decoding\\
+
+
+
+\hspace*{0.5cm}4.3) Mesure de la qualité des estimations de Baum--Welch \\
+\hspace*{1cm}4.3.1) Convergence de la log-vraisemblance \\
+\hspace*{1cm}4.3.2) Stabilité des paramètres estimés\\
+\hspace*{1cm}4.3.3) Interprétation économique des régimes \\
+\hspace*{1cm}4.3.4) Validation hors échantillon \\
 \vspace{0.5cm}
 
-\textbf{IV) Application aux séries temporelles financières}
+\textbf{V) Simulation d'un HMM et application à des données financières}
 
-\textbf{V) Reference} 
+\hspace*{0.5cm}5.1) Jeu de données simulé \\
+\hspace*{0.5cm}5.2) Application des algorithmes sur données simulées \\
+\hspace*{0.5cm}5.3) Interprétation des résultats obtenus sur les données simulées \\
+\hspace*{1cm}5.3.1) Analyse du problème de Forward \\
+\hspace*{1cm}5.3.2) Analyse du problème de Viterbi \\
+\hspace*{1cm}5.3.3) Analyse du problème de Baum--Welch \\
+\hspace*{0.5cm}5.4) Detection de régimes de volatilité sur le Vix \\
+
+
+
+\textbf{V) References} 
 
 
 \newpage
@@ -1341,7 +1364,7 @@ pour les observations.
 Ce jeu de données simulé constitue un cadre pour évaluer les algorithmes. En effet, contrairement à un jeu de données réel, les états cachés et les vrais paramètres du modèle sont connus. Il est donc possible de comparer les résultats produits par les algorithmes avec les valeurs utilisées pour générer les données.
 Cela nous permettra notament de tester la fiabilité des différents algorithmes.
 
-\paragraph{Application des algorithms sur données simulées}\mbox{}\\
+\subsection{Application des algorithms sur données simulées}\mbox{}\\
 Résultat de l'algorithme Forward : 
 -639.814329
 
