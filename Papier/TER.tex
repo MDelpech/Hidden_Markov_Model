@@ -1845,49 +1845,6 @@ Critère de stabilité & Valeur moyenne \\
 
 Les écarts entre initialisations sont extrêmement faibles. Les log-vraisemblances finales sont presque identiques, les matrices de transition sont très proches et les émissions gaussiennes restent stables après alignement des états. Contrairement au cas où Baum--Welch converge vers plusieurs optima locaux distincts, les résultats obtenus ici indiquent une solution très stable pour ce choix de variables et de nombre d'états.
 
-\paragraph{Interprétation des régimes estimés}\mbox{}\\
-
-Les états n'ont pas d'ordre naturel. Ils sont donc réordonnés selon la volatilité réalisée moyenne \(\sigma_t^{(20)}\). On obtient trois régimes : calme, intermédiaire et crise.
-
-\begin{table}[H]
-\centering
-\begin{tabular}{lrrrrr}
-\toprule
-Régime & VIX moyen & \(R_t\) moyen & \(\sigma^{(20)}\) moyenne & \(\sigma^{(5)}\) moyenne & Dates \\
-\midrule
-Calme & 16.387631 & 0.000660 & 0.046607 & 0.044820 & 2368 \\
-Intermédiaire & 20.021746 & -0.002086 & 0.071902 & 0.062696 & 1747 \\
-Crise & 23.670259 & 0.001823 & 0.113367 & 0.110598 & 1003 \\
-\bottomrule
-\end{tabular}
-\caption{Statistiques moyennes des régimes estimés sur le VIX.}
-\end{table}
-
-La matrice de transition estimée, après réordonnancement des régimes, est
-\[
-\widehat A =
-\begin{pmatrix}
-0.972201 & 0.020463 & 0.007337 \\
-0.037692 & 0.940970 & 0.021338 \\
-0.000000 & 0.053202 & 0.946798
-\end{pmatrix}.
-\]
-
-Les durées moyennes associées sont
-\[
-\widehat d_{\text{calme}}=35.97,\qquad
-\widehat d_{\text{intermédiaire}}=16.94,\qquad
-\widehat d_{\text{crise}}=18.80.
-\]
-
-\begin{figure}[H]
-\centering
-\includegraphics[width=0.95\linewidth]{Test/regime_detection_vix_bw.png}
-\caption{Régimes détectés sur le VIX par Baum--Welch.}
-\end{figure}
-
-Les régimes sont lisibles économiquement. Le régime calme correspond à un VIX moyen plus faible et à une volatilité réalisée réduite. Le régime intermédiaire augmente à la fois le niveau moyen du VIX et les volatilités réalisées. Le régime de crise concentre les valeurs de volatilité les plus fortes. Les coefficients diagonaux élevés de \(\widehat A\) indiquent aussi que les régimes sont persistants, ce qui est cohérent avec la dynamique des périodes de marché.
-
 \paragraph{Validation hors échantillon}\mbox{}\\
 
 La série est découpée chronologiquement : \(4094\) observations servent à l'apprentissage et \(1024\) observations servent au test. Le modèle est estimé sur la période d'apprentissage puis évalué sur la période suivante.
