@@ -1344,6 +1344,34 @@ pour les observations.
 Ce jeu de données simulé constitue un cadre pour évaluer les algorithmes. En effet, contrairement à un jeu de données réel, les états cachés et les vrais paramètres du modèle sont connus. Il est donc possible de comparer les résultats produits par les algorithmes avec les valeurs utilisées pour générer les données.
 Cela nous permettra notament de tester la fiabilité des différents algorithmes.
 
+\subsubsection{Application des algos sur les données simulé}
+Résultats de l'estimation par Baum-Welch : 
+
+Après exécution de l'algorithme de Baum-Welch sur les données simulées, nous obtenons les paramètres estimés suivants.
+
+La matrice de transition estimée est
+\[
+\hat{A}
+=
+\begin{pmatrix}
+0.7026 & 0.2956 & 0.0018 \\
+0.2720 & 0.5963 & 0.1316 \\
+0.1804 & 0.2172 & 0.6024
+\end{pmatrix}.
+\]
+
+La matrice d'émission estimée est
+\[
+\hat{B}
+=
+\begin{pmatrix}
+0.1070 & 0.8930 \\ 
+0.5702 & 0.4298 \\
+0.9895 & 0.0105 
+\end{pmatrix}.
+\]
+
+
 \subsection{Interprétation des résultats obtenus sur les données simulées}
 
 \subsubsection{Analyse du problème de Forward}
