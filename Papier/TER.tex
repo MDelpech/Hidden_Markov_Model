@@ -136,20 +136,20 @@ Toutes les variables aléatoires de ce travail sont définies sur l'espace proba
 \textbf{Définition d'une chaîne de Markov :}\\
 Soit $E$ un ensemble fini ou dénombrable, appelé \textit{espace d'états}. Soit $(X_n)_{n \ge 0}$ un \textit{processus} à valeur dans $E$.
 On dit que $(X_n)_{n \ge 0}$ est une \textit{chaîne de Markov} d'ordre 1, si :\\
-Pour tout $n \ge 0$, pour tout $y \in E$, pour tout $x_0,...,x_{n-1},x \in E$ tel que $\mathbb{P}(X_0 = x_0, \ldots, X_{n-1} = x_{n-1}, X_n = x) > 0$, on a:
+Pour tout $n \ge 0$, pour tout $y \in E$, pour tout $x_0,...,x_{n-1},x \in E$ tel que $\mathbb{P}(X_0 = x_0, \ldots, X_{n-1} = y, X_n = x) > 0$, on a:
 \[
-\mathbb{P}(X_{n+1} = y \mid X_n = x_n, X_{n-1} = x_{n-1},\ldots,X_0=x_0)=\mathbb{P}(X_{n+1}=x_{n+1} \mid X_n=x_n)
+\mathbb{P}(X_{n+1} = y \mid X_n = x, X_{n-1} = x_{n-1},\ldots,X_0=x_0)=\mathbb{P}(X_{n+1}=y \mid X_n=x).
 \]
 On pose $\pi_0$ la distribution initiale, i.e., la loi de $X_0$.
 
-De plus, s'il existe $A : E \times E \to [0,1]$ tel que $(x,y) \mapsto a_{x,y}=\mathbb{P}(X_{n+1} = y \mid X_n = x_n)$, pour tout $n \ge 0$, pour tout $x,y \in E$ tel que $\mathbb{P}(X_n=x_n) > 0$.
+De plus, s'il existe $A : E \times E \to [0,1]$ tel que $(x,y) \mapsto a_{x,y}=\mathbb{P}(X_{n+1} = y \mid X_n = x)$, pour tout $n \ge 0$, pour tout $x,y \in E$ tel que $\mathbb{P}(X_n=x) > 0$.
 On dit alors que $(X_n)_{n \ge 0}$ est une chaîne de Markov d'ordre 1 \textit{homogène}.
-Dans ce cas, $A$ est appelé \textit{matrice de transition} du processus $(X_n)_{n \ge 0}$, avec $P(x,y)>0$ et $\sum_{y \in E}a_{x,y}=1$, pour tout $x,y \in E$.\\
+Dans ce cas, $A$ est appelé \textit{matrice de transition} du processus $(X_n)_{n \ge 0}$, avec $a_{x,y}>0$ et $\sum_{y \in E}a_{x,y}=1$, pour tout $x,y \in E$.\\
 
 Dans ce travail, nous ne considèrerons qu'uniquement les chaînes de Markov d'ordre 1 homogènes, c'est pourquoi nous les appelerons juste chaînes de Markov.
 
 \subsubsection{Propriétés}
-\textbf{$\bullet$ Équation de Chapman-Kolmogorov :} \\
+\textbf{$\bullet$ Loi d'une trajectoire markovienne :} \\
 Soit $(X_n)_{n \ge 0}$ une chaîne de Markov de matrice de transition P et de distribution initiale $\pi_0$. On a,\\
 Pour tout $n \ge 0$, pour tout $x_0, \ldots, x_n \in E$, 
 \[
@@ -169,21 +169,21 @@ Alors, pour tout $A \in E^n$, $B \in E^m$, $m \ge 0$, on a :
 \]
 i.e. le passé et le futur d'un moment $n$ d'une chaîne de Markov sont indépendants entre eux.
 
-\textbf{$\bullet$ Quelques propriétés utiles :} \\
+\textbf{Quelques propriétés utiles :}
 
 Pour tout $x,y \in E$, on a :
-\begin{flalign*}
-&\mathbb{P}_x(X_n = y) = P^n(x,y). &&
-\end{flalign*}
+\[
+\mathbb{P}_x(X_n = y) = P^n(x,y).
+\]
 
 De plus, pour toute mesure de probabilité $\mu$ sur $E$, et pour tout $y \in E$, on a :
-\begin{flalign*}
-&\mathbb{P}_{\mu}(X_n = y)
+\[
+\mathbb{P}_{\mu}(X_n = y)
 =
 \sum_{x \in E} \mu(x)P^n(x,y)
 =
-(\mu P^n)(y). &&
-\end{flalign*}
+(\mu P^n)(y).
+\]
 
 %%%%%%%%%%%%%%
 %Début de la partie 2.2 
@@ -243,7 +243,7 @@ Soit $X$ = ($X_1$, \dots, $X_T$) la séquence d'états cachés et $Y$ = ($Y_1$, 
 \mathbb{P}(Y, X) = \pi_{X_1} \prod_{t=2}^T \mathbb{P}(X_{t} \mid X_{t-1}) \prod_{t=1}^T \mathbb{P}(Y_t \mid X_t)
 \]
 
-\textbf{Preuve:}
+\textbf{Preuve :}
 \begin{align*}
 \mathbb{P}(X, Y) 
 &= \mathbb{P}(X_1, Y_1) \prod_{t=2}^T \mathbb{P}(X_t,Y_t \mid X_1, \dots, X_{t-1}, Y_1,\dots, Y_{t-2}) \\
@@ -265,10 +265,10 @@ La loi des observations à chaque instant $t$ est dépend de l'état caché à c
 Soit un modèle de chaîne de Markov cachée avec deux états $A$ et $B$. 
 En supposant ques les observation sont gaussienne conditionnellement à l'état caché, on a :
 \[
-\mathbb{P}(Y_t \mid X_t = A) \sim \mathcal{N}(\mu_{A}, \sigma^2_{A})
+\mathcal{L}(Y_t | {X_t=A}) \sim \mathcal{N}(\mu_{A}, \sigma^2_{A})
 \]
 \[
-\mathbb{P}(Y_t \mid X_t = B) \sim \mathcal{N}(\mu_{B}, \sigma^2_{B})
+\mathcal{L}(Y_t | {X_t=B}) \sim \mathcal{N}(\mu_{B}, \sigma^2_{B})
 \]
 \vspace{0.3cm}
 
@@ -292,12 +292,12 @@ Avec, $a_{ij} = \mathbb{P}(X_{t+1} = j \mid X_t = i)$.
 
 \vspace{0.3cm}
 
-La matrice d'émission $B$ peut être définie par les distributions gaussiennes conditionnelles à chaque état :
+La famille de densités paramétriques $B$, peut être définie par les distributions gaussiennes conditionnelles à chaque état :
 \[
 B =
 \begin{cases}
-\mathbb{P}(Y_t \mid X_t = C) \sim \mathcal{N}(\mu_C, \sigma_C^2) \\
-\mathbb{P}(Y_t \mid X_t = V) \sim \mathcal{N}(\mu_V, \sigma_V^2)
+\mathcal{L}(Y_t \mid X_t = C) \sim \mathcal{N}(\mu_C, \sigma_C^2) \\
+\mathcal{L}(Y_t \mid X_t = V) \sim \mathcal{N}(\mu_V, \sigma_V^2)
 \end{cases}
 \]
 
@@ -346,18 +346,18 @@ node[midway, right, draw=none] {$\mathbb{P}(Y_{t+1} \mid X_{t+1})$}
 \subsubsection{Remarques sur les observations}
 
 \textbf{Propriété:}
-La probabilité totale des obstervation $Y_T$ est donnée par : 
+La probabilité totale des obstervation $(Y_t)_{t}$ est donnée par : 
 \[
 \mathbb{P}(Y) = \sum_{X}\mathbb{P}(Y,X) = \sum_{}\mathbb{P}(Y \mid X)\mathbb{P}(X)
 \]
 \vspace{0.3cm}
 
 \textbf{Propriété:}
-Dans un HMM les observations $(Y_t)$ n'est pas un processus de Markov, même si les états cachés $(X_t)$ le sont. 
+Dans un HMM non dégénéré, les observations $(Y_t)_{t}$ n'est pas un processus de Markov, même si les états cachés $(X_t)_{t}$ le sont. 
 
 \textbf{Preuve :}
 
-Si le processus d'observations $(Y_t)$ était markovien. Alors on aurait
+Si le processus d'observations $(Y_t)_{t}$ était markovien. Alors on aurait
 \[
 \mathbb{P}(Y_{n+1} \mid Y_1,\dots,Y_n) = \mathbb{P}(Y_{n+1} \mid Y_n).
 \]
@@ -378,7 +378,7 @@ or,
 &= \sum_{j=1}^{K} \mathbb{P}(X_{n+1}=i, X_{n}=j \mid Y_1,\dots,Y_n) \\
 &= \sum_{j=1}^{K} \mathbb{P}(X_{n+1}=i \mid X_{n}=j, Y_1,\dots,Y_n) \mathbb{P}(X_{n}=j \mid Y_1, \dots Y_n)\\
 &= \sum_{j=1}^{K} \mathbb{P}(X_{n+1}=i \mid X_{n}=j) \mathbb{P}(X_n=j \mid Y_1, \dots Y_n)\\
-&= \sum_{j=1}^{k} a_{ji} \mathbb{P}(X_n=j \mid Y_1, \dots Y_n).
+&= \sum_{j=1}^{K} a_{ji} \mathbb{P}(X_n=j \mid Y_1, \dots Y_n).
 \end{align*}
 
 et, 
@@ -426,7 +426,7 @@ On sait que la vraisemblance de $Y$ est donnée par :
 \[
 \mathbb{P}(Y) = \sum_{X}\mathbb{P}(Y,X) = \sum_{X}\mathbb{P}(Y \mid X)\mathbb{P}(X).
 \]
-Cependant, pour N états cachés et une séquence d'observations de longueur T, le nombre de séquence cachées possibles est de $N^T$, ce qui rend le calcul direct d'un complexité exponentielle si on l'effectue de manière naïve. \\ 
+Cependant, pour N états cachés et une séquence d'observations de longueur T, le nombre de séquence cachées possibles est de $N^T$, ce qui rend le calcul direct d'une complexité exponentielle si on l'effectue de manière naïve. \\ 
 La solution optimale est d'utiliser l'algorithme de forward qui permet de calculer $\mathbb{P}(Y)$ avec un complexité de $O(N^2T)$. \\ 
 
 Cet algorithme repose sur le comcepte de programmation dynamique et utilise une variable intermédiaire $\alpha_t(i)$ qui représente la probabilité d'observé la séquence d'observation $y_1 \dots y_t$ et d'être dans l'état caché $i$ à l'intant $t$.\\
@@ -474,7 +474,7 @@ avec $a_{ij}$ la probabilité de transition de l'état $i$ à l'état $j$, $b_j(
 L'algorithme de forward permet ainsi de calculer efficacement la vraisemblance d'une séquence d'observations donnée, en évitant le calcul direct de toutes les séquences d'états cachés possibles.
 \vspace{0.5cm}
 
-\textbf{Analyse de la complexité}
+\textbf{Analyse de la complexité :}\\
 Lors de l'initialisation, on effectue $N$ opérations de complexité$O(1)$ pour calculer $\alpha_1(i)$ pour $i=1, \dots, N$, soit une complexité de $O(N)$.\\
 Lors de la récursion, pour chaque instant $t$ de 2 à $T$, on effectue $N$ opérations pour calculer $\alpha_t(j)$ pour $j=1, \dots, N$. chaque calcul de $\alpha_t(j)$ nécessite de faire une somme de $N$ termes, ce qui correspond à une complexité de $O(N^2)$ pour chaque instant $t$. Ainsi la complexité total de la récursion est de $O(N^2T)$.\\
 Lors de la terminaison, on effectue une somme de $N$ termes pour calculer $\mathbb{P}(Y)$, ce qui correspond à une complexité de $O(N)$.\\
@@ -587,12 +587,12 @@ Considérons un nouveau problème : le décodage d'une suite d'état d'après un
 On essaye de découvrir la partie cachée du modèle.\\
 i.e. Découvrir à posteriori la ``vraie'' séquence d'état $X = (X_1, \dots, X_T)$ qui s'est produite pour générer une série d'observation, sachant la distribution initiale, la matrice de transition ainsi que les probabilités d'émissions.
 
-Il paraît évident qu'il n'y a pas de ``vraie'' séquence d'états, nous allons devoir instaurer des critères d'optimalité pour régler notre problème.
+Il paraît évident qu'il n'y a pas toujours de ``vraie'' séquence d'états, nous allons devoir instaurer des critères d'optimalité pour régler notre problème.
 
 Une première approche qu'on pourrait qualifier de ``Greedy'' serait de choisir, à chaque instant $t$, l'état $X_t$ tel que la probabilité d'observer $Y_t$ est la plus grande.
 Ce critère d'optimalité maximise l'espérance du nombre d'états correctement décrypté un à un.
 
-Cependant, cela peut amener plusieurs problèmes avec la séquence d'état qui en résulte. N'ayant aucune condition d'ergodicité sur notre chaîne de Markov cachée, une transition entre 2 états peut avoir une probabilité nulle.
+Cependant, cela peut amener plusieurs problèmes avec la séquence d'état qui en résulte. Comme le critère local ignore la matrice de transition, il peut proposer une transition de probabilité nulle.
 Or rien ne l'interdit dans notre critère, donc cette transition pourrait apparaître dans le résultat alors que celui-ci ne serait ainsi même pas réalisable.
 
 Il va donc falloir trouver un critère prenant en compte la probabilité de réalisation d'une séquence d'états. On pourrait ainsi vouloir maximiser l'espérance du nombre de paires correctes d'états découvert, ou de triplet, etc.
@@ -616,9 +616,13 @@ Avec,
 \[
 a_{ij}=\mathbb{P}(X_{t+1}=j \mid X_t=i)
 \]
-et
+et, si les observations sont discrètes,
 \[
 b_j(y_t)=\mathbb{P}(Y_t=y_t \mid X_t=j)
+\] 
+ou, si les observations sont continues, 
+\[
+b_j(y_t)=f_{Y_t \mid X_t=j}(y_t)
 \]
 Ainsi, par récurrence, on a que :
 \[
@@ -869,7 +873,7 @@ De la même manière, la somme sur les $t$ des $\xi_t(i,j)$ donne l'espérance d
 
 i.e.
 \[
-\sum_{t=1}^{T-1}\gamma_t(i) = \text{espérance du nombre de transitions depuis } i
+\sum_{t=1}^{T}\gamma_t(i) = \text{espérance du nombre de transitions depuis } i
 \]
 \[
 \sum_{t=1}^{T-1}\xi_t(i,j) = \text{espérance du nombre de transitions de } i \text{ vers } j
@@ -934,8 +938,10 @@ On peut donc en déduire cet algorithme :
 \setlength{\abovedisplayshortskip}{2pt}
 \setlength{\belowdisplayshortskip}{2pt}
 \begin{algorithmic}[1]
-\Require Suite d'observations \(Y=(y_1,\dots,y_T)\),
-nombre d'états \(N\), paramètres initiaux \(\lambda^{(0)}=(A^{(0)},B^{(0)},\pi^{(0)})\),
+\Require 
+Suite d'observations \(Y=(y_1,\dots,y_T)\),\\
+nombre d'états \(N\), \\
+paramètres initiaux \(\lambda^{(0)}=(A^{(0)},B^{(0)},\pi^{(0)})\),\\
 seuil de convergence \(\varepsilon\)
 \Ensure Paramètres estimés \(\widehat{\lambda}=(\widehat{A},\widehat{B},\widehat{\pi})\)
 
@@ -997,7 +1003,7 @@ seuil de convergence \(\varepsilon\)
     \frac{\sum_{t=1}^{T-1}\xi_t(i,j)}
     {\sum_{t=1}^{T-1}\gamma_t(i)}
     \]
-    \State Mettre à jour les paramètres d'émission \(B^{(m+1)}\)
+    \State Mettre à jour les paramètres d'émission \(B^{(m+1)}\) avec des estimateurs naturels basés sur les \(\gamma_t(i)\)
     \State \(\displaystyle L^{(m+1)}\gets \sum_{i=1}^{N}\alpha_T(i)\)
     \State \(m\gets m+1\)
 \Until{\(\left|L^{(m)}-L^{(m-1)}\right|<\varepsilon\)}
@@ -1007,6 +1013,7 @@ seuil de convergence \(\varepsilon\)
 \end{algorithm}
 
 Dans ce travail, nous ne traiterons pas du choix de epsilon qui mériterait un travail à part entière, mais il est important de noter que ce choix peut avoir un impact significatif sur la convergence de l'algorithme. De plus, avec une seule série d’observations, on ne peut pas estimer de manière robuste la distribution initiale \(\pi\), car elle ne concerne que l’état caché au premier instant ; toutefois, cela a peu d’impact sur l’utilisation finale du modèle, puisque l’influence de \(\pi\) disparaît progressivement au fil du temps au profit des transitions et des émissions estimées.\\
+
 \textbf{Analyse de la complexité :}
 \begin{itemize}
     \item étape forward : pour chaque instant $t$, pour chaque état $j$, on somme sur tous les états précédents. Donc $O(TN^2)$.
@@ -1030,21 +1037,25 @@ O(ITN^2)
 
 
 %%%%%%%%%%%%%%%%%%
-%% Début de la partie 3 sur les limites et les analyses
+%% Début de la partie 4 sur les limites et les analyses
 %%%%%%%%%%%%%%%%%%
 \newpage
 \section{Limites des algorithmes et analyse de la qualité des estimations}
 
 \subsection{Les limites des algortihmes}
 
+
+\subsection{Limites et Mesure de la qualité de la vraisemblance avec l'algorithme Forward}
+
 \subsubsection{Limites de l'algorithme de forward}
 Une des principales limites de l'algorithme de forward vient de la quantité d'observations. En effet, plus la séquence d'observations est longue, plus la vraisemblance $\mathbb{P}(Y)$ devient extrêmement petite, ce qui peut entraîner des problèmes computationnels liés à la précision numérique.
 Pour pallier à ce problème, on peut alors effectuer une modification de l'algorithme de forward en passant à la log-vraisemblance. Cela permet de transformer les produites en sommes, le tout avec des valeurs plus grandes et par conséquent plus faciles à manipuler numériquement.\\
 De plus, si le nombre d'états cachés est trés grand, l'algorithme de forward peut devenir extrêmement coûteux en temps de calcul, ce qui peut rendre son utilisation moins pertinente dans des applications avec un grand nombre d'états.\\
 
-\subsection{Mesure de la qualité de la vraisemblance avec l'algorithme Forward}
+Aussi, l'algorithme Forward évalue la vraisemblance des observations, mais il ne dit pas directement si les régimes cachés estimés sont économiquement interprétables. Un modèle peut avoir une bonne vraisemblance tout en produisant des régimes difficiles à lire financièrement.
+Ainsi, la vraisemblance calculée par Forward doit être utilisée comme une mesure statistique importante, mais elle doit être complétée par l'analyse des régimes obtenus avec Viterbi ou avec les probabilités a posteriori, ainsi que par une validation hors échantillon.\\
 
-L'algorithme Forward permet de calculer la probabilité d'observer une séquence donnée sous un modèle HMM donné. Si \(Y_{1:T}\) désigne la série observée, avec \(T\) le nombre total d'observations, et si \(\lambda=(\pi,A,B)\) désigne les paramètres du modèle, l'algorithme Forward calcule :
+L'algorithme Forward permet donc de calculer la probabilité d'observer une séquence donnée sous un modèle HMM donné. Si \(Y_{1:T}\) désigne la série observée, avec \(T\) le nombre total d'observations, et si \(\lambda=(\pi,A,B)\) désigne les paramètres du modèle, l'algorithme Forward calcule :
 \[
 P(Y_{1:T}\mid \lambda).
 \]
@@ -1102,12 +1113,6 @@ NLPD
 -\frac{1}{T_{\text{test}}}\ell_{\text{test}}.
 \]
 Un \(NLPD\) faible indique que le modèle attribue une forte probabilité aux nouvelles observations. Il s'agit donc d'un bon indicateur pour vérifier si le modèle reste pertinent sur des données qui n'ont pas servi à l'estimation.
-
-\subsubsection{Limites de l'évaluation par Forward}
-
-L'algorithme Forward évalue la vraisemblance des observations, mais il ne dit pas directement si les régimes cachés estimés sont économiquement interprétables. Un modèle peut avoir une bonne vraisemblance tout en produisant des régimes difficiles à lire financièrement.
-
-Ainsi, la vraisemblance calculée par Forward doit être utilisée comme une mesure statistique importante, mais elle doit être complétée par l'analyse des régimes obtenus avec Viterbi ou avec les probabilités a posteriori, ainsi que par une validation hors échantillon.
 
 
 \subsection{Mesure de la qualité du décodage par Viterbi}
@@ -1220,7 +1225,7 @@ D_A=
 \frac1N\sum_i\frac12\sum_j
 \left|\widehat{a}^{(a)}_{ij}-\widehat{a}^{(b)}_{ij}\right|.
 \]
-On compare également la durée moyenne des régimes :
+On compare également la durée moyenne des régimes, pour $\widehat{a}_{ii} < 1$ :
 \[
 \widehat{d}_i=\frac{1}{1-\widehat{a}_{ii}},
 \qquad
