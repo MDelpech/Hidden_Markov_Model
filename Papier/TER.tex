@@ -124,7 +124,7 @@
 \hspace*{1cm}5.3.2) Analyse du problème de Viterbi \\
 \hspace*{1cm}5.3.3) Analyse du problème de Baum--Welch \\
 \hspace*{0.5cm}5.4) Detection de régimes de volatilité sur le Vix \\
-
+\hspace*{0.5cm}5.5) Analyse de la qualité de l’estimation Baum–Welch sur le VIX\\
 
 
 \textbf{V) References} 
@@ -1769,6 +1769,148 @@ Il faut toutefois souligner que les régimes estimés ne possèdent pas directem
 Les résultats dépendent également des choix de modélisation, notamment des variables utilisées, du nombre d'états cachés et de l'initialisation de l'algorithme. Le choix de trois régimes offre ici une lecture naturelle mais d'autres spécifications pourraient conduire à une segmentation différente.
 
 Cette application illustre ainsi l'intérêt des modèles de Markov cachés pour l'analyse de séries financières. Dans le cas du VIX, le HMM fournit une méthode probabiliste simple pour classifier les périodes de marché selon leur niveau de volatilité et leur dynamique de persistance.
+
+\subsection{Analyse de la qualité de l'estimation Baum--Welch sur le VIX}
+
+On applique les critères d'évaluation de Baum--Welch au modèle HMM estimé sur le VIX. Les observations utilisées sont les mêmes que précédemment :
+\[
+Y_t =
+\begin{pmatrix}
+R_t \\
+\sigma_t^{(20)} \\
+\sigma_t^{(5)}
+\end{pmatrix},
+\]
+où \(R_t\) est le rendement logarithmique journalier du VIX, \(\sigma_t^{(20)}\) la volatilité réalisée sur vingt jours et \(\sigma_t^{(5)}\) la volatilité réalisée sur cinq jours. Les variables sont standardisées avant l'estimation. Le modèle possède trois états cachés et des émissions gaussiennes multivariées.
+
+La série utilisée contient \(5118\) observations, du 2 février 2004 au 31 mai 2024.
+
+\paragraph{Convergence de la log-vraisemblance}\mbox{}\\
+
+Baum--Welch est lancé avec plusieurs initialisations. La meilleure solution est obtenue à la dixième initialisation. La log-vraisemblance finale vaut
+\[
+\ell(\widehat{\lambda})=-14300.087178,
+\]
+soit une log-vraisemblance moyenne de
+\[
+\frac{\ell(\widehat{\lambda})}{T}=-2.794077.
+\]
+
+\begin{table}[H]
+\centering
+\begin{tabular}{lr}
+\toprule
+Critère & Valeur \\
+\midrule
+Nombre d'observations \(T\) & 5118 \\
+Meilleure initialisation & 10 \\
+Nombre d'itérations & 36 \\
+Log-vraisemblance finale & -14300.087178 \\
+Log-vraisemblance moyenne & -2.794077 \\
+Gain final par observation & \(9.728857\times 10^{-11}\) \\
+Gain relatif final & \(3.481714\times 10^{-11}\) \\
+Nombre de baisses détectées & 0 \\
+\bottomrule
+\end{tabular}
+\caption{Convergence de Baum--Welch sur le VIX.}
+\end{table}
+
+La log-vraisemblance est croissante et aucune baisse numérique n'est détectée. Le gain final par observation est très inférieur à \(10^{-6}\), ce qui indique que l'algorithme s'est stabilisé. La convergence est donc satisfaisante.
+
+\paragraph{Stabilité des paramètres estimés}\mbox{}\\
+
+Comme Baum--Welch dépend de l'initialisation, l'estimation est répétée dix fois. Les états sont ensuite alignés afin de corriger le changement d'étiquette. Pour les émissions, le critère discret \(D_B\) est remplacé par une distance gaussienne fondée sur une divergence de Kullback--Leibler symétrisée entre les lois d'émission.
+
+\begin{table}[H]
+\centering
+\begin{tabular}{lr}
+\toprule
+Critère de stabilité & Valeur moyenne \\
+\midrule
+\(D_\pi\) & \(2.563015\times 10^{-109}\) \\
+\(D_A\) & \(5.050970\times 10^{-7}\) \\
+\(D_B\) gaussien & \(7.307790\times 10^{-10}\) \\
+Écart relatif moyen des durées & \(1.257620\times 10^{-5}\) \\
+Écart maximal de log-vraisemblance par observation & \(1.587589\times 10^{-10}\) \\
+\bottomrule
+\end{tabular}
+\caption{Stabilité des estimations selon l'initialisation.}
+\end{table}
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=0.82\linewidth]{Test/comparaison_log_vraisemblances_vix.png}
+\caption{Comparaison des log-vraisemblances finales.}
+\end{figure}
+
+Les écarts entre initialisations sont extrêmement faibles. Les log-vraisemblances finales sont presque identiques, les matrices de transition sont très proches et les émissions gaussiennes restent stables après alignement des états. Contrairement au cas où Baum--Welch converge vers plusieurs optima locaux distincts, les résultats obtenus ici indiquent une solution très stable pour ce choix de variables et de nombre d'états.
+
+\paragraph{Interprétation des régimes estimés}\mbox{}\\
+
+Les états n'ont pas d'ordre naturel. Ils sont donc réordonnés selon la volatilité réalisée moyenne \(\sigma_t^{(20)}\). On obtient trois régimes : calme, intermédiaire et crise.
+
+\begin{table}[H]
+\centering
+\begin{tabular}{lrrrrr}
+\toprule
+Régime & VIX moyen & \(R_t\) moyen & \(\sigma^{(20)}\) moyenne & \(\sigma^{(5)}\) moyenne & Dates \\
+\midrule
+Calme & 16.387631 & 0.000660 & 0.046607 & 0.044820 & 2368 \\
+Intermédiaire & 20.021746 & -0.002086 & 0.071902 & 0.062696 & 1747 \\
+Crise & 23.670259 & 0.001823 & 0.113367 & 0.110598 & 1003 \\
+\bottomrule
+\end{tabular}
+\caption{Statistiques moyennes des régimes estimés sur le VIX.}
+\end{table}
+
+La matrice de transition estimée, après réordonnancement des régimes, est
+\[
+\widehat A =
+\begin{pmatrix}
+0.972201 & 0.020463 & 0.007337 \\
+0.037692 & 0.940970 & 0.021338 \\
+0.000000 & 0.053202 & 0.946798
+\end{pmatrix}.
+\]
+
+Les durées moyennes associées sont
+\[
+\widehat d_{\text{calme}}=35.97,\qquad
+\widehat d_{\text{intermédiaire}}=16.94,\qquad
+\widehat d_{\text{crise}}=18.80.
+\]
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=0.95\linewidth]{Test/regime_detection_vix_bw.png}
+\caption{Régimes détectés sur le VIX par Baum--Welch.}
+\end{figure}
+
+Les régimes sont lisibles économiquement. Le régime calme correspond à un VIX moyen plus faible et à une volatilité réalisée réduite. Le régime intermédiaire augmente à la fois le niveau moyen du VIX et les volatilités réalisées. Le régime de crise concentre les valeurs de volatilité les plus fortes. Les coefficients diagonaux élevés de \(\widehat A\) indiquent aussi que les régimes sont persistants, ce qui est cohérent avec la dynamique des périodes de marché.
+
+\paragraph{Validation hors échantillon}\mbox{}\\
+
+La série est découpée chronologiquement : \(4094\) observations servent à l'apprentissage et \(1024\) observations servent au test. Le modèle est estimé sur la période d'apprentissage puis évalué sur la période suivante.
+
+\begin{table}[H]
+\centering
+\begin{tabular}{lrrr}
+\toprule
+Segment & \(T\) & Log-vraisemblance & NLPD \\
+\midrule
+Apprentissage & 4094 & -11536.441391 & 2.817890 \\
+Test conditionnel & 1024 & -2774.008272 & 2.708992 \\
+Test indépendant & 1024 & -2782.320895 & 2.717110 \\
+\bottomrule
+\end{tabular}
+\caption{Validation hors échantillon du modèle HMM sur le VIX.}
+\end{table}
+
+La NLPD de test conditionnel vaut \(2.708992\), contre \(2.817890\) sur la période d'apprentissage. Le modèle ne présente donc pas de dégradation hors échantillon sur cette découpe chronologique. Cette comparaison ne signifie pas que la période de test est toujours plus facile à prévoir, mais elle indique que les paramètres estimés sur la première partie de la série conservent une bonne capacité à attribuer une densité élevée aux observations futures.
+
+\paragraph{Conclusion}\mbox{}\\
+
+Les critères appliqués au VIX donnent une évaluation favorable de l'estimation Baum--Welch. La log-vraisemblance converge sans baisse numérique, les différentes initialisations conduisent pratiquement à la même solution après alignement des états, et les régimes obtenus sont interprétables en termes de volatilité de marché. La validation hors échantillon confirme que le modèle reste stable sur la période de test. La principale différence avec la simulation est qu'il n'existe pas ici de vrais états cachés observables : l'évaluation repose donc sur la convergence, la stabilité des paramètres, la cohérence économique des régimes et la performance prédictive.
 
 \subsection{References}
 
