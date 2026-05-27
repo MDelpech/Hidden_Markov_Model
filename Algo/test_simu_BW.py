@@ -12,8 +12,6 @@ from fonction import distance_l1_proba, distance_transition, distance_emission, 
 ### convergence de la log vraisemblance au cours des itérations ###
 
 def analyser_convergence(log_likelihoods, T, burn_in=10):
-    import numpy as np
-    import matplotlib.pyplot as plt
 
     log_likelihoods = np.array(log_likelihoods)
 
