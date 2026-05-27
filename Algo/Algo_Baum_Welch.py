@@ -23,7 +23,7 @@ def baum_welch(Y, N, observations_possible, epsilon=1e-6, max_iter=1000):
     PI /= PI.sum()
     A = np.random.random((N, N))
     A /= A.sum(axis=1, keepdims=True)
-    B = np.random.random((N, N))
+    B = np.random.random((N, M))
     B /= B.sum(axis=1, keepdims=True)
 
     ancienne_vraisemblance = -np.inf
@@ -117,5 +117,19 @@ def baum_welch(Y, N, observations_possible, epsilon=1e-6, max_iter=1000):
 
     return PI, A, B, vraisemblance, log_vraisemblance
 
-PI_est, A_est, B_est = baum_welch(view,3,observations,1e-6,1000)
-print(PI_est, A_est, B_est)
+PI_est, A_est, B_est, Vrai, log_vrai = baum_welch(view,3,observations,1e-6,1000)
+
+ordre = [1, 2, 0]
+
+PI_aligne = PI_est[ordre]
+A_aligne = A_est[np.ix_(ordre, ordre)]
+B_aligne = B_est[ordre, :]
+
+print("PI aligné :")
+print(PI_aligne)
+
+print("A aligné :")
+print(A_aligne)
+
+print("B aligné :")
+print(B_aligne)

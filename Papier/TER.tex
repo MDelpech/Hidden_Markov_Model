@@ -1358,6 +1358,34 @@ Résultat de l'algorithme de Viterbi :
 
 Résultat de Baum-Welch : 
 
+\subsubsection{Application des algos sur les données simulé}
+Résultats de l'estimation par Baum-Welch : 
+
+Après exécution de l'algorithme de Baum-Welch sur les données simulées, nous obtenons les paramètres estimés suivants.
+
+La matrice de transition estimée est
+\[
+\hat{A}
+=
+\begin{pmatrix}
+0.7026 & 0.2956 & 0.0018 \\
+0.2720 & 0.5963 & 0.1316 \\
+0.1804 & 0.2172 & 0.6024
+\end{pmatrix}.
+\]
+
+La matrice d'émission estimée est
+\[
+\hat{B}
+=
+\begin{pmatrix}
+0.1070 & 0.8930 \\ 
+0.5702 & 0.4298 \\
+0.9895 & 0.0105 
+\end{pmatrix}.
+\]
+
+
 \subsection{Interprétation des résultats obtenus sur les données simulées}
 
 \subsubsection{Analyse du problème de Forward}
@@ -1591,16 +1619,7 @@ La Figure~\ref{fig:loglik_finales} compare les log-vraisemblances finales obtenu
     \label{fig:loglik_finales}
 \end{figure}
 
-La Figure~\ref{fig:stabilite_pi} montre la stabilité de la distribution initiale $\pi$. Les écarts obtenus sont quasiment nuls, avec des valeurs de l'ordre de $10^{-195}$. Numériquement, cela signifie que les différentes initialisations conduisent pratiquement à la même estimation de la distribution initiale. Ce résultat doit toutefois être interprété avec prudence : sur une trajectoire longue, la distribution initiale influence surtout le début de la séquence et a donc un impact limité sur la vraisemblance totale. Il est donc normal qu'elle soit moins informative que les matrices $A$ et $B$ pour juger de la qualité globale de l'estimation.
-
-\begin{figure}[H]
-    \centering
-    \includegraphics[width=0.85\textwidth]{Test/stabilite_pi.png}
-    \caption{Stabilité de la distribution initiale estimée.}
-    \label{fig:stabilite_pi}
-\end{figure}
-
-Les Figures~\ref{fig:stabilite_A} et~\ref{fig:stabilite_B} montrent respectivement la stabilité de la matrice de transition $A$ et de la matrice d'émission $B$. Contrairement à la distribution initiale, ces deux matrices présentent des écarts plus marqués selon l'initialisation. On observe notamment que les initialisations 1, 2, 6, 7 et 8 conduisent à des distances relativement importantes par rapport à la meilleure solution. Cela montre que les paramètres estimés ne sont pas parfaitement stables.
+Les Figures~\ref{fig:stabilite_A} et~\ref{fig:stabilite_B} montrent respectivement la stabilité de la matrice de transition $A$ et de la matrice d'émission $B$. Ces deux matrices présentent des écarts plus marqués selon l'initialisation. On observe notamment que les initialisations 1, 2, 6, 7 et 8 conduisent à des distances relativement importantes par rapport à la meilleure solution. Cela montre que les paramètres estimés ne sont pas parfaitement stables.
 
 Ce résultat est cohérent avec le comportement attendu de Baum-Welch : l'algorithme peut converger vers des maxima locaux différents selon le point de départ. Ainsi, deux initialisations peuvent donner des log-vraisemblances finales proches tout en produisant des matrices $A$ et $B$ différentes. Autrement dit, la vraisemblance seule ne suffit pas toujours à garantir que les régimes estimés ont exactement la même interprétation.
 
@@ -1667,7 +1686,7 @@ Nous utilisons donc comme variables observées le vecteur
         \sigma^{(5)}_t
     \end{pmatrix}.
 \]
-Ces variables sont ensuite standardisées avant l'estimation du modèle, afin que les différentes composantes aient des ordres de grandeur comparables. Cette étape est importante car l'algorithme d'estimation repose sur des densités gaussiennes multivariées et peut être sensible aux différences d'échelle entre les variables.
+Ces variables sont ensuite standardisées avant l'estimation du modèle, afin que les différentes composantes aient des ordres de grandeur comparables.
 
 On considère un modèle de Markov caché à trois états cachés :
 \[
@@ -1677,16 +1696,9 @@ Conditionnellement à l'état caché $S_t=i$, l'observation $Y_t$ est supposée 
 \[
     Y_t \mid S_t=i \sim \mathcal{N}(\mu_i,\Sigma_i),
 \]
-où $\mu_i$ est le vecteur moyen associé au régime $i$ et $\Sigma_i$ sa matrice de covariance. La dynamique temporelle des états cachés est décrite par une chaîne de Markov homogène de matrice de transition
-\[
-    A = (a_{ij})_{0 \leq i,j \leq 2},
-\]
-où
-\[
-    a_{ij} = \mathbb{P}(S_{t+1}=j \mid S_t=i).
-\]
+où $\mu_i$ est le vecteur moyen associé au régime $i$ et $\Sigma_i$ sa matrice de covariance. 
 
-L'estimation du modèle est réalisée à l'aide de l'algorithme de Baum-Welch, qui correspond à une procédure EM adaptée aux modèles de Markov cachés. À chaque itération, l'algorithme estime les probabilités a posteriori des états cachés, puis met à jour les paramètres du modèle afin d'augmenter la vraisemblance des observations. Une fois le modèle estimé, la séquence la plus probable des états cachés est obtenue par l'algorithme de Viterbi.
+L'estimation du modèle est réalisée à l'aide de l'algorithme de Baum-Welch. Une fois le modèle estimé, la séquence la plus probable des états cachés est obtenue par l'algorithme de Viterbi.
 
 Dans notre application, nous avons choisi trois régimes afin d'obtenir une interprétation simple des phases de marché :
 \[
@@ -1695,6 +1707,7 @@ Dans notre application, nous avons choisi trois régimes afin d'obtenir une inte
     \text{régime de crise}.
 \]
 Les états obtenus par le HMM n'ayant pas d'ordre naturel, nous les réordonnons ensuite selon la volatilité réalisée moyenne $\sigma^{(20)}_t$. Le régime ayant la plus faible volatilité moyenne est appelé régime calme, celui ayant une volatilité moyenne intermédiaire est appelé régime intermédiaire, et celui ayant la volatilité moyenne la plus élevée est appelé régime de crise.
+\vspace{0.5cm}
 
 Les statistiques moyennes obtenues pour les trois régimes sont les suivantes :
 \[
@@ -1706,8 +1719,8 @@ Les statistiques moyennes obtenues pour les trois régimes sont les suivantes :
 \text{Crise} & 23.6703 & 0.0018 & 0.1134 & 1003
 \end{array}
 \]
-Ces résultats sont cohérents avec l'interprétation attendue. Le régime calme correspond à un niveau moyen du VIX relativement faible, autour de $16.38$, et à une faible volatilité réalisée. Le régime intermédiaire présente un niveau moyen du VIX plus élevé, autour de $20.02$, avec une volatilité réalisée également plus importante. Enfin, le régime de crise est associé au niveau moyen du VIX le plus élevé, autour de $23.67$, ainsi qu'à la volatilité réalisée moyenne la plus forte.
 
+\vspace{0.5cm}
 La matrice de transition estimée, après réordonnancement des états, est donnée par :
 \[
     \widehat{A}
@@ -1718,7 +1731,7 @@ La matrice de transition estimée, après réordonnancement des états, est donn
         0.000 & 0.053 & 0.947
     \end{pmatrix}.
 \]
-On observe que les coefficients diagonaux sont élevés. Cela signifie que les régimes sont persistants : lorsqu'un régime est atteint, il a une forte probabilité de se maintenir au jour suivant. Par exemple, la probabilité de rester dans le régime calme est estimée à environ $97.2\%$, tandis que la probabilité de rester dans le régime de crise est d'environ $94.7\%$. Cette persistance est cohérente avec l'idée que les phases de marché ne changent généralement pas brutalement d'un jour à l'autre, mais s'inscrivent dans des périodes de plusieurs jours ou semaines.
+On observe que les coefficients diagonaux sont élevés. Cela signifie que les régimes sont persistants.
 
 La figure suivante représente le VIX sur la période étudiée, avec une coloration de fond indiquant le régime estimé par le modèle HMM.
 
@@ -1729,13 +1742,13 @@ La figure suivante représente le VIX sur la période étudiée, avec une colora
     \label{fig:mon_image}
 \end{figure}
 
-On remarque que le modèle identifie de nombreuses phases calmes, représentées par le régime de plus faible volatilité, mais qu'il bascule vers les régimes intermédiaire et de crise lors des épisodes de forte instabilité. Ces changements de régime apparaissent notamment autour des grandes hausses du VIX, par exemple pendant la crise financière de 2008, certaines tensions de marché autour de 2011--2012, la période 2015--2016, ainsi que le choc de volatilité observé en 2020. Le modèle semble donc capable de détecter automatiquement des périodes de stress de marché à partir des variables construites sur le VIX.
+On remarque que le modèle identifie majoritairement des phases calmes, associées au régime de plus faible volatilité, tout en basculant vers les régimes intermédiaire et de crise lors des épisodes de forte instabilité. Ces changements apparaissent notamment autour des grandes hausses du VIX, comme pendant la crise financière de 2008, la crise de la dette souveraine en  2011--2012, ainsi que le choc de volatilité observé en 2020. Le modèle semble donc capable de repérer automatiquement des périodes de stress de marché à partir des variables construites sur le VIX.
 
-Cependant, il faut souligner une limite importante de cette approche. Le modèle HMM ne donne pas directement une explication économique des régimes : il segmente la série temporelle en fonction des propriétés statistiques des observations. Ainsi, le régime de crise n'est pas défini par un événement économique particulier, mais par une combinaison de rendements et de volatilités réalisées plus élevées. L'interprétation économique des états cachés doit donc être faite a posteriori, en comparant les régimes estimés avec les périodes connues de tension sur les marchés.
+Il faut toutefois souligner que les régimes estimés ne possèdent pas directement une interprétation économique. Le HMM classe les observations selon leurs propriétés statistiques, en particulier les rendements et les niveaux de volatilité réalisée, mais il n'associe pas lui-même un état caché à un événement économique précis. L'interprétation des régimes doit donc être faite a posteriori, en comparant les périodes détectées avec les épisodes connus de tension sur les marchés.
 
-De plus, les régimes estimés dépendent du choix des variables utilisées, du nombre d'états cachés et de l'initialisation de l'algorithme. Le choix de trois régimes permet ici une interprétation naturelle en termes de marché calme, intermédiaire et crise, mais d'autres choix pourraient être envisagés. Une étude plus complète pourrait comparer plusieurs modèles avec différents nombres d'états, par exemple à l'aide de critères d'information comme l'AIC ou le BIC, ou encore en évaluant la capacité du modèle à détecter des périodes de stress sur un échantillon hors apprentissage.
+Les résultats dépendent également des choix de modélisation, notamment des variables utilisées, du nombre d'états cachés et de l'initialisation de l'algorithme. Le choix de trois régimes offre ici une lecture naturelle mais d'autres spécifications pourraient conduire à une segmentation différente.
 
-Cette application illustre néanmoins l'intérêt des modèles de Markov cachés pour l'analyse de séries financières. Ils permettent de modéliser explicitement une dynamique non observable, ici le régime de marché, tout en conservant une structure probabiliste simple et interprétable. Dans le cas du VIX, le HMM fournit une méthode automatique de classification des périodes de marché selon leur niveau de volatilité et leur persistance.
+Cette application illustre ainsi l'intérêt des modèles de Markov cachés pour l'analyse de séries financières. Dans le cas du VIX, le HMM fournit une méthode probabiliste simple pour classifier les périodes de marché selon leur niveau de volatilité et leur dynamique de persistance.
 
 \subsection{References}
 
