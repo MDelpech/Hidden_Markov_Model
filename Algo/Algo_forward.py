@@ -14,4 +14,4 @@ def forward_algo(PI, A, B, Y):
     return np.sum(alpha[:,-1])
 
 vraissemblance = forward_algo(PI, A, B, view)
-#print(vraissemblance)
+print(vraissemblance)

@@ -1045,9 +1045,6 @@ O(ITN^2)
 \newpage
 \section{Limites des algorithmes et analyse de la qualité des estimations}
 
-\subsection{Les limites des algortihmes}
-
-
 \subsection{Limites et Mesure de la qualité de la vraisemblance avec l'algorithme Forward}
 
 \subsubsection{Limites de l'algorithme de forward}
@@ -1287,7 +1284,7 @@ Un \(NLPD\) faible indique que le modèle attribue une forte probabilité aux no
 
 %%% Partie sur la mise en place du modele sur le VIX 
 
-\subsection{Simulation d'un HMM et application à des données financières}
+\section{Simulation d'un HMM et application à des données financières}
 
 \subsection{Jeu de données simulé}
 
@@ -1344,6 +1341,23 @@ pour les observations.
 Ce jeu de données simulé constitue un cadre pour évaluer les algorithmes. En effet, contrairement à un jeu de données réel, les états cachés et les vrais paramètres du modèle sont connus. Il est donc possible de comparer les résultats produits par les algorithmes avec les valeurs utilisées pour générer les données.
 Cela nous permettra notament de tester la fiabilité des différents algorithmes.
 
+\paragraph{Application des algorithms sur données simulées}\mbox{}\\
+Résultat de l'algorithme Forward : 
+
+
+Résultat de l'algorithme de Viterbi :
+\begin{figure}[H]
+\centering
+\includegraphics[width=0.90\linewidth]{Test/viterbi_vs_reel_220.png}
+
+\vspace{0.2cm}
+
+
+\caption{Comparaison entre les états réels simulés et le chemin Viterbi sur les 220 premières dates.}
+\end{figure}
+
+Résultat de Baum-Welch : 
+
 \subsection{Interprétation des résultats obtenus sur les données simulées}
 
 \subsubsection{Analyse du problème de Forward}
@@ -1351,8 +1365,7 @@ Cela nous permettra notament de tester la fiabilité des différents algorithmes
 On applique les critères forward à la trajectoire simulée. Le modèle évalué est le modèle générateur
 \(\lambda=(\pi,A,B)\).
 
-\subsubsection{Vraisemblance et log-vraisemblance}
-
+\paragraph{Vraisemblance et log-vraisemblance}\mbox{}\\
 \begin{table}[H]
 \centering
 \begin{tabular}{lr}
@@ -1372,8 +1385,7 @@ BIC indicatif & 1355.624961 \\
 \caption{Critères forward sur la série complète.}
 \end{table}
 
-La vraisemblance brute est très faible, ce qui est attendu pour une longue suite d'observations. On
-utilise donc la log-vraisemblance
+La vraisemblance brute est très faible, ce qui est attendu pour une longue suite d'observations. On utilise donc la log-vraisemblance
 \[
 \ell(\lambda)=\log P(Y_{1:T}\mid\lambda)=-639.814329.
 \]
@@ -1392,8 +1404,7 @@ et la negative log predictive density vaut
 \caption{Log-vraisemblance cumulée par préfixe.}
 \end{figure}
 
-\subsubsection{Comparaison de modèles}
-
+\paragraph{Comparaison de modèles}\mbox{}\\
 On compare quatre modèles de même dimension :
 \[
 \lambda_0=(\pi,A,B),
@@ -1434,9 +1445,7 @@ Modèle uniforme & -693.840328 & -0.693147 & 0.693147 & 1409.680655 & 1463.67695
 \caption{Comparaison forward des modèles.}
 \end{table}
 
-Le modèle de simulation minimise l'AIC et le BIC. Les modèles à émissions uniformes obtiennent
-une log-vraisemblance moyenne proche de \(-\log(2)\), ce qui indique que supprimer le lien entre
-états cachés et observations dégrade fortement la qualité forward.
+Le modèle de simulation minimise l'AIC et le BIC. Les modèles à émissions uniformes obtiennent une log-vraisemblance moyenne proche de \(-\log(2)\), ce qui indique que supprimer le lien entre états cachés et observations dégrade fortement la qualité forward.
 
 \begin{figure}[H]
 \centering
@@ -1444,10 +1453,8 @@ une log-vraisemblance moyenne proche de \(-\log(2)\), ce qui indique que supprim
 \caption{Log-vraisemblance moyenne par modèle.}
 \end{figure}
 
-\subsubsection{Validation hors échantillon}
-
-La série est découpée chronologiquement en 800 observations d'apprentissage et 201 observations de
-test. La performance hors échantillon est mesurée par
+\paragraph{Validation hors échantillon}\mbox{}\\
+La série est découpée chronologiquement en 800 observations d'apprentissage et 201 observations de test. La performance hors échantillon est mesurée par : 
 \[
 \ell_{\mathrm{test}}
 =\log P(Y_{\mathrm{test}}\mid Y_{\mathrm{train}},\lambda),
@@ -1473,14 +1480,9 @@ Test indépendant & 201 & -128.462530 & -0.639117 & 0.639117 \\
 La NLPD de test conditionnel vaut 0.639277, très proche de celle obtenue sur la partie
 d'apprentissage. Le modèle garde donc une qualité prédictive stable sur les observations de test.
 
-\subsubsection{Conclusion}
-
-Les critères forward donnent une évaluation cohérente : la log-vraisemblance moyenne vaut
--0.639175, la NLPD vaut 0.639175, le modèle générateur minimise l'AIC et le BIC parmi les modèles
-comparés, et la NLPD hors échantillon reste proche de celle obtenue sur la période d'apprentissage.
-La comparaison avec les modèles uniformes montre en particulier que la matrice d'émission joue un
-rôle central : lorsque le lien entre états cachés et observations est supprimé, la vraisemblance se
-dégrade nettement.
+\paragraph{Conclusion}\mbox{}\\
+Les critères forward donnent une évaluation cohérente : la log-vraisemblance moyenne vaut -0.639175, la NLPD vaut 0.639175, le modèle générateur minimise l'AIC et le BIC parmi les modèles comparés, et la NLPD hors échantillon reste proche de celle obtenue sur la période d'apprentissage.
+La comparaison avec les modèles uniformes montre en particulier que la matrice d'émission joue un rôle central : lorsque le lien entre états cachés et observations est supprimé, la vraisemblance se dégrade nettement.
 
 \subsubsection{Analyse du problème de Viterbi}
 

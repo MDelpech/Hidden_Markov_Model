@@ -117,5 +117,5 @@ def baum_welch(Y, N, observations_possible, epsilon=1e-6, max_iter=1000):
 
     return PI, A, B, vraisemblance, log_vraisemblance
 
-##PI_est, A_est, B_est = baum_welch(view,3,observations,1e-6,1000)
-##print(PI_est, A_est, B_est)
+PI_est, A_est, B_est = baum_welch(view,3,observations,1e-6,1000)
+print(PI_est, A_est, B_est)
