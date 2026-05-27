@@ -17,6 +17,7 @@
 \usepackage{algorithm}
 \usepackage{algpseudocode}
 \usepackage{float}
+\usepackage{booktabs}
 
 \usetikzlibrary{arrows.meta,positioning}
 \usetikzlibrary{arrows.meta,positioning,calc}
@@ -1345,6 +1346,238 @@ Cela nous permettra notament de tester la fiabilité des différents algorithmes
 
 \subsection{Interprétation des résultats obtenus sur les données simulées}
 
+\subsubsection{Analyse du problème de Forward}
+
+On applique les critères forward à la trajectoire simulée. Le modèle évalué est le modèle générateur
+\(\lambda=(\pi,A,B)\).
+
+\subsubsection{Vraisemblance et log-vraisemblance}
+
+\begin{table}[H]
+\centering
+\begin{tabular}{lr}
+\toprule
+Critère & Valeur \\
+\midrule
+Longueur de la série \(T\) & 1001 \\
+Nombre de paramètres libres \(p\) & 11 \\
+Vraisemblance brute & \(1.3557\times 10^{-278}\) \\
+Log-vraisemblance & -639.814329 \\
+Log-vraisemblance moyenne & -0.639175 \\
+NLPD & 0.639175 \\
+AIC indicatif & 1301.628658 \\
+BIC indicatif & 1355.624961 \\
+\bottomrule
+\end{tabular}
+\caption{Critères forward sur la série complète.}
+\end{table}
+
+La vraisemblance brute est très faible, ce qui est attendu pour une longue suite d'observations. On
+utilise donc la log-vraisemblance
+\[
+\ell(\lambda)=\log P(Y_{1:T}\mid\lambda)=-639.814329.
+\]
+La log-vraisemblance moyenne vaut
+\[
+\bar\ell(\lambda)=\frac{1}{T}\ell(\lambda)=-0.639175,
+\]
+et la negative log predictive density vaut
+\[
+\mathrm{NLPD}=-\bar\ell(\lambda)=0.639175.
+\]
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=0.82\linewidth]{Test/prefix_log_likelihood}
+\caption{Log-vraisemblance cumulée par préfixe.}
+\end{figure}
+
+\subsubsection{Comparaison de modèles}
+
+On compare quatre modèles de même dimension :
+\[
+\lambda_0=(\pi,A,B),
+\qquad
+\lambda_1=(\pi,A_{\mathrm{unif}},B),
+\qquad
+\lambda_2=(\pi,A,B_{\mathrm{unif}}),
+\qquad
+\lambda_3=(\pi_{\mathrm{unif}},A_{\mathrm{unif}},B_{\mathrm{unif}}).
+\]
+Le modèle \(\lambda_1\) conserve les émissions mais rend les transitions uniformes. Le modèle
+\(\lambda_2\) conserve les transitions mais rend les émissions uniformes. Le modèle \(\lambda_3\)
+est entièrement uniforme.
+
+Pour \(N=3\) états et \(M=2\) observations, on utilise
+\[
+p=(N-1)+N(N-1)+N(M-1)=11.
+\]
+Les critères sont
+\[
+\mathrm{AIC}=-2\ell(\lambda)+2p,
+\qquad
+\mathrm{BIC}=-2\ell(\lambda)+p\log(T).
+\]
+
+\begin{table}[H]
+\centering
+\begin{tabular}{lrrrrr}
+\toprule
+Modèle & log-vrais. & log-vrais./obs. & NLPD & AIC & BIC \\
+\midrule
+Modèle de simulation & -639.814329 & -0.639175 & 0.639175 & 1301.628658 & 1355.624961 \\
+Transitions uniformes & -689.395632 & -0.688707 & 0.688707 & 1400.791264 & 1454.787566 \\
+Émissions uniformes & -693.840328 & -0.693147 & 0.693147 & 1409.680655 & 1463.676958 \\
+Modèle uniforme & -693.840328 & -0.693147 & 0.693147 & 1409.680655 & 1463.676958 \\
+\bottomrule
+\end{tabular}
+\caption{Comparaison forward des modèles.}
+\end{table}
+
+Le modèle de simulation minimise l'AIC et le BIC. Les modèles à émissions uniformes obtiennent
+une log-vraisemblance moyenne proche de \(-\log(2)\), ce qui indique que supprimer le lien entre
+états cachés et observations dégrade fortement la qualité forward.
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=0.82\linewidth]{Test/model_comparison}
+\caption{Log-vraisemblance moyenne par modèle.}
+\end{figure}
+
+\subsubsection{Validation hors échantillon}
+
+La série est découpée chronologiquement en 800 observations d'apprentissage et 201 observations de
+test. La performance hors échantillon est mesurée par
+\[
+\ell_{\mathrm{test}}
+=\log P(Y_{\mathrm{test}}\mid Y_{\mathrm{train}},\lambda),
+\qquad
+\mathrm{NLPD}_{\mathrm{test}}
+=-\frac{1}{T_{\mathrm{test}}}\ell_{\mathrm{test}}.
+\]
+
+\begin{table}[H]
+\centering
+\begin{tabular}{lrrrr}
+\toprule
+Segment & \(T\) & log-vrais. & log-vrais./obs. & NLPD \\
+\midrule
+Apprentissage & 800 & -511.319586 & -0.639149 & 0.639149 \\
+Test conditionnel & 201 & -128.494743 & -0.639277 & 0.639277 \\
+Test indépendant & 201 & -128.462530 & -0.639117 & 0.639117 \\
+\bottomrule
+\end{tabular}
+\caption{Validation forward hors échantillon.}
+\end{table}
+
+La NLPD de test conditionnel vaut 0.639277, très proche de celle obtenue sur la partie
+d'apprentissage. Le modèle garde donc une qualité prédictive stable sur les observations de test.
+
+\subsubsection{Conclusion}
+
+Les critères forward donnent une évaluation cohérente : la log-vraisemblance moyenne vaut
+-0.639175, la NLPD vaut 0.639175, le modèle générateur minimise l'AIC et le BIC parmi les modèles
+comparés, et la NLPD hors échantillon reste proche de celle obtenue sur la période d'apprentissage.
+La comparaison avec les modèles uniformes montre en particulier que la matrice d'émission joue un
+rôle central : lorsque le lien entre états cachés et observations est supprimé, la vraisemblance se
+dégrade nettement.
+
+\subsubsection{Analyse du problème de Viterbi}
+
+On applique les critères liés au décodage de Viterbi à la trajectoire simulée. Le chemin obtenu est
+noté \(\hat X^V_{1:T}\).
+
+\subsubsection{Interprétation des régimes détectés}
+
+On commence par regarder si les états décodés correspondent à des profils d'observations distincts.
+
+\begin{table}[H]
+\centering
+\begin{tabular}{lrrrr}
+\toprule
+État Viterbi & Dates & Parapluie obs. & Parapluie théorique & Pas parapluie obs. \\
+\midrule
+soleil & 408 & 9.56\% & 10.00\% & 90.44\% \\
+nuageux & 206 & 12.62\% & 40.00\% & 87.38\% \\
+pluie & 387 & 100.00\% & 90.00\% & 0.00\% \\
+\bottomrule
+\end{tabular}
+\caption{Profil des observations dans chaque état décodé par Viterbi.}
+\end{table}
+
+Les états \emph{soleil} et \emph{pluie} sont bien séparés : l'état \emph{soleil} est associé presque
+toujours à \emph{Pas parapluie}, tandis que l'état \emph{pluie} est associé presque toujours à
+\emph{Parapluie}. L'état \emph{nuageux} est moins clairement identifié, ce qui est cohérent avec
+des probabilités d'émission moins extrêmes.
+
+On regarde ensuite la persistance des régimes.
+
+\begin{table}[H]
+\centering
+\begin{tabular}{lrrrrr}
+\toprule
+Séquence & Changements & Taux & Runs & Longueur moy. & Longueur max \\
+\midrule
+Viterbi & 326 & 32.60\% & 327 & 3.06 & 28 \\
+Posterior decoding & 390 & 39.00\% & 391 & 2.56 & 21 \\
+Décodage local émissions & 358 & 35.80\% & 359 & 2.79 & 23 \\
+\bottomrule
+\end{tabular}
+\caption{Persistance des séquences décodées.}
+\end{table}
+
+Le chemin Viterbi effectue \(326\) changements, soit un taux de \(32.60\%\). Il est plus régulier que
+le posterior decoding, ce qui correspond à son objectif : trouver une trajectoire globale cohérente.
+
+\subsubsection{Comparaison avec le posterior decoding}
+
+Le posterior decoding choisit, à chaque date, l'état marginalement le plus probable :
+\[
+\hat X^P_t \in \arg\max_i P(X_t=i\mid Y_{1:T},\lambda).
+\]
+On compare les deux décodages avec le taux de désaccord
+\[
+D_{VP}
+=\frac{1}{T}\sum_{t=1}^T
+\mathbf 1_{\{\hat X^V_t\neq \hat X^P_t\}}.
+\]
+
+\begin{table}[H]
+\centering
+\begin{tabular}{lr}
+\toprule
+Critère & Valeur \\
+\midrule
+\(D_{VP}\) & 8.39\% \\
+Désaccord Viterbi vs local émissions & 24.48\% \\
+Proba postérieure moyenne de l'état Viterbi & 66.04\% \\
+Proba postérieure médiane de l'état Viterbi & 67.99\% \\
+Marge postérieure moyenne & 38.33\% \\
+Marge postérieure médiane & 42.12\% \\
+\bottomrule
+\end{tabular}
+\caption{Comparaison entre Viterbi et posterior decoding.}
+\end{table}
+
+On obtient \(D_{VP}=8.39\%\). Les deux méthodes donnent donc des classifications proches. La
+probabilité postérieure moyenne de l'état choisi par Viterbi vaut \(66.04\%\), ce qui indique que le
+chemin Viterbi suit le plus souvent des états marginalement plausibles.
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=0.90\linewidth]{Test/comparaison_visuelle_Viterbi}
+\caption{Comparaison visuelle entre Viterbi, posterior decoding et décodage local.}
+\end{figure}
+
+\subsubsection{Conclusion}
+
+Les critères donnent une lecture cohérente du décodage. Les régimes extrêmes sont bien
+interprétables à partir des observations, et le taux de désaccord avec le posterior decoding reste
+faible. Le chemin Viterbi est aussi plus régulier que les décodages fondés sur des décisions locales.
+Le régime \emph{nuageux} reste moins nettement séparé, ce qui est cohérent avec des probabilités
+d'émission moins discriminantes.
+
+\subsubsection{Analyse du problème de Baum-Welch}
 Nous avons appliqué l'algorithme de Baum-Welch au jeu de données simulé présenté précédemment, en lançant l'estimation à partir de plusieurs initialisations différentes. L'objectif est ici d'observer si les paramètres estimés sont stables d'une initialisation à l'autre et si les solutions obtenues conduisent à des vraisemblances comparables.
 
 La Figure~\ref{fig:loglik_finales} compare les log-vraisemblances finales obtenues pour les différentes initialisations. On observe que les écarts de log-vraisemblance par observation sont très faibles, de l'ordre de $10^{-4}$ à $10^{-3}$. Cela signifie que, du point de vue de la vraisemblance, les différentes estimations expliquent les observations de manière assez proche. Certaines initialisations, notamment les initialisations 9 et 10, donnent des résultats quasiment identiques à la meilleure solution. À l'inverse, l'initialisation 8 présente l'écart le plus important, ce qui indique une solution légèrement moins bonne, même si l'écart reste faible une fois rapporté au nombre d'observations.
@@ -1489,7 +1722,7 @@ La figure suivante représente le VIX sur la période étudiée, avec une colora
 
 \begin{figure}[h]
     \centering
-    \includegraphics[width = 1\textwidth]{/Users/max.dlch/Desktop/M1/S2/Hidden_Markov_Model/Papier/Figures/regime_detectionVIX.png}
+    \includegraphics[width = 1\textwidth]{Figures/regime_detectionVIX.png}
     \caption{Detection de régime sur l'indice du VIX entre 2004 et 2024}
     \label{fig:mon_image}
 \end{figure}
