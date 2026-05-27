@@ -114,6 +114,23 @@ def analyser_viterbi(PI, A, B, Y, etats_reels=None, horizon=220):
     plt.legend(handles=legend, loc="upper center", bbox_to_anchor=(0.5, -0.24), ncol=3, frameon=False)
     plt.tight_layout()
 
+    # Graphe 2 : Viterbi / états réels si disponibles
+    if etats_reels is not None:
+        etats_reels = np.asarray(etats_reels, dtype=int)
+
+        data_reel = np.vstack([
+            etats_reels[:h],
+            viterbi_path[:h],
+        ])
+
+        plt.figure(figsize=(10.5, 2.6))
+        plt.imshow(data_reel, aspect="auto", interpolation="nearest", cmap=cmap, vmin=0, vmax=2)
+        plt.yticks([0, 1], ["Réel", "Viterbi"])
+        plt.xlabel("t")
+        plt.title(f"Comparaison Viterbi / états réels sur les {h} premières dates")
+        plt.legend(handles=legend, loc="upper center", bbox_to_anchor=(0.5, -0.32), ncol=3, frameon=False)
+        plt.tight_layout()
+
     plt.show()
 
     return viterbi_path, posterior_path, local_path

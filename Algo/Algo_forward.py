@@ -15,3 +15,5 @@ def forward_algo(PI, A, B, Y):
 
 vraissemblance = forward_algo(PI, A, B, view)
 print(vraissemblance)
+log_vraissemblance=np.log(vraissemblance)
+print(log_vraissemblance)
