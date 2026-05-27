@@ -1285,7 +1285,7 @@ Un \(NLPD\) faible indique que le modèle attribue une forte probabilité aux no
 
 \subsection{Jeu de données simulé}
 
-Afin de tester et de valider les différents algorithmes étudiés dans ce travail, nous avons construit un jeu de données simulé à partir d'un modèle de Markov caché. L'objectif de cette simulation est de disposer d'une séquence d'observations pour laquelle les paramètres du modèle sont connus à l'avance. Cela permet ensuite de vérifier si les algorithmes d'inférence et d'estimation parviennent à retrouver correctement la structure sous-jacente du modèle.
+Afin de tester et de valider les différents algorithmes étudiés, nous avons construit un jeu de données simulé à partir d'un modèle de Markov caché. L'objectif de cette simulation est de disposer d'une séquence d'observations pour laquelle les paramètres du modèle sont connus à l'avance. Cela permet ensuite de vérifier si les algorithmes d'inférence et d'estimation parviennent à retrouver correctement la structure sous-jacente du modèle.
 
 Le modèle considéré possède trois états cachés, représentant trois conditions météorologiques possibles :
 \[
@@ -1305,7 +1305,7 @@ La distribution initiale des états est donnée par
 \]
 ce qui signifie que la simulation commence avec une probabilité de $0.5$ dans l'état \og soleil \fg, $0.3$ dans l'état \og nuageux \fg{} et $0.2$ dans l'état \og pluie \fg.
 
-La dynamique de la chaîne de Markov cachée est décrite par la matrice de transition
+La matrice de transition entre les états cachés est définie par : 
 \[
 A =
 \begin{pmatrix}
@@ -1314,9 +1314,8 @@ A =
 0.005 & 0.395 & 0.6
 \end{pmatrix}.
 \]
-Chaque coefficient $A_{ij}$ représente la probabilité de passer de l'état caché $i$ à l'état caché $j$ entre deux instants successifs. Par exemple, si le système est dans l'état \og soleil \fg, il reste dans cet état avec probabilité $0.7$, passe à l'état \og nuageux \fg{} avec probabilité $0.295$, et passe à l'état \og pluie \fg{} avec probabilité $0.005$.
 
-La matrice d'émission, qui donne les probabilités d'observer chaque symbole conditionnellement à l'état caché courant, est définie par
+La matrice d'émission est qu'en a elle définit par :
 \[
 B =
 \begin{pmatrix}
@@ -1325,7 +1324,6 @@ B =
 0.9 & 0.1
 \end{pmatrix}.
 \]
-Ainsi, lorsque l'état caché est \og soleil \fg, la probabilité d'observer \og parapluie \fg{} est faible, tandis que lorsque l'état caché est \og pluie \fg, cette probabilité devient élevée. Cette matrice permet donc de créer un lien probabiliste cohérent entre les états météorologiques cachés et les observations visibles.
 
 À partir de ces paramètres, nous simulons une trajectoire de longueur $T = 1000$. La génération se fait en deux étapes à chaque instant. Tout d'abord, un état caché est tiré selon la matrice de transition $A$. Ensuite, une observation est générée selon la loi d'émission correspondant à cet état, donnée par la matrice $B$. On obtient ainsi deux suites :
 \[
@@ -1337,7 +1335,8 @@ pour les états cachés, et
 \]
 pour les observations.
 
-Ce jeu de données simulé constitue un cadre contrôlé pour évaluer les algorithmes. En effet, contrairement à un jeu de données réel, les états cachés et les vrais paramètres du modèle sont connus. Il est donc possible de comparer les résultats produits par les algorithmes avec les valeurs utilisées pour générer les données. Cela permet notamment de tester la capacité des méthodes comme l'algorithme Forward, l'algorithme de Viterbi ou encore l'algorithme de Baum-Welch à retrouver la vraisemblance, la trajectoire cachée la plus probable ou les paramètres du modèle.
+Ce jeu de données simulé constitue un cadre pour évaluer les algorithmes. En effet, contrairement à un jeu de données réel, les états cachés et les vrais paramètres du modèle sont connus. Il est donc possible de comparer les résultats produits par les algorithmes avec les valeurs utilisées pour générer les données.
+Cela nous permettra notament de tester la fiabilité des différents algorithmes.
 
 \subsection{Interprétation des résultats obtenus sur les données simulées}
 
