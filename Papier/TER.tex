@@ -1343,6 +1343,7 @@ Cela nous permettra notament de tester la fiabilité des différents algorithmes
 
 \paragraph{Application des algorithms sur données simulées}\mbox{}\\
 Résultat de l'algorithme Forward : 
+-639.814329
 
 
 Résultat de l'algorithme de Viterbi :
@@ -1357,10 +1358,6 @@ Résultat de l'algorithme de Viterbi :
 \end{figure}
 
 Résultat de Baum-Welch : 
-
-\subsubsection{Application des algos sur les données simulé}
-Résultats de l'estimation par Baum-Welch : 
-
 Après exécution de l'algorithme de Baum-Welch sur les données simulées, nous obtenons les paramètres estimés suivants.
 
 La matrice de transition estimée est
@@ -1517,7 +1514,7 @@ La comparaison avec les modèles uniformes montre en particulier que la matrice 
 On applique les critères liés au décodage de Viterbi à la trajectoire simulée. Le chemin obtenu est
 noté \(\hat X^V_{1:T}\).
 
-\subsubsection{Interprétation des régimes détectés}
+\paragraph{Interprétation des régimes détectés}\mbox{}\\
 
 On commence par regarder si les états décodés correspondent à des profils d'observations distincts.
 
@@ -1559,7 +1556,7 @@ Décodage local émissions & 358 & 35.80\% & 359 & 2.79 & 23 \\
 Le chemin Viterbi effectue \(326\) changements, soit un taux de \(32.60\%\). Il est plus régulier que
 le posterior decoding, ce qui correspond à son objectif : trouver une trajectoire globale cohérente.
 
-\subsubsection{Comparaison avec le posterior decoding}
+\paragraph{Comparaison avec le posterior decoding}\mbox{}\\
 
 Le posterior decoding choisit, à chaque date, l'état marginalement le plus probable :
 \[
@@ -1599,7 +1596,7 @@ chemin Viterbi suit le plus souvent des états marginalement plausibles.
 \caption{Comparaison visuelle entre Viterbi, posterior decoding et décodage local.}
 \end{figure}
 
-\subsubsection{Conclusion}
+\paragraph{Conclusion}\mbox{}\\
 
 Les critères donnent une lecture cohérente du décodage. Les régimes extrêmes sont bien
 interprétables à partir des observations, et le taux de désaccord avec le posterior decoding reste
@@ -1654,7 +1651,7 @@ Dans notre cas, les initialisations 9 et 10 semblent très proches de la solutio
 
 
 
-\subsubsection{Détection de régimes de volatilité sur le VIX}
+\subsection{Détection de régimes de volatilité sur le VIX}
 
 
 Dans cette section, nous appliquons un modèle de Markov caché au VIX, c'est-à-dire à l'indice de volatilité implicite du S\&P 500. L'objectif est d'étudier si un modèle HMM permet d'identifier automatiquement différents régimes de marché à partir de l'évolution de la volatilité. En effet, le VIX est souvent interprété comme un indicateur du niveau de stress ou d'incertitude sur les marchés financiers. Un niveau faible du VIX correspond généralement à une période calme, tandis qu'un niveau élevé est associé à des phases de tension ou de crise.
