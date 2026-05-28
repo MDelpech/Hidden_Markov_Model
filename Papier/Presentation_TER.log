@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.141592653-2.6-1.40.27 (TeX Live 2025) (preloaded format=pdflatex 2026.1.23)  28 MAY 2026 12:45
+This is pdfTeX, Version 3.141592653-2.6-1.40.27 (TeX Live 2025) (preloaded format=pdflatex 2026.1.23)  28 MAY 2026 15:41
 entering extended mode
  restricted \write18 enabled.
  file:line:error style messages enabled.
@@ -860,50 +860,71 @@ Package pdftex.def Info: Test/viterbi_vs_reel_220.png  used on input line 739.
 [16
 
  <./Test/viterbi_vs_reel_220.png>]
-<Test/comparaison_log_vraisemblances.png, id=516, 790.955pt x 491.8375pt>
-File: Test/comparaison_log_vraisemblances.png Graphic file (type png)
-<use Test/comparaison_log_vraisemblances.png>
-Package pdftex.def Info: Test/comparaison_log_vraisemblances.png  used on input line 789.
-(pdftex.def)             Requested size: 171.14764pt x 106.42593pt.
-<Test/stabilite_A.png, id=517, 797.98125pt x 497.86pt>
-File: Test/stabilite_A.png Graphic file (type png)
-<use Test/stabilite_A.png>
-Package pdftex.def Info: Test/stabilite_A.png  used on input line 789.
-(pdftex.def)             Requested size: 171.14764pt x 106.77953pt.
-<Test/stabilite_b.png, id=518, 795.97375pt x 495.8525pt>
-File: Test/stabilite_b.png Graphic file (type png)
-<use Test/stabilite_b.png>
-Package pdftex.def Info: Test/stabilite_b.png  used on input line 789.
-(pdftex.def)             Requested size: 171.14764pt x 106.61377pt.
-<Test/stabilite_durees.png, id=519, 789.95125pt x 497.86pt>
-File: Test/stabilite_durees.png Graphic file (type png)
-<use Test/stabilite_durees.png>
-Package pdftex.def Info: Test/stabilite_durees.png  used on input line 789.
-(pdftex.def)             Requested size: 171.14764pt x 107.86584pt.
+<Test/prefix_log_likelihood.png, id=516, 592.2855pt x 332.1135pt>
+File: Test/prefix_log_likelihood.png Graphic file (type png)
+<use Test/prefix_log_likelihood.png>
+Package pdftex.def Info: Test/prefix_log_likelihood.png  used on input line 787.
+(pdftex.def)             Requested size: 164.30028pt x 92.12457pt.
 
 
 [17
 
- <./Test/comparaison_log_vraisemblances.png> <./Test/stabilite_A.png> <./Test/stabilite_b.png> <./Test/stabilite_durees.png>]
-<Figures/regime_detectionVIX.png, id=551, 1148.3703pt x 426.393pt>
-File: Figures/regime_detectionVIX.png Graphic file (type png)
-<use Figures/regime_detectionVIX.png>
-Package pdftex.def Info: Figures/regime_detectionVIX.png  used on input line 835.
-(pdftex.def)             Requested size: 290.9531pt x 108.02934pt.
+ <./Test/prefix_log_likelihood.png>]
+<Test/comparaison_visuelle_Viterbi.png, id=545, 1028.84375pt x 364.36125pt>
+File: Test/comparaison_visuelle_Viterbi.png Graphic file (type png)
+<use Test/comparaison_visuelle_Viterbi.png>
+Package pdftex.def Info: Test/comparaison_visuelle_Viterbi.png  used on input line 848.
+(pdftex.def)             Requested size: 266.98991pt x 94.55377pt.
 
 
 [18
 
- <./Figures/regime_detectionVIX.png>]
+ <./Test/comparaison_visuelle_Viterbi.png>]
+<Test/comparaison_log_vraisemblances.png, id=574, 790.955pt x 491.8375pt>
 File: Test/comparaison_log_vraisemblances.png Graphic file (type png)
 <use Test/comparaison_log_vraisemblances.png>
-Package pdftex.def Info: Test/comparaison_log_vraisemblances.png  used on input line 900.
-(pdftex.def)             Requested size: 181.41609pt x 112.80504pt.
+Package pdftex.def Info: Test/comparaison_log_vraisemblances.png  used on input line 898.
+(pdftex.def)             Requested size: 171.14764pt x 106.42593pt.
+<Test/stabilite_A.png, id=575, 797.98125pt x 497.86pt>
+File: Test/stabilite_A.png Graphic file (type png)
+<use Test/stabilite_A.png>
+Package pdftex.def Info: Test/stabilite_A.png  used on input line 898.
+(pdftex.def)             Requested size: 171.14764pt x 106.77953pt.
+<Test/stabilite_b.png, id=576, 795.97375pt x 495.8525pt>
+File: Test/stabilite_b.png Graphic file (type png)
+<use Test/stabilite_b.png>
+Package pdftex.def Info: Test/stabilite_b.png  used on input line 898.
+(pdftex.def)             Requested size: 171.14764pt x 106.61377pt.
+<Test/stabilite_durees.png, id=577, 789.95125pt x 497.86pt>
+File: Test/stabilite_durees.png Graphic file (type png)
+<use Test/stabilite_durees.png>
+Package pdftex.def Info: Test/stabilite_durees.png  used on input line 898.
+(pdftex.def)             Requested size: 171.14764pt x 107.86584pt.
 
 
 [19
 
-]
+ <./Test/comparaison_log_vraisemblances.png> <./Test/stabilite_A.png> <./Test/stabilite_b.png> <./Test/stabilite_durees.png>]
+<Figures/regime_detectionVIX.png, id=610, 1148.3703pt x 426.393pt>
+File: Figures/regime_detectionVIX.png Graphic file (type png)
+<use Figures/regime_detectionVIX.png>
+Package pdftex.def Info: Figures/regime_detectionVIX.png  used on input line 944.
+(pdftex.def)             Requested size: 290.9531pt x 108.02934pt.
+
+
+[20
+
+ <./Figures/regime_detectionVIX.png>]
+<Test/comparaison_log_vraisemblances_vix.png, id=639, 578.16pt x 361.35pt>
+File: Test/comparaison_log_vraisemblances_vix.png Graphic file (type png)
+<use Test/comparaison_log_vraisemblances_vix.png>
+Package pdftex.def Info: Test/comparaison_log_vraisemblances_vix.png  used on input line 1009.
+(pdftex.def)             Requested size: 181.41609pt x 113.38475pt.
+
+
+[21
+
+ <./Test/comparaison_log_vraisemblances_vix.png>]
 \tf@nav=\write6
 \openout6 = `Presentation_TER.nav'.
 
@@ -922,18 +943,18 @@ Package rerunfilecheck Info: File `Presentation_TER.out' has not changed.
 (rerunfilecheck)             Checksum: 47949AC7C3DCEDDDEEFE3CD50587DDA1;103.
  ) 
 Here is how much of TeX's memory you used:
- 25546 strings out of 473190
- 512820 string characters out of 5715800
- 879090 words of memory out of 5000000
- 48253 multiletter control sequences out of 15000+600000
+ 25575 strings out of 473190
+ 513804 string characters out of 5715800
+ 879162 words of memory out of 5000000
+ 48278 multiletter control sequences out of 15000+600000
  571160 words of font info for 80 fonts, out of 8000000 for 9000
  1141 hyphenation exceptions out of 8191
  128i,16n,123p,452b,767s stack positions out of 10000i,1000n,20000p,200000b,200000s
 </usr/local/texlive/2025/texmf-dist/fonts/type1/public/amsfonts/cm/cmex10.pfb></usr/local/texlive/2025/texmf-dist/fonts/type1/public/amsfonts/cmextra/cmex7.pfb></usr/local/texlive/2025/texmf-dist/fonts/type1/public/amsfonts/cmextra/cmex8.pfb></usr/local/texlive/2025/texmf-dist/fonts/type1/public/amsfonts/cm/cmmi10.pfb></usr/local/texlive/2025/texmf-dist/fonts/type1/public/amsfonts/cm/cmmi12.pfb></usr/local/texlive/2025/texmf-dist/fonts/type1/public/amsfonts/cm/cmmi6.pfb></usr/local/texlive/2025/texmf-dist/fonts/type1/public/amsfonts/cm/cmmi7.pfb></usr/local/texlive/2025/texmf-dist/fonts/type1/public/amsfonts/cm/cmmi8.pfb></usr/local/texlive/2025/texmf-dist/fonts/type1/public/amsfonts/cm/cmss10.pfb></usr/local/texlive/2025/texmf-dist/fonts/type1/public/amsfonts/cm/cmss12.pfb></usr/local/texlive/2025/texmf-dist/fonts/type1/public/amsfonts/cm/cmss8.pfb></usr/local/texlive/2025/texmf-dist/fonts/type1/public/amsfonts/cm/cmssbx10.pfb></usr/local/texlive/2025/texmf-dist/fonts/type1/public/amsfonts/cm/cmssi10.pfb></usr/local/texlive/2025/texmf-dist/fonts/type1/public/amsfonts/cm/cmssi12.pfb></usr/local/texlive/2025/texmf-dist/fonts/type1/public/amsfonts/cm/cmssi8.pfb></usr/local/texlive/2025/texmf-dist/fonts/type1/public/amsfonts/cm/cmsy10.pfb></usr/local/texlive/2025/texmf-dist/fonts/type1/public/amsfonts/cm/cmsy5.pfb></usr/local/texlive/2025/texmf-dist/fonts/type1/public/amsfonts/cm/cmsy6.pfb></usr/local/texlive/2025/texmf-dist/fonts/type1/public/amsfonts/cm/cmsy7.pfb></usr/local/texlive/2025/texmf-dist/fonts/type1/public/amsfonts/cm/cmsy8.pfb></usr/local/texlive/2025/texmf-dist/fonts/type1/public/amsfonts/symbols/msbm10.pfb></usr/local/texlive/2025/texmf-dist/fonts/type1/public/amsfonts/symbols/msbm7.pfb>
-Output written on Presentation_TER.pdf (19 pages, 1068663 bytes).
+Output written on Presentation_TER.pdf (21 pages, 1282131 bytes).
 PDF statistics:
- 709 PDF objects out of 1000 (max. 8388607)
- 585 compressed objects within 6 object streams
- 40 named destinations out of 1000 (max. 500000)
- 171 words of extra memory for PDF output out of 10000 (max. 10000000)
+ 771 PDF objects out of 1000 (max. 8388607)
+ 636 compressed objects within 7 object streams
+ 44 named destinations out of 1000 (max. 500000)
+ 186 words of extra memory for PDF output out of 10000 (max. 10000000)
 

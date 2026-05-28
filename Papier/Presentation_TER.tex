@@ -584,7 +584,7 @@ Viterbi estime la trajectoire cachée la plus probable :
     \mathbf{1}_{\{\widehat X_t^V\neq \widehat X_{t+1}^V\}}.
     \]
 
-    \item \textbf{Comparaison avec le posterior decoding}
+    \item \textbf{Comparaison avec le posterior decoding et le decoding local}
     \[
     D_{VP}
     =
@@ -738,6 +738,115 @@ La trajectoire simulée contient \(T=1001\) observations, avec les vrais états 
 
 \end{frame}
 
+\begin{frame}{Analyse Forward sur la simulation}
+
+\tiny
+\centering
+
+\vspace{-0.2cm}
+
+\includegraphics[width=0.48\linewidth]{Test/prefix_log_likelihood.png}
+
+\vspace{-0.1cm}
+
+\textbf{Comparaison de modèles}
+
+\vspace{0.1cm}
+
+\resizebox{0.86\linewidth}{!}{
+\begin{tabular}{lrrrrr}
+\toprule
+Modèle & log-vrais. & log-vrais./obs. & NLPD & AIC & BIC \\
+\midrule
+Simulation & -639.814329 & -0.639175 & 0.639175 & 1301.628658 & 1355.624961 \\
+Transitions unif. & -689.395632 & -0.688707 & 0.688707 & 1400.791264 & 1454.787566 \\
+Émissions unif. & -693.840328 & -0.693147 & 0.693147 & 1409.680655 & 1463.676958 \\
+Modèle unif. & -693.840328 & -0.693147 & 0.693147 & 1409.680655 & 1463.676958 \\
+\bottomrule
+\end{tabular}
+}
+
+\vspace{0.1cm}
+
+\textbf{Validation hors échantillon}
+
+\vspace{0.1cm}
+
+\resizebox{0.80\linewidth}{!}{
+\begin{tabular}{lrrrr}
+\toprule
+Segment & \(T\) & log-vrais. & log-vrais./obs. & NLPD \\
+\midrule
+Apprentissage & 800 & -511.319586 & -0.639149 & 0.639149 \\
+Test cond. & 201 & -128.494743 & -0.639277 & 0.639277 \\
+Test indép. & 201 & -128.462530 & -0.639117 & 0.639117 \\
+\bottomrule
+\end{tabular}
+}
+
+\end{frame}
+
+
+\begin{frame}{Analyse Viterbi sur la simulation}
+
+\tiny
+\centering
+
+\begin{columns}[T]
+
+\begin{column}{0.50\textwidth}
+\centering
+\textbf{Persistance des séquences}
+
+\vspace{0.05cm}
+
+\resizebox{\linewidth}{!}{
+\begin{tabular}{lrrrrr}
+\toprule
+Séquence & Chang. & Taux & Runs & Moy. & Max \\
+\midrule
+Viterbi & 326 & 32.60\% & 327 & 3.06 & 28 \\
+Posterior decoding & 390 & 39.00\% & 391 & 2.56 & 21 \\
+Décodage local & 358 & 35.80\% & 359 & 2.79 & 23 \\
+\bottomrule
+\end{tabular}
+}
+\end{column}
+
+\begin{column}{0.50\textwidth}
+\centering
+\textbf{Viterbi vs posterior decoding}
+
+\vspace{0.05cm}
+
+\resizebox{\linewidth}{!}{
+\begin{tabular}{lr}
+\toprule
+Critère & Valeur \\
+\midrule
+\(D_{VP}\) & 8.39\% \\
+Désaccord Viterbi / décodage local & 24.48\% \\
+Proba post. moyenne Viterbi & 66.04\% \\
+Proba post. médiane Viterbi & 67.99\% \\
+Marge post. moyenne & 38.33\% \\
+Marge post. médiane & 42.12\% \\
+\bottomrule
+\end{tabular}
+}
+\end{column}
+
+\end{columns}
+
+\vspace{0.25cm}
+
+\includegraphics[width=0.78\linewidth]{Test/comparaison_visuelle_Viterbi.png}
+
+\vspace{0.05cm}
+
+{\tiny Comparaison visuelle entre Viterbi, posterior decoding et décodage local.}
+
+\end{frame}
+
 
 \begin{frame}{Analyse Baum--Welch sur la simulation}
 
@@ -871,7 +980,7 @@ Baisses détectées & 0 \\
 
 \vspace{0.05cm}
 
-\includegraphics[width=\linewidth]{Test/comparaison_log_vraisemblances.png}
+\includegraphics[width=\linewidth]{Test/comparaison_log_vraisemblances_vix.png}
 
 \vspace{0.03cm}
 
