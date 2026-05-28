@@ -1,10 +1,10 @@
-This is pdfTeX, Version 3.141592653-2.6-1.40.27 (TeX Live 2025) (preloaded format=pdflatex 2026.1.23)  28 MAY 2026 15:41
+This is pdfTeX, Version 3.141592653-2.6-1.40.27 (TeX Live 2025) (preloaded format=pdflatex 2025.5.10)  28 MAY 2026 16:25
 entering extended mode
  restricted \write18 enabled.
  file:line:error style messages enabled.
  %&-line parsing enabled.
-**/Users/mariusrequillart/Documents/Hidden_Markov_Model/Papier/Presentation_TER.tex
-(/Users/mariusrequillart/Documents/Hidden_Markov_Model/Papier/Presentation_TER.tex
+**/Users/max.dlch/Desktop/M1/S2/Hidden_Markov_Model/Papier/Presentation_TER.tex
+(/Users/max.dlch/Desktop/M1/S2/Hidden_Markov_Model/Papier/Presentation_TER.tex
 LaTeX2e <2024-11-01> patch level 2
 L3 programming layer <2025-01-18>
 (/usr/local/texlive/2025/texmf-dist/tex/latex/beamer/beamer.cls
@@ -758,171 +758,363 @@ Dictionary: translator-numbers-dictionary, Language: English
 ) (/usr/local/texlive/2025/texmf-dist/tex/latex/translator/translator-theorem-dictionary-English.dict
 Dictionary: translator-theorem-dictionary, Language: English 
 ) (./Presentation_TER.nav)
+Overfull \hbox (18.81548pt too wide) in paragraph at lines 16--16
+ [][][][]  
+ []
+
+
+Overfull \hbox (18.81548pt too wide) in paragraph at lines 20--20
+ [][][][]  
+ []
+
+
+
+
+Overfull \hbox (18.81548pt too wide) has occurred while \output is active
+ [][][][]  
+ []
 
 [1
 
-{/usr/local/texlive/2025/texmf-var/fonts/map/pdftex/updmap/pdftex.map}] (./Presentation_TER.toc)
+{/usr/local/texlive/2025/texmf-var/fonts/map/pdftex/updmap/pdftex.map}]
+Overfull \hbox (18.81548pt too wide) in paragraph at lines 59--59
+ [][][][]  
+ []
 
-[2
-
-]
-LaTeX Font Info:    Trying to load font information for U+msa on input line 64.
- (/usr/local/texlive/2025/texmf-dist/tex/latex/amsfonts/umsa.fd
+LaTeX Font Info:    Trying to load font information for U+msa on input line 59.
+(/usr/local/texlive/2025/texmf-dist/tex/latex/amsfonts/umsa.fd
 File: umsa.fd 2013/01/14 v3.01 AMS symbols A
 )
-LaTeX Font Info:    Trying to load font information for U+msb on input line 64.
+LaTeX Font Info:    Trying to load font information for U+msb on input line 59.
  (/usr/local/texlive/2025/texmf-dist/tex/latex/amsfonts/umsb.fd
 File: umsb.fd 2013/01/14 v3.01 AMS symbols B
 )
-LaTeX Font Info:    Trying to load font information for OT1+mathkerncmss on input line 64.
+LaTeX Font Info:    Trying to load font information for OT1+mathkerncmss on input line 59.
  (/usr/local/texlive/2025/texmf-dist/tex/latex/sansmathaccent/ot1mathkerncmss.fd
 File: ot1mathkerncmss.fd 2020/01/31 Fontinst v1.933 font definitions for OT1/mathkerncmss.
 )
 
+
+Overfull \hbox (18.81548pt too wide) has occurred while \output is active
+ [][][][]  
+ []
+
+[2
+
+]
+Overfull \hbox (18.81548pt too wide) in paragraph at lines 99--99
+ [][][][]  
+ []
+
+
+
+
+Overfull \hbox (18.81548pt too wide) has occurred while \output is active
+ [][][][]  
+ []
+
 [3
 
 ]
+Overfull \hbox (18.81548pt too wide) in paragraph at lines 136--136
+ [][][][]  
+ []
+
+
+
+
+Overfull \hbox (18.81548pt too wide) has occurred while \output is active
+ [][][][]  
+ []
 
 [4
 
 ]
+Overfull \hbox (18.81548pt too wide) in paragraph at lines 175--175
+ [][][][]  
+ []
+
+
+
+
+Overfull \hbox (18.81548pt too wide) has occurred while \output is active
+ [][][][]  
+ []
 
 [5
 
 ]
+Overfull \hbox (18.81548pt too wide) in paragraph at lines 229--229
+ [][][][]  
+ []
+
+
+
+
+Overfull \hbox (18.81548pt too wide) has occurred while \output is active
+ [][][][]  
+ []
 
 [6
 
 ]
+Overfull \hbox (18.81548pt too wide) in paragraph at lines 275--275
+ [][][][]  
+ []
+
+
+Overfull \vbox (8.01765pt too high) detected at line 275
+ []
+
+
+
+
+Overfull \hbox (18.81548pt too wide) has occurred while \output is active
+ [][][][]  
+ []
 
 [7
 
 ]
-Overfull \vbox (8.01765pt too high) detected at line 280
+Overfull \hbox (18.81548pt too wide) in paragraph at lines 385--385
+ [][][][]  
  []
 
 
+Overfull \vbox (43.15265pt too high) detected at line 385
+ []
+
+
+
+
+Overfull \hbox (18.81548pt too wide) has occurred while \output is active
+ [][][][]  
+ []
 
 [8
 
 ]
-Overfull \vbox (43.15265pt too high) detected at line 390
+Overfull \hbox (18.81548pt too wide) in paragraph at lines 439--439
+ [][][][]  
  []
 
 
 
+
+Overfull \hbox (18.81548pt too wide) has occurred while \output is active
+ [][][][]  
+ []
+
 [9
 
 ]
+Overfull \hbox (18.81548pt too wide) in paragraph at lines 508--508
+ [][][][]  
+ []
+
+LaTeX Font Info:    Font shape `OT1/cmss/b/n' in size <8> not available
+(Font)              Font shape `OT1/cmss/bx/n' tried instead on input line 508.
+LaTeX Font Info:    Font shape `OT1/cmss/b/n' in size <6> not available
+(Font)              Font shape `OT1/cmss/bx/n' tried instead on input line 508.
+LaTeX Font Info:    Font shape `OT1/cmss/b/n' in size <5> not available
+(Font)              Font shape `OT1/cmss/bx/n' tried instead on input line 508.
+
+
+
+Overfull \hbox (18.81548pt too wide) has occurred while \output is active
+ [][][][]  
+ []
 
 [10
 
 ]
-LaTeX Font Info:    Font shape `OT1/cmss/b/n' in size <8> not available
-(Font)              Font shape `OT1/cmss/bx/n' tried instead on input line 513.
-LaTeX Font Info:    Font shape `OT1/cmss/b/n' in size <6> not available
-(Font)              Font shape `OT1/cmss/bx/n' tried instead on input line 513.
-LaTeX Font Info:    Font shape `OT1/cmss/b/n' in size <5> not available
-(Font)              Font shape `OT1/cmss/bx/n' tried instead on input line 513.
+Overfull \hbox (18.81548pt too wide) in paragraph at lines 551--551
+ [][][][]  
+ []
 
+LaTeX Font Info:    Font shape `OT1/cmss/b/n' in size <10> not available
+(Font)              Font shape `OT1/cmss/bx/n' tried instead on input line 551.
+LaTeX Font Info:    Font shape `OT1/cmss/b/n' in size <7> not available
+(Font)              Font shape `OT1/cmss/bx/n' tried instead on input line 551.
+
+
+
+Overfull \hbox (18.81548pt too wide) has occurred while \output is active
+ [][][][]  
+ []
 
 [11
 
 ]
-LaTeX Font Info:    Font shape `OT1/cmss/b/n' in size <10> not available
-(Font)              Font shape `OT1/cmss/bx/n' tried instead on input line 556.
-LaTeX Font Info:    Font shape `OT1/cmss/b/n' in size <7> not available
-(Font)              Font shape `OT1/cmss/bx/n' tried instead on input line 556.
+Overfull \hbox (18.81548pt too wide) in paragraph at lines 597--597
+ [][][][]  
+ []
 
+
+
+
+Overfull \hbox (18.81548pt too wide) has occurred while \output is active
+ [][][][]  
+ []
 
 [12
 
 ]
+Overfull \hbox (18.81548pt too wide) in paragraph at lines 646--646
+ [][][][]  
+ []
+
+
+
+
+Overfull \hbox (18.81548pt too wide) has occurred while \output is active
+ [][][][]  
+ []
 
 [13
 
 ]
+Overfull \hbox (18.81548pt too wide) in paragraph at lines 691--691
+ [][][][]  
+ []
+
+
+
+
+Overfull \hbox (18.81548pt too wide) has occurred while \output is active
+ [][][][]  
+ []
 
 [14
 
 ]
+Overfull \hbox (18.81548pt too wide) in paragraph at lines 734--734
+ [][][][]  
+ []
 
-[15
-
-]
-<Test/viterbi_vs_reel_220.png, id=485, 751.2795pt x 158.6655pt>
+<Test/viterbi_vs_reel_220.png, id=451, 751.2795pt x 158.6655pt>
 File: Test/viterbi_vs_reel_220.png Graphic file (type png)
 <use Test/viterbi_vs_reel_220.png>
-Package pdftex.def Info: Test/viterbi_vs_reel_220.png  used on input line 739.
+Package pdftex.def Info: Test/viterbi_vs_reel_220.png  used on input line 734.
 (pdftex.def)             Requested size: 266.98991pt x 56.38837pt.
 
 
-[16
+
+Overfull \hbox (18.81548pt too wide) has occurred while \output is active
+ [][][][]  
+ []
+
+[15
 
  <./Test/viterbi_vs_reel_220.png>]
-<Test/prefix_log_likelihood.png, id=516, 592.2855pt x 332.1135pt>
+Overfull \hbox (18.81548pt too wide) in paragraph at lines 782--782
+ [][][][]  
+ []
+
+<Test/prefix_log_likelihood.png, id=481, 592.2855pt x 332.1135pt>
 File: Test/prefix_log_likelihood.png Graphic file (type png)
 <use Test/prefix_log_likelihood.png>
-Package pdftex.def Info: Test/prefix_log_likelihood.png  used on input line 787.
+Package pdftex.def Info: Test/prefix_log_likelihood.png  used on input line 782.
 (pdftex.def)             Requested size: 164.30028pt x 92.12457pt.
 
 
-[17
+
+Overfull \hbox (18.81548pt too wide) has occurred while \output is active
+ [][][][]  
+ []
+
+[16
 
  <./Test/prefix_log_likelihood.png>]
-<Test/comparaison_visuelle_Viterbi.png, id=545, 1028.84375pt x 364.36125pt>
+Overfull \hbox (18.81548pt too wide) in paragraph at lines 843--843
+ [][][][]  
+ []
+
+<Test/comparaison_visuelle_Viterbi.png, id=511, 1028.84375pt x 364.36125pt>
 File: Test/comparaison_visuelle_Viterbi.png Graphic file (type png)
 <use Test/comparaison_visuelle_Viterbi.png>
-Package pdftex.def Info: Test/comparaison_visuelle_Viterbi.png  used on input line 848.
+Package pdftex.def Info: Test/comparaison_visuelle_Viterbi.png  used on input line 843.
 (pdftex.def)             Requested size: 266.98991pt x 94.55377pt.
 
 
-[18
+
+Overfull \hbox (18.81548pt too wide) has occurred while \output is active
+ [][][][]  
+ []
+
+[17
 
  <./Test/comparaison_visuelle_Viterbi.png>]
-<Test/comparaison_log_vraisemblances.png, id=574, 790.955pt x 491.8375pt>
+Overfull \hbox (18.81548pt too wide) in paragraph at lines 893--893
+ [][][][]  
+ []
+
+<Test/comparaison_log_vraisemblances.png, id=540, 790.955pt x 491.8375pt>
 File: Test/comparaison_log_vraisemblances.png Graphic file (type png)
 <use Test/comparaison_log_vraisemblances.png>
-Package pdftex.def Info: Test/comparaison_log_vraisemblances.png  used on input line 898.
+Package pdftex.def Info: Test/comparaison_log_vraisemblances.png  used on input line 893.
 (pdftex.def)             Requested size: 171.14764pt x 106.42593pt.
-<Test/stabilite_A.png, id=575, 797.98125pt x 497.86pt>
+<Test/stabilite_A.png, id=541, 797.98125pt x 497.86pt>
 File: Test/stabilite_A.png Graphic file (type png)
 <use Test/stabilite_A.png>
-Package pdftex.def Info: Test/stabilite_A.png  used on input line 898.
+Package pdftex.def Info: Test/stabilite_A.png  used on input line 893.
 (pdftex.def)             Requested size: 171.14764pt x 106.77953pt.
-<Test/stabilite_b.png, id=576, 795.97375pt x 495.8525pt>
+<Test/stabilite_b.png, id=542, 795.97375pt x 495.8525pt>
 File: Test/stabilite_b.png Graphic file (type png)
 <use Test/stabilite_b.png>
-Package pdftex.def Info: Test/stabilite_b.png  used on input line 898.
+Package pdftex.def Info: Test/stabilite_b.png  used on input line 893.
 (pdftex.def)             Requested size: 171.14764pt x 106.61377pt.
-<Test/stabilite_durees.png, id=577, 789.95125pt x 497.86pt>
+<Test/stabilite_durees.png, id=543, 789.95125pt x 497.86pt>
 File: Test/stabilite_durees.png Graphic file (type png)
 <use Test/stabilite_durees.png>
-Package pdftex.def Info: Test/stabilite_durees.png  used on input line 898.
+Package pdftex.def Info: Test/stabilite_durees.png  used on input line 893.
 (pdftex.def)             Requested size: 171.14764pt x 107.86584pt.
 
 
-[19
+
+Overfull \hbox (18.81548pt too wide) has occurred while \output is active
+ [][][][]  
+ []
+
+[18
 
  <./Test/comparaison_log_vraisemblances.png> <./Test/stabilite_A.png> <./Test/stabilite_b.png> <./Test/stabilite_durees.png>]
-<Figures/regime_detectionVIX.png, id=610, 1148.3703pt x 426.393pt>
+Overfull \hbox (18.81548pt too wide) in paragraph at lines 939--939
+ [][][][]  
+ []
+
+<Figures/regime_detectionVIX.png, id=575, 1148.3703pt x 426.393pt>
 File: Figures/regime_detectionVIX.png Graphic file (type png)
 <use Figures/regime_detectionVIX.png>
-Package pdftex.def Info: Figures/regime_detectionVIX.png  used on input line 944.
+Package pdftex.def Info: Figures/regime_detectionVIX.png  used on input line 939.
 (pdftex.def)             Requested size: 290.9531pt x 108.02934pt.
 
 
-[20
+
+Overfull \hbox (18.81548pt too wide) has occurred while \output is active
+ [][][][]  
+ []
+
+[19
 
  <./Figures/regime_detectionVIX.png>]
-<Test/comparaison_log_vraisemblances_vix.png, id=639, 578.16pt x 361.35pt>
+Overfull \hbox (18.81548pt too wide) in paragraph at lines 1004--1004
+ [][][][]  
+ []
+
+<Test/comparaison_log_vraisemblances_vix.png, id=604, 578.16pt x 361.35pt>
 File: Test/comparaison_log_vraisemblances_vix.png Graphic file (type png)
 <use Test/comparaison_log_vraisemblances_vix.png>
-Package pdftex.def Info: Test/comparaison_log_vraisemblances_vix.png  used on input line 1009.
+Package pdftex.def Info: Test/comparaison_log_vraisemblances_vix.png  used on input line 1004.
 (pdftex.def)             Requested size: 181.41609pt x 113.38475pt.
 
 
-[21
+
+Overfull \hbox (18.81548pt too wide) has occurred while \output is active
+ [][][][]  
+ []
+
+[20
 
  <./Test/comparaison_log_vraisemblances_vix.png>]
 \tf@nav=\write6
@@ -940,21 +1132,21 @@ LaTeX2e <2024-11-01> patch level 2
 L3 programming layer <2025-01-18>
  ***********
 Package rerunfilecheck Info: File `Presentation_TER.out' has not changed.
-(rerunfilecheck)             Checksum: 47949AC7C3DCEDDDEEFE3CD50587DDA1;103.
+(rerunfilecheck)             Checksum: D41D8CD98F00B204E9800998ECF8427E;0.
  ) 
 Here is how much of TeX's memory you used:
- 25575 strings out of 473190
- 513804 string characters out of 5715800
- 879162 words of memory out of 5000000
- 48278 multiletter control sequences out of 15000+600000
+ 25527 strings out of 473190
+ 512614 string characters out of 5715800
+ 879062 words of memory out of 5000000
+ 48235 multiletter control sequences out of 15000+600000
  571160 words of font info for 80 fonts, out of 8000000 for 9000
  1141 hyphenation exceptions out of 8191
- 128i,16n,123p,452b,767s stack positions out of 10000i,1000n,20000p,200000b,200000s
+ 128i,16n,123p,448b,767s stack positions out of 10000i,1000n,20000p,200000b,200000s
 </usr/local/texlive/2025/texmf-dist/fonts/type1/public/amsfonts/cm/cmex10.pfb></usr/local/texlive/2025/texmf-dist/fonts/type1/public/amsfonts/cmextra/cmex7.pfb></usr/local/texlive/2025/texmf-dist/fonts/type1/public/amsfonts/cmextra/cmex8.pfb></usr/local/texlive/2025/texmf-dist/fonts/type1/public/amsfonts/cm/cmmi10.pfb></usr/local/texlive/2025/texmf-dist/fonts/type1/public/amsfonts/cm/cmmi12.pfb></usr/local/texlive/2025/texmf-dist/fonts/type1/public/amsfonts/cm/cmmi6.pfb></usr/local/texlive/2025/texmf-dist/fonts/type1/public/amsfonts/cm/cmmi7.pfb></usr/local/texlive/2025/texmf-dist/fonts/type1/public/amsfonts/cm/cmmi8.pfb></usr/local/texlive/2025/texmf-dist/fonts/type1/public/amsfonts/cm/cmss10.pfb></usr/local/texlive/2025/texmf-dist/fonts/type1/public/amsfonts/cm/cmss12.pfb></usr/local/texlive/2025/texmf-dist/fonts/type1/public/amsfonts/cm/cmss8.pfb></usr/local/texlive/2025/texmf-dist/fonts/type1/public/amsfonts/cm/cmssbx10.pfb></usr/local/texlive/2025/texmf-dist/fonts/type1/public/amsfonts/cm/cmssi10.pfb></usr/local/texlive/2025/texmf-dist/fonts/type1/public/amsfonts/cm/cmssi12.pfb></usr/local/texlive/2025/texmf-dist/fonts/type1/public/amsfonts/cm/cmssi8.pfb></usr/local/texlive/2025/texmf-dist/fonts/type1/public/amsfonts/cm/cmsy10.pfb></usr/local/texlive/2025/texmf-dist/fonts/type1/public/amsfonts/cm/cmsy5.pfb></usr/local/texlive/2025/texmf-dist/fonts/type1/public/amsfonts/cm/cmsy6.pfb></usr/local/texlive/2025/texmf-dist/fonts/type1/public/amsfonts/cm/cmsy7.pfb></usr/local/texlive/2025/texmf-dist/fonts/type1/public/amsfonts/cm/cmsy8.pfb></usr/local/texlive/2025/texmf-dist/fonts/type1/public/amsfonts/symbols/msbm10.pfb></usr/local/texlive/2025/texmf-dist/fonts/type1/public/amsfonts/symbols/msbm7.pfb>
-Output written on Presentation_TER.pdf (21 pages, 1282131 bytes).
+Output written on Presentation_TER.pdf (20 pages, 1280184 bytes).
 PDF statistics:
- 771 PDF objects out of 1000 (max. 8388607)
- 636 compressed objects within 7 object streams
- 44 named destinations out of 1000 (max. 500000)
- 186 words of extra memory for PDF output out of 10000 (max. 10000000)
+ 735 PDF objects out of 1000 (max. 8388607)
+ 603 compressed objects within 7 object streams
+ 41 named destinations out of 1000 (max. 500000)
+ 172 words of extra memory for PDF output out of 10000 (max. 10000000)
 
