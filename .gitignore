@@ -12,6 +12,7 @@ Papier/TER.fdb_latexmk
 Papier/TER.fls
 Papier/TER.pdf
 Papier/TER.toc
+Papier/TER.pdf
 
 Papier/Presentation_TER.fls
 Papier/Presentation_TER.log
@@ -21,3 +22,6 @@ Papier/Presentation_TER.snm
 Papier/Presentation_TER.fdb_latexmk
 Papier/Presentation_TER.synctex.gz
 Papier/Presentation_TER.toc
+Papier/Presentation_TER.aux
+Papier/Presentation_TER.pdf
+
