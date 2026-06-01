@@ -1,0 +1,109 @@
+* a989f0e (HEAD -> develop, origin/develop) add diapo
+| * c65c255 (origin/main, origin/HEAD) add readme
+| *   a433fc4 Merge branch 'develop'
+| |\  
+| |/  
+|/|   
+* | 3bc7c5c fix last typos
+* | e40192b fix references
+* | 1b5f144 add references
+* | 6c57372 set typo
+* | d1722e4 fix analyse BM VIX
+* | 8a042e4 add analyse BM VIX
+* | aec5c3a fix merge
+* |   8187075 Merge branch 'maximeter' into develop
+|\ \  
+* | | d87197b maj summary
+| * | 4014e04 (origin/maximeter) maj summary
+* | |   49422ac (origin/mariuster, mariuster) Merge branch 'mariusBis' into develop
+|\ \ \  
+| |/ /  
+|/| |   
+| * | b2f3e1a (origin/mariusBis, mariusBis) add python
+* | | 1a4ad75 fix typo merge
+* | |   740f650 Merge branch 'maxime84' into develop
+|\ \ \  
+| |/ /  
+|/| |   
+* | | 54c44a0 add figure
+| * | 14d812a (origin/maxime84) add Baum Welch simulation
+| * | 65a8df2 fix writting on Vix text
+|/ /  
+* | 888fe30 add tests Forward + Viterbi
+* | 4b0ed45 delete file
+* |   8b7e49e Merge branch 'Test' into develop
+|\ \  
+| * | 8930cbf (origin/Test) rewritting jeu de données simulé
+* | | d147e80 fix typos
+| * | ca40937 Add text on simuation and test BM + Vix
+| * | c3a7f05 add regime detection
+| * | c038b3a add parametre stability test
+| * | 1045996 add test log-vraisemblance convergence
+| * | f865d61 Rework of the code structure.
+|/ /  
+* | be73575 add VIX_Marius
+| | * 213bbb4 (origin/marius3, marius3) add VIX_marius
+| * | 412a6d5 fix issue on the paper due to the merge
+| * |   fd2d278 Merge branch 'develop'
+| |\ \  
+| |/ /  
+|/| |   
+* | |   a18e4a2 Merge branch 'VIX_implementation' into develop
+|\ \ \  
+* | | | 064efd3 fix typos due to the merge
+* | | |   e10fbfb Merge branch 'maxime3' into develop
+|\ \ \ \  
+| |_|_|/  
+|/| | |   
+| | * | 4e414f1 (origin/VIX_implementation) fix test
+| | * | e8a4c38 add transition matrix printting
+| | * | caca90e implementation of HMM for VIX data analysis
+| | * | a668810 implementation of regime switching model on VIX
+| |/ /  
+|/| |   
+| | * 6fcdf21 merge develop into main
+| | *   7cdea47 Merge branch 'develop'
+| | |\  
+| |_|/  
+|/| |   
+* | | e47c665 add analyse qualité estimations + treillis + peuso-algo
+| | *   0623119 Merge branch 'develop'
+| | |\  
+| |_|/  
+|/| |   
+| * | 0a886dc (origin/maxime3) add limits of forward algorithm
+| * | dc8e6a8 add complexity analysis of forward algorithm
+|/ /  
+* | 6f9adb1 change style viterbi code
+* | a3da478 change style of block code algo backward
+* | ad16d64 clean project
+* | b9db0bd add algo Baum-Welch
+* | 1ee2dc7 add simulation part 1
+* | a4541c9 Introduction
+* | f5e2430 fix typos
+* | edb7091 fix some typos and organisation after merge
+* | 428d02f git ignore pdf file
+* |   31a4f27 Merge remote-tracking branch 'origin/marius2' into develop
+|\ \  
+| * | 4385b61 (origin/marius2, marius2) Viterbi + BW
+* | | 3b03022 merge branch maxime2 into develop
+* | | f574b6e (origin/maxime2) last commit before merge
+* | | 26300b2 add proof of non-markovian propertie and VIXDATA fix
+* | | 3c158e7 Add forward in file + algo and VIX data
+* | | 776f265 add forward algo
+|/ /  
+* | 7eb1929 modification due to the merge
+* |   16c3a69 Merge remote-tracking branch 'origin/marius' into develop
+|\ \  
+| * | da0ed79 (origin/marius, marius) add file HMM
+* | | 5b924b6 (origin/maxime) Add definition and properties of HMM in the paper
+* | | c52d3a5 clean paper
+* | | a5aa547 Add TER.tex, TER.pdf file and update .gitignore
+| * | 6309de3 add Viterbi
+|/ /  
+| * 819c43e add .gitignore in main branch
+* | 7ea441d modification number of regimes
+* | d001570 Add HMM
+* | f626f5b Add .gitignore
+|/  
+* a3dcd70 (main) Add README
