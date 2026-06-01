@@ -69,7 +69,7 @@ The main objectives of the project are:
 │   ├── HMMVIX.ipynb
 │   └── vix_data.csv
 │
-├── Papier/
+├── Paper/
 │   ├── Figures/
 │   ├── Logo/
 │   ├── Test/
