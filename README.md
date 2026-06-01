@@ -73,7 +73,8 @@ The main objectives of the project are:
 │   ├── Figures/
 │   ├── Logo/
 │   ├── Test/
-│   └── TER.pdf
+│   └── TER.pdf #French
+|   └── TER_EN.pdf #English 
 │
 ├── .vscode/
 └── README.md
