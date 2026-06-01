@@ -67,7 +67,6 @@ The main objectives of the project are:
 │   ├── test_simu_Forward
 │   ├── test_simu_Viterbi.py
 │   ├── HMMVIX.ipynb
-│   ├── VIX_Marius.ipynb
 │   └── vix_data.csv
 │
 ├── Papier/
