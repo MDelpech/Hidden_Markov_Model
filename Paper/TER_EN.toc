@@ -1,0 +1,49 @@
+\babel@toc {french}{}\relax 
+\contentsline {section}{\numberline {1}Introduction}{3}{section.1}%
+\contentsline {section}{\numberline {2}Definition and Properties of Hidden Markov Models}{4}{section.2}%
+\contentsline {subsection}{\numberline {2.1}Definition of a Hidden Markov Model}{4}{subsection.2.1}%
+\contentsline {subsubsection}{\numberline {2.1.1}Observable and Hidden Random Variables}{4}{subsubsection.2.1.1}%
+\contentsline {subsubsection}{\numberline {2.1.2}Joint Distributions and Likelihood}{4}{subsubsection.2.1.2}%
+\contentsline {subsubsection}{\numberline {2.1.3}General Example of a Hidden Markov Model}{5}{subsubsection.2.1.3}%
+\contentsline {subsubsection}{\numberline {2.1.4}Remarks on the Observations}{7}{subsubsection.2.1.4}%
+\contentsline {section}{\numberline {3}Three Main Problems in HMMs}{9}{section.3}%
+\contentsline {subsection}{\numberline {3.1}Likelihood Estimation and the Forward Algorithm}{9}{subsection.3.1}%
+\contentsline {subsection}{\numberline {3.2}Decoding and the Viterbi Algorithm}{11}{subsection.3.2}%
+\contentsline {paragraph}{Viterbi Algorithm}{12}{paragraph*.1}%
+\contentsline {subsection}{\numberline {3.3}Estimation and the Baum--Welch Algorithm}{15}{subsection.3.3}%
+\contentsline {section}{\numberline {4}Algorithmic Limitations and Analysis of Estimation Quality}{20}{section.4}%
+\contentsline {subsection}{\numberline {4.1}Limitations and Measurement of Likelihood Quality with the Forward Algorithm}{20}{subsection.4.1}%
+\contentsline {subsubsection}{\numberline {4.1.1}Limitations of the Forward Algorithm}{20}{subsubsection.4.1.1}%
+\contentsline {subsubsection}{\numberline {4.1.2}Interpretation of the Log-Likelihood}{20}{subsubsection.4.1.2}%
+\contentsline {subsubsection}{\numberline {4.1.3}Comparison between Models}{21}{subsubsection.4.1.3}%
+\contentsline {subsubsection}{\numberline {4.1.4}Out-of-Sample Evaluation}{21}{subsubsection.4.1.4}%
+\contentsline {subsection}{\numberline {4.2}Measurement of Viterbi Decoding Quality}{22}{subsection.4.2}%
+\contentsline {subsubsection}{\numberline {4.2.1}Difficulty of Evaluation on Real Data}{22}{subsubsection.4.2.1}%
+\contentsline {subsubsection}{\numberline {4.2.2}Economic Interpretation of the Detected Regimes}{22}{subsubsection.4.2.2}%
+\contentsline {subsubsection}{\numberline {4.2.3}Comparison with Posterior Decoding}{22}{subsubsection.4.2.3}%
+\contentsline {subsection}{\numberline {4.3}Measurement of the Quality of Baum--Welch Estimates}{23}{subsection.4.3}%
+\contentsline {subsubsection}{\numberline {4.3.1}Log-Likelihood Convergence}{24}{subsubsection.4.3.1}%
+\contentsline {subsubsection}{\numberline {4.3.2}Stability of the Estimated Parameters}{24}{subsubsection.4.3.2}%
+\contentsline {subsubsection}{\numberline {4.3.3}Economic Interpretation of Regimes}{25}{subsubsection.4.3.3}%
+\contentsline {subsubsection}{\numberline {4.3.4}Out-of-Sample Validation}{25}{subsubsection.4.3.4}%
+\contentsline {section}{\numberline {5}Simulation of an HMM and Application to Financial Data}{26}{section.5}%
+\contentsline {subsection}{\numberline {5.1}Simulated Dataset}{26}{subsection.5.1}%
+\contentsline {subsection}{\numberline {5.2}Application of the Algorithms to Simulated Data}{27}{subsection.5.2}%
+\contentsline {subsection}{\numberline {5.3}Interpretation of the Results Obtained on the Simulated Data}{28}{subsection.5.3}%
+\contentsline {subsubsection}{\numberline {5.3.1}Analysis of the Forward Problem}{28}{subsubsection.5.3.1}%
+\contentsline {paragraph}{Likelihood and Log-Likelihood}{28}{paragraph*.2}%
+\contentsline {paragraph}{Model Comparison}{29}{paragraph*.3}%
+\contentsline {paragraph}{Out-of-Sample Validation}{30}{paragraph*.4}%
+\contentsline {paragraph}{Conclusion}{30}{paragraph*.5}%
+\contentsline {subsubsection}{\numberline {5.3.2}Analysis of the Viterbi Problem}{31}{subsubsection.5.3.2}%
+\contentsline {paragraph}{Interpretation of the Detected Regimes}{31}{paragraph*.6}%
+\contentsline {paragraph}{Comparison with Posterior Decoding and Local Decoding}{32}{paragraph*.7}%
+\contentsline {paragraph}{Conclusion}{33}{paragraph*.8}%
+\contentsline {subsubsection}{\numberline {5.3.3}Analysis of the Baum--Welch Problem}{33}{subsubsection.5.3.3}%
+\contentsline {subsection}{\numberline {5.4}Detection of Volatility Regimes on the VIX}{36}{subsection.5.4}%
+\contentsline {subsection}{\numberline {5.5}Analysis of the Quality of the Baum--Welch Estimation on the VIX}{39}{subsection.5.5}%
+\contentsline {paragraph}{Log-Likelihood Convergence}{39}{paragraph*.9}%
+\contentsline {paragraph}{Stability of the Estimated Parameters}{40}{paragraph*.10}%
+\contentsline {paragraph}{Out-of-Sample Validation}{41}{paragraph*.11}%
+\contentsline {paragraph}{Conclusion}{42}{paragraph*.12}%
+\contentsline {section}{\numberline {6}References}{42}{section.6}%
